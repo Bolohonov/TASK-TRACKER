@@ -2,14 +2,14 @@ public class Task {
 
     String name;
     String description;
-    int hash;
+    int hashCode;
     TaskStatus status;
     boolean epic;
 
     public Task(String name, String description, int hash, TaskStatus status, boolean epic) {
         this.name = name;
         this.description = description;
-        this.hash = hash;
+        this.hashCode = hash;
         this.status = status;
         this.epic = epic;
     }
@@ -17,9 +17,15 @@ public class Task {
     public Task() {
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+    public int hashCode(String name, String description) {
+        int hash = 17;
+        if (name != null) {
+            hash = name.hashCode();
+        }
+        if (description != null) {
+            hash = hash + description.hashCode();
+        }
+        return hash;
     }
 
     @Override
@@ -44,11 +50,11 @@ public class Task {
     }
 
     public int getHash() {
-        return hash;
+        return hashCode;
     }
 
     public void setHash(int hash) {
-        this.hash = hash;
+        this.hashCode = hash;
     }
 
     public TaskStatus getStatus() {

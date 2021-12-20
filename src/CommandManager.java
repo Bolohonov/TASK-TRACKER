@@ -5,20 +5,26 @@ public class CommandManager {
     Scanner scanner = new Scanner(System.in);
 
     public void getCommamndPanel() {
+        int command = -1;
 
-        while (true) {
+        while (command != 0) {
             printMenu();
-
-            int command = scanner.nextInt();
+            command = scanner.nextInt();
 
             switch (command) {
                 case 1:
+                    TaskStorage.setTaskStorage();
+                    break;
                 case 2:
                 case 3:
                 case 4:
                 case 5:
                 case 6:
-
+                case 7:
+                case 8:
+                case 0:
+                    System.out.println("Работа программы завершена!");
+                    break;
                 default:
                     System.out.println("Извините, такой команды пока нет.");
                     break;
@@ -28,12 +34,9 @@ public class CommandManager {
 
     private void printMenu() {
         System.out.println("Выберите действие: ");
-        System.out.println("1 - Считать все месячные отчёты");
-        System.out.println("2 - Считать годовой отчёт");
-        System.out.println("3 - Сверить отчёты");
-        System.out.println("4 - Вывести информацию о всех месячных отчётах");
-        System.out.println("5 - Вывести информацию о годовом отчёте");
-        System.out.println("0 - Выход из программы");
+        for (Menu m : Menu.values()) {
+            System.out.println(m.getMenu());
+        }
     }
 
 }

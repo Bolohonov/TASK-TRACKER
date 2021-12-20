@@ -1,20 +1,25 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 
 public class TaskStorage {
 
+    public static LinkedList<Task> tasks = new LinkedList<>();
     private static TaskStorage taskStorage;
-    HashMap<String, ArrayList<Task>> taskList = new HashMap<>();
 
     private TaskStorage () {
     }
 
-
-    public HashMap<String, ArrayList<Task>> getTaskList() {
-        return taskList;
+    public static TaskStorage getTaskStorage() {
+        if (taskStorage == null) {
+            return taskStorage = new TaskStorage();
+        } else {
+            return null;
+        }
     }
 
-    public void setTaskList(HashMap<String, ArrayList<Task>> taskList) {
-        this.taskList = taskList;
+    public static void setTaskStorage() {
+        TaskToSave taskToSave = new TaskToSave();
+        if (taskToSave.saveTask() != null) {
+            tasks.add(taskToSave.saveTask());
+        }
     }
 }
