@@ -5,17 +5,23 @@ public class SubTask extends Task {
         int subTaskHash;
         TaskStatus subTaskStatus;
 
-    public SubTask(String subTaskName, String subTaskdescription, int hash, TaskStatus status) {
-        super();
-        this.subTaskName = subTaskName;
-        this.subTaskDescription = subTaskdescription;
-        this.subTaskHash = subTaskHash;
-        this.subTaskStatus = subTaskStatus;
-    }
+//    public SubTask(String subTaskName, String subTaskdescription, int hash, TaskStatus status) {
+//        super();
+//        this.subTaskName = subTaskName;
+//        this.subTaskDescription = subTaskdescription;
+//        this.subTaskHash = subTaskHash;
+//        this.subTaskStatus = subTaskStatus;
+//    }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+    public int hashCode(String subTaskName, String subTaskDescription) {
+        int hash = 19;
+        if (name != null) {
+            hash = name.hashCode();
+        }
+        if (description != null) {
+            hash = hash + description.hashCode();
+        }
+        return hash;
     }
 
     @Override

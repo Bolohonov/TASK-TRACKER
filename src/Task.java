@@ -6,13 +6,13 @@ public class Task {
     TaskStatus status;
     boolean epic;
 
-    public Task(String name, String description, int hash, TaskStatus status, boolean epic) {
-        this.name = name;
-        this.description = description;
-        this.hashCode = hash;
-        this.status = status;
-        this.epic = epic;
-    }
+//    public Task(String name, String description, int hash, TaskStatus status, boolean epic) {
+//        this.name = name;
+//        this.description = description;
+//        this.hashCode = hash;
+//        this.status = status;
+//        this.epic = epic;
+//    }
 
     public Task() {
     }
