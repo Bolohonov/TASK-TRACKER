@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Task {
 
     private String name = "";
@@ -86,5 +88,10 @@ public class Task {
                 ", ID=" + id +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, id, status);
     }
 }

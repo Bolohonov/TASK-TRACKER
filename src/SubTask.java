@@ -22,4 +22,19 @@ public class SubTask extends Task {
         }
         return hash;
     }
+
+    public Task getTask() {
+        return task;
+    }
+
+    @Override
+    public String toString() {
+        return "SubTask{" +
+                "task=" + task.getName() +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status=" + status +
+                '}';
+    }
 }

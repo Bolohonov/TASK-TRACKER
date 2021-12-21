@@ -18,7 +18,9 @@ public class CommandManager {
                 case 2:
                     SubTaskStorage.getSubTaskStorage().setSubTaskFromUserChoice();
                 case 3:
+                    SubTaskStorage.getSubTaskStorage().getSubTasksList();
                 case 4:
+                    SubTaskStorage.getSubTaskStorage().getSubTasksListFromUserChoice();
                 case 5:
                 case 6:
                 case 7:

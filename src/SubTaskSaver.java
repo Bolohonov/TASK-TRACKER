@@ -28,7 +28,7 @@ public class SubTaskSaver extends TaskSaver{
         return userTask;
     }
 
-    private Task chooseUserTask() {
+    public Task chooseUserTask() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
         for (Task task : TaskStorage.getTaskStorage().getTasks()) {

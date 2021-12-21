@@ -1,5 +1,6 @@
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class TaskStorage {
 
@@ -32,14 +33,4 @@ public class TaskStorage {
     public static void setTasks(LinkedList<Task> tasks) {
         TaskStorage.tasks = tasks;
     }
-
-
-//    public static void setSubTaskStorage() {
-//        TaskToSave taskToSave = new TaskToSave();
-//        if (taskToSave.saveSubTask() != null) {
-//            subTasks.add(taskToSave.saveSubTask());
-//            epics.put()
-//        }
-//    }
-
 }

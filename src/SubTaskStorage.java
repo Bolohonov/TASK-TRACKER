@@ -30,4 +30,25 @@ public class SubTaskStorage {
             subTasks.add(subTaskToSave.saveSubTaskFromUserChoice());
         }
     }
+
+    public static void getSubTasksList() {
+        for (SubTask subTask : subTaskStorage.subTasks) {
+            System.out.println(subTask.toString());
+        }
+    }
+
+    public static void getSubTasksListFromUserChoice() {
+        SubTaskSaver chooseTask = new SubTaskSaver();
+        Task task = null;
+        if (chooseTask.chooseUserTask() != null) {
+            task = chooseTask.chooseUserTask();
+        }
+        for (SubTask subTask : subTaskStorage.subTasks) {
+            if (subTask.getTask().equals(task)) {
+                System.out.println(subTask.toString());
+            }
+        }
+    }
+
+
 }
