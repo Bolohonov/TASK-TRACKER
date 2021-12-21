@@ -1,35 +1,35 @@
 import java.util.Scanner;
 
 public class TaskSaver {
+    String userTask[] = new String[2];
 
-    public Task saveTask() {
-        String name;
-        String description;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите название задачи: ");
-        name = scanner.nextLine();
-        System.out.println("Введите описание задачи (можно оставить поле пустым): ");
-        description = scanner.nextLine();
-        if (name.equals(null)) {
+    public void run() {
+        saveUserTask();
+        saveTask();
+    }
+
+    private Task saveTask() {
+        if (userTask[0].equals(null)) {
             System.out.println("Поле Название должно быть заполнено");
             return null;
         } else {
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Разделить задачу на подзадачи? Введите ");
-            System.out.println("1 - Для разделения подзадачи: ");
             System.out.println("0 - Для сохранения задачи и выхода в меню: ");
+            System.out.println("1 - Для разделения подзадачи: ");
             String answer = scanner.nextLine();
-            if (answer.equals("1")) {
-                Task task = new Task();
-                task.name = name;
-                task.description = description;
-                task.hashCode = task.hashCode(task.name, task.description);
-                task.status = TaskStatus.NEW;
-                task.epic = false;
+            if (answer.equals("0")) {
+                hashCode(userTask[0], userTask[1]);
+                Task task = new Task(userTask[0], userTask[1], hashCode(userTask[0], userTask[1]),
+                        TaskStatus.NEW, false);
                 return task;
-            } else if (answer.equals("0")){
+            } else if (answer.equals("1")){
+                saveUserTask();
+                SubTask subTask = new SubTask();
+
                 return null;
             } else {
-                System.out.println("Введите верное значение (1 или 0)");
+                System.out.println("Введите верное значение (0 или 1)");
                 return null;
             }
         }
@@ -63,6 +63,26 @@ public class TaskSaver {
 //            return subTask;
 //        } else return null;
 //    }
+
+    private String[] saveUserTask() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите название задачи: ");
+        userTask[0] = scanner.nextLine();
+        System.out.println("Введите описание задачи (можно оставить поле пустым): ");
+        userTask[1] = scanner.nextLine();
+        return userTask;
+    }
+
+    public int hashCode(String name, String description) {
+        int hash = 17;
+        if (name != null) {
+            hash = name.hashCode();
+        }
+        if (description != null) {
+            hash = hash + description.hashCode();
+        }
+        return hash;
+    }
 
 
     public boolean checkGoToPrevisionMenu(String zeroOrNot) {
