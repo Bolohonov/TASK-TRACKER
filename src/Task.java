@@ -54,11 +54,11 @@ public class Task {
         this.description = description;
     }
 
-    public int getHash() {
+    public int getId() {
         return id;
     }
 
-    public void setHash(int hash) {
+    public void setId(int hash) {
         this.id = hash;
     }
 

@@ -4,7 +4,7 @@ public class CommandManager {
 
     Scanner scanner = new Scanner(System.in);
 
-    public void getCommamndPanel() {
+    public void getCommandPanel() {
         int command = -1;
 
         while (command != 0) {
@@ -16,10 +16,7 @@ public class CommandManager {
                     TaskStorage.getTaskStorage().setTaskStorage();
                     break;
                 case 2:
-                    SubTaskStorage.getSubTaskStorage();
-////                    if (!TaskStorage.tasks.isEmpty()) {
-////                        TaskStorage.setSubTaskStorage();
-//                    }
+                    SubTaskStorage.getSubTaskStorage().setSubTaskFromUserChoice();
                 case 3:
                 case 4:
                 case 5:

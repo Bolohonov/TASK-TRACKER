@@ -24,10 +24,10 @@ public class SubTaskStorage {
         }
     }
 
-    public static void setSubTaskStorage() {
+    public static void setSubTaskFromUserChoice() {
         SubTaskSaver subTaskToSave = new SubTaskSaver();
-        if (subTaskToSave.saveSubTask(task) != null) {
-            subTasks.add(subTaskToSave.saveSubTask(task));
+        if (subTaskToSave.saveSubTaskFromUserChoice() != null) {
+            subTasks.add(subTaskToSave.saveSubTaskFromUserChoice());
         }
     }
 }
