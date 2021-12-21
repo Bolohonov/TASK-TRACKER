@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class TaskToSave {
+public class TaskSaver {
 
     public Task saveTask() {
         String name;
@@ -10,28 +10,28 @@ public class TaskToSave {
         name = scanner.nextLine();
         System.out.println("Введите описание задачи (можно оставить поле пустым): ");
         description = scanner.nextLine();
-        System.out.println("Разделить задачу на подзадачи? Введите ");
-        System.out.println("1 - Для разделения подзадачи: ");
-        System.out.println("0 - Для сохранения задачи и выхода в меню: ");
-        String answer = scanner.nextLine();
-        if (answer.equals("1")) {
-
-        } else if (answer.equals("0")){
-
-        } else {
-            System.out.println("Введите верное значение (1 или 0)");
-        }
         if (name.equals(null)) {
             System.out.println("Поле Название должно быть заполнено");
             return null;
         } else {
-            Task task = new Task();
-            task.name = name;
-            task.description = description;
-            task.hashCode = task.hashCode(task.name, task.description);
-            task.status = TaskStatus.NEW;
-            task.epic = false;
-            return task;
+            System.out.println("Разделить задачу на подзадачи? Введите ");
+            System.out.println("1 - Для разделения подзадачи: ");
+            System.out.println("0 - Для сохранения задачи и выхода в меню: ");
+            String answer = scanner.nextLine();
+            if (answer.equals("1")) {
+                Task task = new Task();
+                task.name = name;
+                task.description = description;
+                task.hashCode = task.hashCode(task.name, task.description);
+                task.status = TaskStatus.NEW;
+                task.epic = false;
+                return task;
+            } else if (answer.equals("0")){
+                return null;
+            } else {
+                System.out.println("Введите верное значение (1 или 0)");
+                return null;
+            }
         }
     }
 
