@@ -19,15 +19,6 @@ public class SubTaskSaver extends TaskSaver{
         }
     }
 
-    private String[] saveUserTask() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите название задачи: ");
-        userTask[0] = scanner.nextLine();
-        System.out.println("Введите описание задачи (можно оставить поле пустым): ");
-        userTask[1] = scanner.nextLine();
-        return userTask;
-    }
-
     public Task chooseUserTask() {
         for (Task task : TaskStorage.getTasks()) {
             System.out.println(task.toString());
@@ -39,11 +30,11 @@ public class SubTaskSaver extends TaskSaver{
         for (Task taskChoose : TaskStorage.getTasks()) {
             if (taskChoose.getId() == id) {
                 task = taskChoose;
-            } else {
-                System.out.println("Вы ввели неверный ID задачи");
             }
+        }
+        if (task == null) {
+            System.out.println("Вы ввели неверный ID задачи");
         }
         return task;
     }
-
 }

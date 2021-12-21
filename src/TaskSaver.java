@@ -36,7 +36,7 @@ public class TaskSaver {
         return task;
     }
 
-    private String[] saveUserTask() {
+    public String[] saveUserTask() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите название задачи: ");
         userTask[0] = scanner.nextLine();

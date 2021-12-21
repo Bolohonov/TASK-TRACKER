@@ -1,11 +1,8 @@
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 public class TaskStorage {
 
     public static LinkedList<Task> tasks = new LinkedList<>();
-    public static LinkedHashMap<Task, LinkedList<SubTask>> epics = new LinkedHashMap<>();
     private static TaskStorage taskStorage;
 
     TaskStorage () {
