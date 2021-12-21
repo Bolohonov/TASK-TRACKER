@@ -1,4 +1,3 @@
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class SubTaskSaver extends TaskSaver{
@@ -12,8 +11,9 @@ public class SubTaskSaver extends TaskSaver{
     }
 
     public SubTask saveSubTaskFromUserChoice() {
-        if (chooseUserTask() != null) {
-            return saveSubTask(chooseUserTask());
+        Task task = chooseUserTask();
+        if (task != null) {
+            return saveSubTask(task);
         } else {
             return null;
         }
@@ -29,15 +29,14 @@ public class SubTaskSaver extends TaskSaver{
     }
 
     public Task chooseUserTask() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите задачу по ID: ");
-        for (Task task : TaskStorage.getTaskStorage().getTasks()) {
+        for (Task task : TaskStorage.getTasks()) {
             System.out.println(task.toString());
         }
-        int id = scanner.nextInt();
-
         Task task = null;
-        for (Task taskChoose : TaskStorage.getTaskStorage().getTasks()) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        int id = scanner.nextInt();
+        for (Task taskChoose : TaskStorage.getTasks()) {
             if (taskChoose.getId() == id) {
                 task = taskChoose;
             } else {

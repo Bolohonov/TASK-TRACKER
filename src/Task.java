@@ -17,8 +17,8 @@ public class Task {
     }
 
     public Task() {
-        this.name = "";
-        this.description = "";
+        this.name = null;
+        this.description = null;
         this.id = 0;
         this.status = TaskStatus.NEW;
         this.epic = 0;

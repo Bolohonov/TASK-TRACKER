@@ -21,8 +21,9 @@ public class TaskStorage {
 
     public static void setTaskStorage() {
         TaskSaver taskToSave = new TaskSaver();
-        if (taskToSave.saveTask() != null) {
-            tasks.add(taskToSave.saveTask());
+        Task task = taskToSave.saveTask();
+        if (task != null) {
+            tasks.add(task);
         }
     }
 

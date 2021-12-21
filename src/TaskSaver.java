@@ -1,35 +1,39 @@
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class TaskSaver {
     String userTask[] = new String[2];
+    Scanner scanner = new Scanner(System.in);
 
     public Task saveTask() {
+        Task task = null;
         saveUserTask();
-        if (userTask[0].equals(null)) {
-            System.out.println("Поле Название должно быть заполнено");
-            return null;
-        } else {
+        if (!userTask[0].equals(null)) {
             int hash = hashCode(userTask[0], userTask[1]);
-            Task task = new Task(userTask[0], userTask[1], hash,
+            task = new Task(userTask[0], userTask[1], hash,
                     TaskStatus.NEW, 0);
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Введите: ");
-            System.out.println("0 - Для выхода в меню: ");
-            System.out.println("1 - Для для добавления подзадач: ");
-            String answer = scanner.nextLine();
-            if (answer.equals("0")) {
-                return task;
-            } else if (answer.equals("1")){
-                task.setEpic(1);
-                SubTaskSaver subTaskSaver = new SubTaskSaver();
-                subTaskSaver.saveSubTask(task);
-                return task;
-            } else {
-                System.out.println("Вы ввели неверное значение!");
-                return null;
+            int command = -1;
+
+            while (command != 0) {
+                printMenuToAddSubTask();
+                command = scanner.nextInt();
+                switch (command) {
+                    case 0:
+                        break;
+                    case 1:
+                        task.setEpic(1);
+                        SubTaskStorage.setSubTaskStorage(task);
+                        task.setStatus(TaskStatus.IN_PROGRESS);
+                        break;
+                    default:
+                        System.out.println("Вы ввели неверное значение!");
+                        break;
+                }
             }
+        } else {
+            System.out.println("Поле Название должно быть заполнено");
+            return task;
         }
+        return task;
     }
 
     private String[] saveUserTask() {
@@ -50,5 +54,30 @@ public class TaskSaver {
             hash = hash + description.hashCode();
         }
         return hash;
+    }
+
+    public Task chooseUserTask() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        for (Task task : TaskStorage.getTaskStorage().getTasks()) {
+            System.out.println(task.toString());
+        }
+        int id = scanner.nextInt();
+
+        Task task = null;
+        for (Task taskChoose : TaskStorage.getTaskStorage().getTasks()) {
+            if (taskChoose.getId() == id) {
+                task = taskChoose;
+            } else {
+                System.out.println("Вы ввели неверный ID задачи");
+            }
+        }
+        return task;
+    }
+
+    private void printMenuToAddSubTask() {
+        System.out.println("Введите: ");
+        System.out.println("0 - Для выхода в меню: ");
+        System.out.println("1 - Для для добавления подзадач: ");
     }
 }

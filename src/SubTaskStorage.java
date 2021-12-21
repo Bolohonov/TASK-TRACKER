@@ -19,33 +19,34 @@ public class SubTaskStorage {
 
     public static void setSubTaskStorage(Task task) {
         SubTaskSaver subTaskToSave = new SubTaskSaver();
-        if (subTaskToSave.saveSubTask(task) != null) {
-            subTasks.add(subTaskToSave.saveSubTask(task));
+        SubTask subTask = subTaskToSave.saveSubTask(task);
+        if (subTask != null) {
+            subTasks.add(subTask);
         }
     }
 
     public static void setSubTaskFromUserChoice() {
         SubTaskSaver subTaskToSave = new SubTaskSaver();
-        if (subTaskToSave.saveSubTaskFromUserChoice() != null) {
-            subTasks.add(subTaskToSave.saveSubTaskFromUserChoice());
+        SubTask subTask = subTaskToSave.saveSubTaskFromUserChoice();
+        if (subTask != null) {
+            subTasks.add(subTask);
         }
     }
 
     public static void getSubTasksList() {
-        for (SubTask subTask : subTaskStorage.subTasks) {
+        for (SubTask subTask : subTasks) {
             System.out.println(subTask.toString());
         }
     }
 
     public static void getSubTasksListFromUserChoice() {
         SubTaskSaver chooseTask = new SubTaskSaver();
-        Task task = null;
-        if (chooseTask.chooseUserTask() != null) {
-            task = chooseTask.chooseUserTask();
-        }
-        for (SubTask subTask : subTaskStorage.subTasks) {
-            if (subTask.getTask().equals(task)) {
-                System.out.println(subTask.toString());
+        Task task = chooseTask.chooseUserTask();
+        if (task != null) {
+            for (SubTask subTask : subTasks) {
+                if (subTask.getTask().equals(task)) {
+                    System.out.println(subTask);
+                }
             }
         }
     }

@@ -13,18 +13,21 @@ public class CommandManager {
 
             switch (command) {
                 case 1:
-                    TaskStorage.getTaskStorage().setTaskStorage();
+                    TaskStorage.setTaskStorage();
                     break;
                 case 2:
-                    SubTaskStorage.getSubTaskStorage().setSubTaskFromUserChoice();
+                    SubTaskStorage.setSubTaskFromUserChoice();
+                    break;
                 case 3:
-                    SubTaskStorage.getSubTaskStorage().getSubTasksList();
+                    SubTaskStorage.getSubTasksList();
+                    break;
                 case 4:
-                    SubTaskStorage.getSubTaskStorage().getSubTasksListFromUserChoice();
-                case 5:
-                case 6:
-                case 7:
-                case 8:
+                    SubTaskStorage.getSubTasksListFromUserChoice();
+                    break;
+                case 5: break;
+                case 6: break;
+                case 7: break;
+                case 8: break;
                 case 0:
                     System.out.println("Работа программы завершена!");
                     break;
