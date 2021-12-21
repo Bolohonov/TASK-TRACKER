@@ -16,9 +16,9 @@ public class CommandManager {
                     TaskStorage.getTaskStorage().setTaskStorage();
                     break;
                 case 2:
-                    if (!TaskStorage.tasks.isEmpty()) {
-                        TaskStorage.setSubTaskStorage();
-                    }
+////                    if (!TaskStorage.tasks.isEmpty()) {
+////                        TaskStorage.setSubTaskStorage();
+//                    }
                 case 3:
                 case 4:
                 case 5:
