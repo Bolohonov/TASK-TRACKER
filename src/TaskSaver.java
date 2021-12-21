@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class TaskSaver {
@@ -47,11 +48,12 @@ public class TaskSaver {
 
     public int hashCode(String name, String description) {
         int hash = 17;
+        int random = (int)(Math.random() * 131);
         if (name != null) {
             hash = name.hashCode();
         }
         if (description != null) {
-            hash = hash + description.hashCode();
+            hash = hash + description.hashCode()+random;
         }
         return hash;
     }
