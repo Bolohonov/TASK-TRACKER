@@ -1,35 +1,32 @@
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class TaskSaver {
     String userTask[] = new String[2];
 
-    public void run() {
+    public Task saveTask() {
         saveUserTask();
-        saveTask();
-    }
-
-    private Task saveTask() {
         if (userTask[0].equals(null)) {
             System.out.println("Поле Название должно быть заполнено");
             return null;
         } else {
+            int hash = hashCode(userTask[0], userTask[1]);
+            Task task = new Task(userTask[0], userTask[1], hash,
+                    TaskStatus.NEW, 0);
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Разделить задачу на подзадачи? Введите ");
-            System.out.println("0 - Для сохранения задачи и выхода в меню: ");
-            System.out.println("1 - Для разделения подзадачи: ");
+            System.out.println("Введите: ");
+            System.out.println("0 - Для выхода в меню: ");
+            System.out.println("1 - Для для добавления подзадач: ");
             String answer = scanner.nextLine();
             if (answer.equals("0")) {
-                hashCode(userTask[0], userTask[1]);
-                Task task = new Task(userTask[0], userTask[1], hashCode(userTask[0], userTask[1]),
-                        TaskStatus.NEW, false);
                 return task;
             } else if (answer.equals("1")){
-                saveUserTask();
-                SubTask subTask = new SubTask();
-
-                return null;
+                task.setEpic(1);
+                SubTaskSaver subTaskSaver = new SubTaskSaver();
+                subTaskSaver.saveSubTask(task);
+                return task;
             } else {
-                System.out.println("Введите верное значение (0 или 1)");
+                System.out.println("Вы ввели неврное значение!");
                 return null;
             }
         }

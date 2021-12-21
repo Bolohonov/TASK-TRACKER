@@ -4,12 +4,10 @@ import java.util.LinkedList;
 public class TaskStorage {
 
     public static LinkedList<Task> tasks = new LinkedList<>();
-    public static LinkedList<SubTask> subTasks = new LinkedList<>();
     public static LinkedHashMap<Task, LinkedList<SubTask>> epics = new LinkedHashMap<>();
-
     private static TaskStorage taskStorage;
 
-    private TaskStorage () {
+    TaskStorage () {
     }
 
     public static TaskStorage getTaskStorage() {
@@ -26,6 +24,15 @@ public class TaskStorage {
             tasks.add(taskToSave.saveTask());
         }
     }
+
+    public static LinkedList<Task> getTasks() {
+        return tasks;
+    }
+
+    public static void setTasks(LinkedList<Task> tasks) {
+        TaskStorage.tasks = tasks;
+    }
+
 
 //    public static void setSubTaskStorage() {
 //        TaskToSave taskToSave = new TaskToSave();

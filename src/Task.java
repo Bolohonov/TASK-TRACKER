@@ -1,20 +1,25 @@
 public class Task {
 
-    String name;
-    String description;
-    int hashCode;
-    TaskStatus status;
-    boolean epic;
+    private String name = "";
+    private String description = "";
+    private int id = 0;
+    private TaskStatus status = TaskStatus.NEW;
+    private int epic = 0;
 
-    public Task(String name, String description, int hash, TaskStatus status, boolean epic) {
+    public Task(String name, String description, int id, TaskStatus status, int epic) {
         this.name = name;
         this.description = description;
-        this.hashCode = hash;
+        this.id = id;
         this.status = status;
         this.epic = epic;
     }
 
     public Task() {
+        this.name = "";
+        this.description = "";
+        this.id = 0;
+        this.status = TaskStatus.NEW;
+        this.epic = 0;
     }
 
     public int hashCode(String name, String description) {
@@ -50,11 +55,11 @@ public class Task {
     }
 
     public int getHash() {
-        return hashCode;
+        return id;
     }
 
     public void setHash(int hash) {
-        this.hashCode = hash;
+        this.id = hash;
     }
 
     public TaskStatus getStatus() {
@@ -65,11 +70,21 @@ public class Task {
         this.status = status;
     }
 
-    public boolean isEpic() {
+    public int getEpic() {
         return epic;
     }
 
-    public void setEpic(boolean epic) {
+    public void setEpic(int epic) {
         this.epic = epic;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", ID=" + id +
+                ", status=" + status +
+                '}';
     }
 }
