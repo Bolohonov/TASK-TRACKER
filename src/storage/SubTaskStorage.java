@@ -1,6 +1,5 @@
 package storage;
 
-import services.Print;
 import services.SubTaskInputOutput;
 import services.TaskInputOutput;
 import tasks.SubTask;
@@ -68,7 +67,7 @@ public class SubTaskStorage {
 
     public static SubTask selectUserSubTaskByID() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите задачу по ID: ");
+        System.out.println("Выберите подзадачу по ID: ");
         int id = scanner.nextInt();
 
         SubTask subTask = null;
@@ -76,10 +75,26 @@ public class SubTaskStorage {
             if (taskSelect.getId() == id) {
                 subTask = taskSelect;
             } else {
-                System.out.println("Вы ввели неверный ID задачи");
+                System.out.println("Вы ввели неверный ID подзадачи");
             }
         }
         return subTask;
+    }
+
+    public static int getSubTaskIndex(SubTask subTask) {
+        int index = -1;
+        if (subTask != null) {
+            for (SubTask t : subTasks) {
+                if (t.equals(subTask)) {
+                    index = subTasks.indexOf(t);
+                }
+            }
+        }
+        return index;
+    }
+
+    public static void replaceSubTask(int index, SubTask subTask) {
+        subTasks.set(index, subTask);
     }
 
 }

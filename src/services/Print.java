@@ -3,6 +3,7 @@ package services;
 import storage.TaskStatus;
 import tasks.SubTask;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Print {
@@ -45,6 +46,6 @@ public class Print {
     }
 
     static void printStatusList() {
-        System.out.println(TaskStatus.values());
+        System.out.println(Arrays.toString(TaskStatus.values()));
     }
 }
