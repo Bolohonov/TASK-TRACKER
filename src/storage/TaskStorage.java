@@ -1,25 +1,18 @@
 package storage;
 
-import services.TaskInputOutput;
+import services.Print;
+import services.TaskSaver;
 import tasks.Task;
 
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class TaskStorage {
 
     public static LinkedList<Task> tasks = new LinkedList<>();
-    private static TaskStorage taskStorage;
-
-    public static TaskStorage getTaskStorage() {
-        if (taskStorage == null) {
-            return taskStorage = new TaskStorage();
-        } else {
-            return null;
-        }
-    }
 
     public static void setTaskStorage() {
-        Task task = TaskInputOutput.saveTask();
+        Task task = TaskSaver.saveTask();
         if (task != null) {
             tasks.add(task);
         }
@@ -30,7 +23,7 @@ public class TaskStorage {
     }
 
     public static void removeTask() {
-        Task task = TaskInputOutput.selectUserTaskByID();
+        Task task = selectUserTaskByID();
         if (task != null) {
             SubTaskStorage.removeSubTask(task);
             if (SubTaskStorage.getSubTasksListByTask(task).isEmpty()) {
@@ -53,5 +46,27 @@ public class TaskStorage {
             }
         }
         return index;
+    }
+
+    public static Task selectUserTaskByID() {
+        int id = selectId();
+        Task task = null;
+        for (Task taskSelect : TaskStorage.getTasks()) {
+            if (taskSelect.getId() == id) {
+                task = taskSelect;
+            }
+        }
+        if (task == null) {
+            System.out.println("Вы ввели неверный ID задачи");
+        }
+        return task;
+    }
+
+    public static int selectId() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        Print.printTaskList(TaskStorage.tasks);
+        int id = scanner.nextInt();
+        return id;
     }
 }

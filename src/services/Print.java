@@ -30,11 +30,11 @@ public class Print {
         System.out.println("3 - Для обновления статуса: ");
     }
 
-    static void printTaskList(LinkedList<Task> list) {
+    public static void printTaskList(LinkedList<Task> list) {
         list.forEach((Task task) -> System.out.println(task));
     }
 
-    static void printSubTaskList(LinkedList<SubTask> list) {
+    public static void printSubTaskList(LinkedList<SubTask> list) {
         list.forEach((SubTask subtask) -> System.out.println(subtask));
     }
 
@@ -45,6 +45,10 @@ public class Print {
     static void printSaved() {
         System.out.println("Задача сохранена!");
     }
+    static void printMistake() {
+        System.out.println("Вы ввели неверное значение!");
+    }
+
 
     static void printExit() {
         System.out.println("Работа программы завершена!");
@@ -55,6 +59,8 @@ public class Print {
     }
 
     static void printStatusList() {
-        System.out.println(Arrays.toString(TaskStatus.values()));
+        for (TaskStatus taskStatus : TaskStatus.values()) {
+            System.out.println(taskStatus.getStatus());
+        }
     }
 }

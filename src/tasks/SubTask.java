@@ -25,6 +25,10 @@ public class SubTask extends Task {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "tasks.SubTask{" +
@@ -34,5 +38,23 @@ public class SubTask extends Task {
                 ", id=" + id +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        int random = (int)(Math.random() * 137);
+        if (name != null) {
+            hash = name.hashCode();
+        }
+        if (description != null) {
+            hash = hash + description.hashCode()+random;
+        }
+        return hash;
     }
 }

@@ -1,32 +1,33 @@
 package storage;
 
-import services.SubTaskInputOutput;
-import services.TaskInputOutput;
+import services.Print;
+import services.SubTaskSaver;
 import tasks.SubTask;
 import tasks.Task;
 
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class SubTaskStorage {
 
     private static LinkedList<SubTask> subTasks = new LinkedList<>();
 
     public static void setSubTaskStorage(Task task) {
-        SubTask subTask = SubTaskInputOutput.saveSubTask(task);
+        SubTask subTask = SubTaskSaver.saveSubTask(task);
         if (subTask != null) {
             subTasks.add(subTask);
         }
     }
 
     public static void setSubTaskFromUserSelect() {
-        SubTask subTask = SubTaskInputOutput.saveSubTaskFromUserSelect();
+        SubTask subTask = SubTaskSaver.saveSubTaskFromUserSelect();
         if (subTask != null) {
             subTasks.add(subTask);
         }
     }
 
     public static LinkedList<SubTask> getSubTasksListFromUserSelect() {
-        Task task = TaskInputOutput.selectUserTaskByID();
+        Task task = TaskStorage.selectUserTaskByID();
         LinkedList<SubTask> subTasksListFromSelect = new LinkedList<>();
         if (task != null) {
             for (SubTask subTask : subTasks) {
@@ -73,7 +74,7 @@ public class SubTaskStorage {
     }
 
     public static void removeSubTaskById() {
-        SubTask selectedTask = SubTaskInputOutput.selectUserSubTaskByID();
+        SubTask selectedTask = selectUserSubTaskByID();
         subTasks.remove(selectedTask);
     }
 
@@ -88,6 +89,28 @@ public class SubTaskStorage {
             }
         }
         return index;
+    }
+
+    public static SubTask selectUserSubTaskByID() {
+        int id = selectSubTaskId();
+        SubTask subTask = null;
+        for (SubTask taskSelect : SubTaskStorage.getSubTasksList()) {
+            if (taskSelect.getId() == id) {
+                subTask = taskSelect;
+            }
+        }
+        if (subTask == null) {
+            System.out.println("Вы ввели неверный ID задачи");
+        }
+        return subTask;
+    }
+
+    public static int selectSubTaskId() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        Print.printSubTaskList(getSubTasksList());
+        int id = scanner.nextInt();
+        return id;
     }
 
     public static void replaceSubTask(int index, SubTask subTask) {

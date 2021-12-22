@@ -28,20 +28,22 @@ public class Task {
         this.epic = 0;
     }
 
-    public int hashCode(String name, String description) {
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
         int hash = 17;
+        int random = (int)(Math.random() * 131);
         if (name != null) {
             hash = name.hashCode();
         }
         if (description != null) {
-            hash = hash + description.hashCode();
+            hash = hash + description.hashCode()+random;
         }
         return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
     }
 
     public String getName() {
