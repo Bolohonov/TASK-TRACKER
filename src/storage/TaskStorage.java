@@ -29,10 +29,6 @@ public class TaskStorage {
         return tasks;
     }
 
-    public static void setTasks(LinkedList<Task> tasks) {
-        TaskStorage.tasks = tasks;
-    }
-
     public static void removeTask() {
         Task task = TaskInputOutput.selectUserTaskByID();
         if (task != null) {

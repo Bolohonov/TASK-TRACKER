@@ -47,5 +47,4 @@ public class SubTaskInputOutput {
         int id = scanner.nextInt();
         return id;
     }
-
 }

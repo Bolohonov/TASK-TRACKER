@@ -17,17 +17,6 @@ public class SubTask extends Task {
         this.status = status;
     }
 
-    public int hashCode(String subTaskName, String subTaskDescription) {
-        int hash = 19;
-        if (name != null) {
-            hash = name.hashCode();
-        }
-        if (description != null) {
-            hash = hash + description.hashCode();
-        }
-        return hash;
-    }
-
     public Task getTask() {
         return task;
     }

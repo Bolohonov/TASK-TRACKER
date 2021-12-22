@@ -66,12 +66,21 @@ public class TaskUpdater {
         boolean status = true;
         if (subTask != null) {
             for (SubTask subT : subTaskList) {
-                if (!subT.getStatus().equals("DONE")) {
+                if (!subT.getStatus().equals(TaskStatus.DONE)) {
                     status = false;
                 }
             }
         }
         return status;
+    }
+
+    public static boolean checkStatusInProgressOrDone(SubTask subTask) {
+        Task task = subTask.getTask();
+        if (task.getStatus().equals(TaskStatus.IN_PROGRESS) || task.getStatus().equals(TaskStatus.DONE)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static void updateTaskStatus(Task task, TaskStatus status) {
@@ -123,6 +132,9 @@ public class TaskUpdater {
                     }
                     if (checkStatusAllDone(subTask)) {
                         updateTaskStatus(subTask.getTask(), TaskStatus.DONE);
+                    }
+                    if (status.equals(TaskStatus.IN_PROGRESS) && checkStatusInProgressOrDone(subTask)) {
+                        updateTaskStatus(subTask.getTask(), TaskStatus.IN_PROGRESS);
                     }
                     break;
                 default:
