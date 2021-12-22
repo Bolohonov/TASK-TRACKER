@@ -1,3 +1,5 @@
+package services;
+
 public enum Menu {
 
     ONE("1 - Добавить новую задачу"),

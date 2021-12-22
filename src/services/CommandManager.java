@@ -1,4 +1,9 @@
+package services;
+
 import java.util.Scanner;
+
+import storage.SubTaskStorage;
+import storage.TaskStorage;
 
 public class CommandManager {
 
@@ -8,7 +13,7 @@ public class CommandManager {
         int command = -1;
 
         while (command != 0) {
-            printMenu();
+            Print.printMenu();
             command = scanner.nextInt();
 
             switch (command) {
@@ -16,16 +21,16 @@ public class CommandManager {
                     TaskStorage.setTaskStorage();
                     break;
                 case 2:
-                    SubTaskStorage.setSubTaskFromUserChoice();
+                    SubTaskStorage.setSubTaskFromUserSelect();
                     break;
                 case 3:
-                    SubTaskStorage.getSubTasksList();
+                    Print.printSubTaskList(SubTaskStorage.getSubTasksList());
                     break;
                 case 4:
-                    SubTaskStorage.getSubTasksListFromUserChoice();
+                    Print.printSubTaskList(SubTaskStorage.getSubTasksListFromUserSelect());
                     break;
                 case 5:
-                    SubTaskStorage.getSubTasksListFromUserChoice();
+                    //SubTaskStorage.printSubTasksListFromUserChoice();
                     break;
                 case 6: break;
                 case 7: break;
@@ -39,12 +44,4 @@ public class CommandManager {
             }
         }
     }
-
-    private void printMenu() {
-        System.out.println("Выберите действие: ");
-        for (Menu m : Menu.values()) {
-            System.out.println(m.getMenu());
-        }
-    }
-
 }

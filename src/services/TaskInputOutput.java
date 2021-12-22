@@ -1,7 +1,13 @@
-import java.util.Random;
+package services;
+
+import storage.TaskStorage;
+import storage.SubTaskStorage;
+import storage.TaskStatus;
+import tasks.Task;
+
 import java.util.Scanner;
 
-public class TaskSaver {
+public class TaskInputOutput {
     String userTask[] = new String[2];
     Scanner scanner = new Scanner(System.in);
 
@@ -58,7 +64,7 @@ public class TaskSaver {
         return hash;
     }
 
-    public Task chooseUserTask() {
+    public Task selectUserTaskByID() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
         for (Task task : TaskStorage.getTaskStorage().getTasks()) {
@@ -67,15 +73,17 @@ public class TaskSaver {
         int id = scanner.nextInt();
 
         Task task = null;
-        for (Task taskChoose : TaskStorage.getTaskStorage().getTasks()) {
-            if (taskChoose.getId() == id) {
-                task = taskChoose;
+        for (Task taskSelect : TaskStorage.getTaskStorage().getTasks()) {
+            if (taskSelect.getId() == id) {
+                task = taskSelect;
             } else {
                 System.out.println("Вы ввели неверный ID задачи");
             }
         }
         return task;
     }
+
+
 
     private void printMenuToAddSubTask() {
         System.out.println("Введите: ");

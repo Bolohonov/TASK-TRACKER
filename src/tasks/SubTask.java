@@ -1,3 +1,7 @@
+package tasks;
+
+import storage.TaskStatus;
+
 public class SubTask extends Task {
         Task task;
         String name;
@@ -29,7 +33,7 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "SubTask{" +
+        return "tasks.SubTask{" +
                 "task=" + task.getName() +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

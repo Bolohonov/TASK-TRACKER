@@ -1,6 +1,13 @@
+package services;
+
+import storage.TaskStatus;
+import storage.TaskStorage;
+import tasks.SubTask;
+import tasks.Task;
+
 import java.util.Scanner;
 
-public class SubTaskSaver extends TaskSaver{
+public class SubTaskInputOutput extends TaskInputOutput {
 
     public SubTask saveSubTask(Task task) {
         saveUserTask();
@@ -10,8 +17,8 @@ public class SubTaskSaver extends TaskSaver{
         return subTask;
     }
 
-    public SubTask saveSubTaskFromUserChoice() {
-        Task task = chooseUserTask();
+    public SubTask saveSubTaskFromUserSelect() {
+        Task task = selectUserTaskByID();
         if (task != null) {
             return saveSubTask(task);
         } else {
@@ -19,7 +26,7 @@ public class SubTaskSaver extends TaskSaver{
         }
     }
 
-    public Task chooseUserTask() {
+    public Task selectUserTaskByID() {
         for (Task task : TaskStorage.getTasks()) {
             System.out.println(task.toString());
         }
