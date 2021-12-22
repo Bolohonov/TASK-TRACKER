@@ -6,7 +6,6 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.util.LinkedList;
-import java.util.Scanner;
 
 public class SubTaskStorage {
 
@@ -51,6 +50,19 @@ public class SubTaskStorage {
         return subTasksListByTask;
     }
 
+    public static LinkedList<SubTask> getSubTasksListBySubTask(SubTask subTask) {
+        LinkedList<SubTask> subTasksListBySubTask = new LinkedList<>();
+        Task task = subTask.getTask();
+        if (task != null) {
+            for (SubTask subT : subTasks) {
+                if (subT.getTask().equals(task)) {
+                    subTasksListBySubTask.add(subT);
+                }
+            }
+        }
+        return subTasksListBySubTask;
+    }
+
     public static LinkedList<SubTask> getSubTasksList() {
         return subTasks;
     }
@@ -61,25 +73,10 @@ public class SubTaskStorage {
     }
 
     public static void removeSubTaskById() {
-        SubTask selectedTask = selectUserSubTaskByID();
+        SubTask selectedTask = SubTaskInputOutput.selectUserSubTaskByID();
         subTasks.remove(selectedTask);
     }
 
-    public static SubTask selectUserSubTaskByID() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите подзадачу по ID: ");
-        int id = scanner.nextInt();
-
-        SubTask subTask = null;
-        for (SubTask taskSelect : subTasks) {
-            if (taskSelect.getId() == id) {
-                subTask = taskSelect;
-            } else {
-                System.out.println("Вы ввели неверный ID подзадачи");
-            }
-        }
-        return subTask;
-    }
 
     public static int getSubTaskIndex(SubTask subTask) {
         int index = -1;

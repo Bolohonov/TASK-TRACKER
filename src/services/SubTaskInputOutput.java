@@ -1,8 +1,11 @@
 package services;
 
+import storage.SubTaskStorage;
 import storage.TaskStatus;
 import tasks.SubTask;
 import tasks.Task;
+
+import java.util.Scanner;
 
 public class SubTaskInputOutput {
 
@@ -22,4 +25,26 @@ public class SubTaskInputOutput {
             return null;
         }
     }
+
+    public static SubTask selectUserSubTaskByID() {
+        int id = selectSubTaskId();
+        SubTask subTask = null;
+        for (SubTask taskSelect : SubTaskStorage.getSubTasksList()) {
+            if (taskSelect.getId() == id) {
+                subTask = taskSelect;
+            } else {
+                System.out.println("Вы ввели неверный ID подзадачи");
+            }
+        }
+        return subTask;
+    }
+
+    public static int selectSubTaskId() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        Print.printSubTaskList(SubTaskStorage.getSubTasksList());
+        int id = scanner.nextInt();
+        return id;
+    }
+
 }

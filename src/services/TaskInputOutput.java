@@ -65,12 +65,7 @@ public class TaskInputOutput {
     }
 
     public static Task selectUserTaskByID() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите задачу по ID: ");
-        for (Task task : TaskStorage.getTaskStorage().getTasks()) {
-            System.out.println(task.toString());
-        }
-        int id = scanner.nextInt();
+        int id = selectId();
 
         Task task = null;
         for (Task taskSelect : TaskStorage.getTaskStorage().getTasks()) {
@@ -81,5 +76,13 @@ public class TaskInputOutput {
             }
         }
         return task;
+    }
+
+    public static int selectId() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        Print.printTaskList(TaskStorage.tasks);
+        int id = scanner.nextInt();
+        return id;
     }
 }

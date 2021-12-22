@@ -2,6 +2,7 @@ package services;
 
 import storage.TaskStatus;
 import tasks.SubTask;
+import tasks.Task;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -27,6 +28,10 @@ public class Print {
         System.out.println("1 - Для обновления названия: ");
         System.out.println("2 - Для обновления описания: ");
         System.out.println("3 - Для обновления статуса: ");
+    }
+
+    static void printTaskList(LinkedList<Task> list) {
+        list.forEach((Task task) -> System.out.println(task));
     }
 
     static void printSubTaskList(LinkedList<SubTask> list) {

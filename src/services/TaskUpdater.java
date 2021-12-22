@@ -7,6 +7,7 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class TaskUpdater {
@@ -60,8 +61,27 @@ public class TaskUpdater {
         }
     }
 
+    public static boolean checkStatusAllDone(SubTask subTask) {
+        LinkedList<SubTask> subTaskList = SubTaskStorage.getSubTasksListBySubTask(subTask);
+        boolean status = true;
+        if (subTask != null) {
+            for (SubTask subT : subTaskList) {
+                if (!subT.getStatus().equals("DONE")) {
+                    status = false;
+                }
+            }
+        }
+        return status;
+    }
+
+    public static void updateTaskStatus(Task task, TaskStatus status) {
+        task.setStatus(status);
+        int index = TaskStorage.getTaskIndex(task);
+        TaskStorage.replaceTask(index, task);
+    }
+
     public static void updateSubTask() {
-        SubTask subTask = SubTaskStorage.selectUserSubTaskByID();
+        SubTask subTask = SubTaskInputOutput.selectUserSubTaskByID();
         int index = SubTaskStorage.getSubTaskIndex(subTask);
         int command = -1;
         while (command != 0) {
@@ -100,6 +120,9 @@ public class TaskUpdater {
                         subTask.setStatus(TaskStatus.valueOf(status));
                     } else {
                         System.out.println("Указан неверный статус!");
+                    }
+                    if (checkStatusAllDone(subTask)) {
+                        updateTaskStatus(subTask.getTask(), TaskStatus.DONE);
                     }
                     break;
                 default:
