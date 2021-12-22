@@ -66,14 +66,14 @@ public class TaskInputOutput {
 
     public static Task selectUserTaskByID() {
         int id = selectId();
-
         Task task = null;
         for (Task taskSelect : TaskStorage.getTaskStorage().getTasks()) {
             if (taskSelect.getId() == id) {
                 task = taskSelect;
-            } else {
-                System.out.println("Вы ввели неверный ID задачи");
             }
+        }
+        if (task == null) {
+            System.out.println("Вы ввели неверный ID задачи");
         }
         return task;
     }

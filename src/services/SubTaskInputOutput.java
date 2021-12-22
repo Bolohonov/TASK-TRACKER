@@ -32,9 +32,10 @@ public class SubTaskInputOutput {
         for (SubTask taskSelect : SubTaskStorage.getSubTasksList()) {
             if (taskSelect.getId() == id) {
                 subTask = taskSelect;
-            } else {
-                System.out.println("Вы ввели неверный ID подзадачи");
             }
+        }
+        if (subTask == null) {
+            System.out.println("Вы ввели неверный ID задачи");
         }
         return subTask;
     }
