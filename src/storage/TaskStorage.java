@@ -11,6 +11,8 @@ public class TaskStorage {
     public static LinkedList<Task> tasks = new LinkedList<>();
     private static TaskStorage taskStorage;
 
+    private static TaskStorage TaskStorage;
+
     public static TaskStorage getTaskStorage() {
         if (taskStorage == null) {
             return taskStorage = new TaskStorage();

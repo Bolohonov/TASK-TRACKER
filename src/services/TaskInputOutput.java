@@ -8,12 +8,13 @@ import tasks.Task;
 import java.util.Scanner;
 
 public class TaskInputOutput {
-    String userTask[] = new String[2];
-    Scanner scanner = new Scanner(System.in);
+    static Scanner scanner = new Scanner(System.in);
 
-    public Task saveTask() {
+    private static SubTaskInputOutput TaskIO;
+
+    public static Task saveTask() {
         Task task = null;
-        saveUserTask();
+        String[] userTask = saveUserTask();
         if (!userTask[0].equals(null)) {
             int hash = hashCode(userTask[0], userTask[1]);
             task = new Task(userTask[0], userTask[1], hash,
@@ -21,7 +22,7 @@ public class TaskInputOutput {
             int command = -1;
 
             while (command != 0) {
-                printMenuToAddSubTask();
+                Print.printMenuToAddSubTask();
                 command = scanner.nextInt();
                 switch (command) {
                     case 0:
@@ -43,7 +44,8 @@ public class TaskInputOutput {
         return task;
     }
 
-    public String[] saveUserTask() {
+    public static String[] saveUserTask() {
+        String[] userTask = new String[2];
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите название задачи: ");
         userTask[0] = scanner.nextLine();
@@ -52,7 +54,7 @@ public class TaskInputOutput {
         return userTask;
     }
 
-    public int hashCode(String name, String description) {
+    public static int hashCode(String name, String description) {
         int hash = 17;
         int random = (int)(Math.random() * 131);
         if (name != null) {
@@ -64,7 +66,7 @@ public class TaskInputOutput {
         return hash;
     }
 
-    public Task selectUserTaskByID() {
+    public static Task selectUserTaskByID() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
         for (Task task : TaskStorage.getTaskStorage().getTasks()) {
@@ -81,13 +83,5 @@ public class TaskInputOutput {
             }
         }
         return task;
-    }
-
-
-
-    private void printMenuToAddSubTask() {
-        System.out.println("Введите: ");
-        System.out.println("0 - Для выхода в меню: ");
-        System.out.println("1 - Для для добавления подзадач: ");
     }
 }

@@ -12,12 +12,9 @@ public class SubTaskStorage {
 
     private static SubTaskStorage subTaskStorage;
 
-    private SubTaskStorage () {
-    }
-
     public static void setSubTaskStorage(Task task) {
         SubTaskInputOutput subTaskToSave = new SubTaskInputOutput();
-        SubTask subTask = subTaskToSave.saveSubTask(task);
+        SubTask subTask = SubTaskInputOutput.saveSubTask(task);
         if (subTask != null) {
             subTasks.add(subTask);
         }

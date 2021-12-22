@@ -9,15 +9,17 @@ import java.util.Scanner;
 
 public class SubTaskInputOutput extends TaskInputOutput {
 
-    public SubTask saveSubTask(Task task) {
-        saveUserTask();
+    private static SubTaskInputOutput subTaskIO;
+
+    public static SubTask saveSubTask(Task task) {
+        String[] userTask = saveUserTask();
         int hash = hashCode(userTask[0], userTask[1]);
         SubTask subTask = new SubTask(task, userTask[0], userTask[1], hash,
                 TaskStatus.NEW);
         return subTask;
     }
 
-    public SubTask saveSubTaskFromUserSelect() {
+    public static SubTask saveSubTaskFromUserSelect() {
         Task task = selectUserTaskByID();
         if (task != null) {
             return saveSubTask(task);
@@ -26,7 +28,7 @@ public class SubTaskInputOutput extends TaskInputOutput {
         }
     }
 
-    public Task selectUserTaskByID() {
+    public static Task selectUserTaskByID() {
         for (Task task : TaskStorage.getTasks()) {
             System.out.println(task.toString());
         }
