@@ -30,11 +30,12 @@ public class CommandManager {
                     Print.printSubTaskList(SubTaskStorage.getSubTasksListFromUserSelect());
                     break;
                 case 5:
-                    //SubTaskStorage.printSubTasksListFromUserChoice();
                     break;
                 case 6: break;
                 case 7: break;
-                case 8: break;
+                case 8:
+                    TaskStorage.removeTask();
+                    break;
                 case 0:
                     System.out.println("Работа программы завершена!");
                     break;

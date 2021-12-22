@@ -16,6 +16,7 @@ public class SubTask extends Task {
         this.id = id;
         this.status = status;
     }
+
     public int hashCode(String subTaskName, String subTaskDescription) {
         int hash = 19;
         if (name != null) {

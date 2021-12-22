@@ -1,7 +1,6 @@
 package storage;
 
 import services.TaskInputOutput;
-import tasks.SubTask;
 import tasks.Task;
 
 import java.util.LinkedList;
@@ -10,8 +9,6 @@ public class TaskStorage {
 
     public static LinkedList<Task> tasks = new LinkedList<>();
     private static TaskStorage taskStorage;
-
-    private static TaskStorage TaskStorage;
 
     public static TaskStorage getTaskStorage() {
         if (taskStorage == null) {
@@ -22,8 +19,7 @@ public class TaskStorage {
     }
 
     public static void setTaskStorage() {
-        TaskInputOutput taskToSave = new TaskInputOutput();
-        Task task = taskToSave.saveTask();
+        Task task = TaskInputOutput.saveTask();
         if (task != null) {
             tasks.add(task);
         }
@@ -38,16 +34,28 @@ public class TaskStorage {
     }
 
     public static void removeTask() {
-        TaskInputOutput taskToSave = new TaskInputOutput();
-        Task task = taskToSave.selectUserTaskByID();
-        LinkedList<SubTask> subTaskList = SubTaskStorage.getSubTasksList();
-
+        Task task = TaskInputOutput.selectUserTaskByID();
         if (task != null) {
-            for (SubTask sub : SubTaskStorage.getSubTasksList()) {
-                if (sub.getTask().equals(task)) {
-                    System.out.println(sub);
+            SubTaskStorage.removeSubTask(task);
+            if (SubTaskStorage.getSubTasksListByTask(task).isEmpty()) {
+                TaskStorage.tasks.remove(task);
+            }
+        }
+    }
+
+    public static void replaceTask(int index, Task task) {
+        tasks.set(index, task);
+    }
+
+    public static int getTaskIndex(Task task) {
+        int index = -1;
+        if (task != null) {
+            for (Task t : tasks) {
+                if (t.equals(task)) {
+                    index = tasks.indexOf(t);
                 }
             }
         }
+        return index;
     }
 }

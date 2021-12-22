@@ -6,11 +6,11 @@ import java.util.Objects;
 
 public class Task {
 
-    private String name = "";
-    private String description = "";
-    private int id = 0;
-    private TaskStatus status = TaskStatus.NEW;
-    private int epic = 0;
+    private String name;
+    private String description;
+    private int id;
+    private TaskStatus status;
+    private int epic;
 
     public Task(String name, String description, int id, TaskStatus status, int epic) {
         this.name = name;
@@ -92,10 +92,5 @@ public class Task {
                 ", ID=" + id +
                 ", status=" + status +
                 '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, id, status);
     }
 }

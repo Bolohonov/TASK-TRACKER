@@ -8,13 +8,10 @@ import tasks.Task;
 import java.util.Scanner;
 
 public class TaskInputOutput {
-    static Scanner scanner = new Scanner(System.in);
-
-    private static SubTaskInputOutput TaskIO;
 
     public static Task saveTask() {
         Task task = null;
-        String[] userTask = saveUserTask();
+        String[] userTask = TaskInputOutput.saveUserTask();
         if (!userTask[0].equals(null)) {
             int hash = hashCode(userTask[0], userTask[1]);
             task = new Task(userTask[0], userTask[1], hash,
@@ -23,6 +20,7 @@ public class TaskInputOutput {
 
             while (command != 0) {
                 Print.printMenuToAddSubTask();
+                Scanner scanner = new Scanner(System.in);
                 command = scanner.nextInt();
                 switch (command) {
                     case 0:
@@ -49,7 +47,7 @@ public class TaskInputOutput {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите название задачи: ");
         userTask[0] = scanner.nextLine();
-        System.out.println("Введите описание задачи (можно оставить поле пустым): ");
+        System.out.println("Введите описание задачи: ");
         userTask[1] = scanner.nextLine();
         return userTask;
     }

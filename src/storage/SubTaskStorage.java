@@ -1,6 +1,7 @@
 package storage;
 
 import services.SubTaskInputOutput;
+import services.TaskInputOutput;
 import tasks.SubTask;
 import tasks.Task;
 
@@ -10,10 +11,7 @@ public class SubTaskStorage {
 
     private static LinkedList<SubTask> subTasks = new LinkedList<>();
 
-    private static SubTaskStorage subTaskStorage;
-
     public static void setSubTaskStorage(Task task) {
-        SubTaskInputOutput subTaskToSave = new SubTaskInputOutput();
         SubTask subTask = SubTaskInputOutput.saveSubTask(task);
         if (subTask != null) {
             subTasks.add(subTask);
@@ -21,22 +19,14 @@ public class SubTaskStorage {
     }
 
     public static void setSubTaskFromUserSelect() {
-        SubTaskInputOutput subTaskToSave = new SubTaskInputOutput();
-        SubTask subTask = subTaskToSave.saveSubTaskFromUserSelect();
+        SubTask subTask = SubTaskInputOutput.saveSubTaskFromUserSelect();
         if (subTask != null) {
             subTasks.add(subTask);
         }
     }
 
-    public static void printSubTasksList() {
-        for (SubTask subTask : subTasks) {
-            System.out.println(subTask.toString());
-        }
-    }
-
     public static LinkedList<SubTask> getSubTasksListFromUserSelect() {
-        SubTaskInputOutput selectTask = new SubTaskInputOutput();
-        Task task = selectTask.selectUserTaskByID();
+        Task task = TaskInputOutput.selectUserTaskByID();
         LinkedList<SubTask> subTasksListFromSelect = new LinkedList<>();
         if (task != null) {
             for (SubTask subTask : subTasks) {
@@ -48,7 +38,24 @@ public class SubTaskStorage {
         return subTasksListFromSelect;
     }
 
+    public static LinkedList<SubTask> getSubTasksListByTask(Task task) {
+        LinkedList<SubTask> subTasksListByTask = new LinkedList<>();
+        if (task != null) {
+            for (SubTask subTask : subTasks) {
+                if (subTask.getTask().equals(task)) {
+                    subTasksListByTask.add(subTask);
+                }
+            }
+        }
+        return subTasksListByTask;
+    }
+
     public static LinkedList<SubTask> getSubTasksList() {
         return subTasks;
+    }
+
+    public static void removeSubTask(Task task) {
+        LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(task);
+        subTasks.removeAll(subTasksListByTask);
     }
 }
