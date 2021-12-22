@@ -3,6 +3,7 @@ package services;
 import storage.SubTaskStorage;
 import storage.TaskStatus;
 import storage.TaskStorage;
+import tasks.EpicStatus;
 import tasks.SubTask;
 import tasks.Task;
 
@@ -41,12 +42,24 @@ public class TaskUpdater {
                     TaskStorage.replaceTask(index, task);
                     break;
                 case 3:
-                    task = setStatus(task);
+                    if (!checkEpicStatus(task)) {
+                        task = setStatus(task);
+                    } else {
+                        System.out.println("Статус не подлежит изменению!");
+                    }
                     break;
                 default:
                     Print.printMistake();
                     break;
             }
+        }
+    }
+
+    public static boolean checkEpicStatus(Task task) {
+        if (task.getStatus().equals(EpicStatus.EPIC)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -71,10 +84,10 @@ public class TaskUpdater {
         int statusIndex = scanner.nextInt();
         switch (statusIndex) {
             case 2:
-                task.setStatus(TaskStatus.IN_PROGRESS);
+                updateTaskStatus(task, TaskStatus.IN_PROGRESS);
                 break;
             case 3:
-                task.setStatus(TaskStatus.DONE);
+                updateTaskStatus(task, TaskStatus.DONE);
                 break;
             default:
                 Print.printMistake();
@@ -91,10 +104,10 @@ public class TaskUpdater {
         int statusIndex = scanner.nextInt();
         switch (statusIndex) {
             case 2:
-                subTask.setStatus(TaskStatus.IN_PROGRESS);
+                updateSubTaskStatus(subTask, TaskStatus.IN_PROGRESS);
                 break;
             case 3:
-                subTask.setStatus(TaskStatus.DONE);
+                updateSubTaskStatus(subTask, TaskStatus.DONE);
                 break;
             default:
                 Print.printMistake();
@@ -116,6 +129,18 @@ public class TaskUpdater {
         task.setStatus(status);
         int index = TaskStorage.getTaskIndex(task);
         TaskStorage.replaceTask(index, task);
+    }
+
+    public static void updateEpicStatus(Task task, EpicStatus status) {
+        task.setEpic(status);
+        int index = TaskStorage.getTaskIndex(task);
+        TaskStorage.replaceTask(index, task);
+    }
+
+    public static void updateSubTaskStatus(SubTask subTask, TaskStatus status) {
+        subTask.setStatus(status);
+        int index = SubTaskStorage.getSubTaskIndex(subTask);
+        SubTaskStorage.replaceSubTask(index, subTask);
     }
 
     public static void updateSubTask() {

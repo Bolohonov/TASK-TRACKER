@@ -10,9 +10,9 @@ public class Task {
     private String description;
     private int id;
     private TaskStatus status;
-    private int epic;
+    private EpicStatus epic;
 
-    public Task(String name, String description, int id, TaskStatus status, int epic) {
+    public Task(String name, String description, int id, TaskStatus status, EpicStatus epic) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -25,7 +25,7 @@ public class Task {
         this.description = null;
         this.id = 0;
         this.status = TaskStatus.NEW;
-        this.epic = 0;
+        this.epic = EpicStatus.NOT_EPIC;
     }
 
     @Override
@@ -78,11 +78,11 @@ public class Task {
         this.status = status;
     }
 
-    public int getEpic() {
+    public EpicStatus getEpic() {
         return epic;
     }
 
-    public void setEpic(int epic) {
+    public void setEpic(EpicStatus epic) {
         this.epic = epic;
     }
 

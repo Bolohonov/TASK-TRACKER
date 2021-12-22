@@ -3,6 +3,7 @@ package services;
 import storage.SubTaskStorage;
 import storage.TaskStatus;
 import storage.TaskStorage;
+import tasks.EpicStatus;
 import tasks.SubTask;
 import tasks.Task;
 
@@ -39,7 +40,7 @@ public class SubTaskSaver extends TaskSaver {
                 case 0:
                     break;
                 case 1:
-                    task.setEpic(1);
+                    task.setEpic(EpicStatus.EPIC);
                     SubTaskStorage.setSubTaskStorage(task);
                     task.setStatus(TaskStatus.IN_PROGRESS);
                     break;

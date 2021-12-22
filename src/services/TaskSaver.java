@@ -1,6 +1,7 @@
 package services;
 
 import storage.TaskStatus;
+import tasks.EpicStatus;
 import tasks.Task;
 
 import java.util.Scanner;
@@ -13,7 +14,7 @@ public class TaskSaver {
         if (!userTask[0].equals(null)) {
             int id = 0;
             task = new Task(userTask[0], userTask[1], id,
-                    TaskStatus.NEW, 0);
+                    TaskStatus.NEW, EpicStatus.NOT_EPIC);
             id = task.hashCode();
             task.setId(id);
             task = SubTaskSaver.saveSubTaskFromTask(task);

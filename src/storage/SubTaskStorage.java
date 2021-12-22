@@ -2,6 +2,8 @@ package storage;
 
 import services.Print;
 import services.SubTaskSaver;
+import services.TaskUpdater;
+import tasks.EpicStatus;
 import tasks.SubTask;
 import tasks.Task;
 
@@ -75,7 +77,11 @@ public class SubTaskStorage {
 
     public static void removeSubTaskById() {
         SubTask selectedTask = selectUserSubTaskByID();
+        Task task = selectedTask.getTask();
         subTasks.remove(selectedTask);
+        if (!TaskUpdater.checkEpicStatus(task)) {
+            TaskUpdater.updateEpicStatus(task, EpicStatus.NOT_EPIC);
+        }
     }
 
 
