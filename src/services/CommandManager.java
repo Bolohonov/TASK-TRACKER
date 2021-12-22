@@ -31,19 +31,23 @@ public class CommandManager {
                     break;
                 case 5:
                     break;
-                case 6: break;
+                case 6:
+                    TaskUpdater.updateTask();
+                    break;
                 case 7: break;
                 case 8:
                     TaskStorage.removeTask();
+                    Print.printDeleted();
                     break;
                 case 9:
                     SubTaskStorage.removeSubTaskById();
+                    Print.printDeleted();
                     break;
                 case 0:
-                    System.out.println("Работа программы завершена!");
+                    Print.printExit();
                     break;
                 default:
-                    System.out.println("Извините, такой команды пока нет.");
+                    Print.printNoCommand();
                     break;
             }
         }

@@ -1,5 +1,6 @@
 package services;
 
+import storage.TaskStatus;
 import tasks.SubTask;
 
 import java.util.LinkedList;
@@ -29,5 +30,21 @@ public class Print {
 
     static void printSubTaskList(LinkedList<SubTask> list) {
         list.forEach((SubTask subtask) -> System.out.println(subtask));
+    }
+
+    static void printDeleted() {
+        System.out.println("Задача удалена!");
+    }
+
+    static void printExit() {
+        System.out.println("Работа программы завершена!");
+    }
+
+    static void printNoCommand() {
+        System.out.println("Извините, такой команды пока нет.");
+    }
+
+    static void printStatusList() {
+        System.out.println(TaskStatus.values());
     }
 }
