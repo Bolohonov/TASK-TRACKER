@@ -19,9 +19,11 @@ public class CommandManager {
             switch (command) {
                 case 1:
                     TaskStorage.setTaskStorage();
+                    Print.printSaved();
                     break;
                 case 2:
                     SubTaskStorage.setSubTaskFromUserSelect();
+                    Print.printSaved();
                     break;
                 case 3:
                     Print.printSubTaskList(SubTaskStorage.getSubTasksList());
@@ -34,9 +36,11 @@ public class CommandManager {
                     break;
                 case 6:
                     TaskUpdater.updateTask();
+                    Print.printSaved();
                     break;
                 case 7:
                     TaskUpdater.updateSubTask();
+                    Print.printSaved();
                     break;
                 case 8:
                     TaskStorage.removeTask();

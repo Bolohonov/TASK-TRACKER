@@ -42,6 +42,10 @@ public class Print {
         System.out.println("Задача удалена!");
     }
 
+    static void printSaved() {
+        System.out.println("Задача сохранена!");
+    }
+
     static void printExit() {
         System.out.println("Работа программы завершена!");
     }
