@@ -36,6 +36,9 @@ public class CommandManager {
                 case 8:
                     TaskStorage.removeTask();
                     break;
+                case 9:
+                    SubTaskStorage.removeSubTaskById();
+                    break;
                 case 0:
                     System.out.println("Работа программы завершена!");
                     break;

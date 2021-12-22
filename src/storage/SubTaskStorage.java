@@ -1,11 +1,13 @@
 package storage;
 
+import services.Print;
 import services.SubTaskInputOutput;
 import services.TaskInputOutput;
 import tasks.SubTask;
 import tasks.Task;
 
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class SubTaskStorage {
 
@@ -58,4 +60,26 @@ public class SubTaskStorage {
         LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(task);
         subTasks.removeAll(subTasksListByTask);
     }
+
+    public static void removeSubTaskById() {
+        SubTask selectedTask = selectUserSubTaskByID();
+        subTasks.remove(selectedTask);
+    }
+
+    public static SubTask selectUserSubTaskByID() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        int id = scanner.nextInt();
+
+        SubTask subTask = null;
+        for (SubTask taskSelect : subTasks) {
+            if (taskSelect.getId() == id) {
+                subTask = taskSelect;
+            } else {
+                System.out.println("Вы ввели неверный ID задачи");
+            }
+        }
+        return subTask;
+    }
+
 }

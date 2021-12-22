@@ -32,6 +32,10 @@ public class SubTask extends Task {
         return task;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "tasks.SubTask{" +
