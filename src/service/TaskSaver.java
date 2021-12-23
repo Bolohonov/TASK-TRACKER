@@ -1,7 +1,7 @@
-package services;
+package service;
 
-import storage.TaskStatus;
-import tasks.EpicStatus;
+import repository.TaskStatus;
+import repository.EpicStatus;
 import tasks.Task;
 
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-import services.CommandManager;
+import service.CommandManager;
 
 public class Main {
     public static void main(String[] args) {

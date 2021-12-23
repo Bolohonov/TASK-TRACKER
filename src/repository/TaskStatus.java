@@ -1,4 +1,4 @@
-package storage;
+package repository;
 
 public enum TaskStatus {
     NEW("Статус NEW присваивается при создании задачи"),

@@ -1,9 +1,9 @@
-package services;
+package service;
 
-import storage.SubTaskStorage;
-import storage.TaskStatus;
-import storage.TaskStorage;
-import tasks.EpicStatus;
+import repository.SubTaskStorage;
+import repository.TaskStatus;
+import repository.TaskStorage;
+import repository.EpicStatus;
 import tasks.SubTask;
 import tasks.Task;
 

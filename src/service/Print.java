@@ -1,10 +1,9 @@
-package services;
+package service;
 
-import storage.TaskStatus;
+import repository.TaskStatus;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Print {
@@ -31,11 +30,27 @@ public class Print {
     }
 
     public static void printTaskList(LinkedList<Task> list) {
-        list.forEach((Task task) -> System.out.println(task));
+        if (list.isEmpty()) {
+            System.out.println("Список пуст!");
+        } else {
+            list.forEach((Task task) -> System.out.println(task));
+        }
+    }
+
+    public static void printEpicList(LinkedList<Task> list) {
+        if (list.isEmpty()) {
+            System.out.println("Список пуст!");
+        } else {
+            list.forEach((Task task) -> System.out.println(task));
+        }
     }
 
     public static void printSubTaskList(LinkedList<SubTask> list) {
-        list.forEach((SubTask subtask) -> System.out.println(subtask));
+        if (list.isEmpty()) {
+            System.out.println("Список пуст!");
+        } else {
+            list.forEach((SubTask subtask) -> System.out.println(subtask));
+        }
     }
 
     static void printDeleted() {

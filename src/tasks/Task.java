@@ -1,6 +1,7 @@
 package tasks;
 
-import storage.TaskStatus;
+import repository.EpicStatus;
+import repository.TaskStatus;
 
 public class Task {
 

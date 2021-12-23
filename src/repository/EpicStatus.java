@@ -1,4 +1,4 @@
-package tasks;
+package repository;
 
 public enum EpicStatus {
     EPIC("Статус EPIC - имеются подзадачи"),
@@ -8,9 +8,5 @@ public enum EpicStatus {
 
     EpicStatus(String epicStatus) {
         this.epicStatus = epicStatus;
-    }
-
-    public String getEpicStatus() {
-        return this.epicStatus;
     }
 }

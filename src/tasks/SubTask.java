@@ -1,6 +1,6 @@
 package tasks;
 
-import storage.TaskStatus;
+import repository.TaskStatus;
 
 public class SubTask extends Task {
         Task task;
@@ -21,6 +21,14 @@ public class SubTask extends Task {
         return task;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int hash) {
+        this.id = hash;
+    }
+
     @Override
     public String toString() {
         return "Подзадача{" +
@@ -39,13 +47,12 @@ public class SubTask extends Task {
 
     @Override
     public int hashCode() {
-        int hash = 17;
-        int random = (int)(Math.random() * 137);
+        int hash = 37;
         if (name != null) {
             hash = name.hashCode();
         }
         if (description != null) {
-            hash = hash + description.hashCode()+random;
+            hash = hash + description.hashCode();
         }
         return hash;
     }
