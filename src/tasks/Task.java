@@ -2,8 +2,6 @@ package tasks;
 
 import storage.TaskStatus;
 
-import java.util.Objects;
-
 public class Task {
 
     private String name;
@@ -88,11 +86,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return "tasks.Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
+        return "Задача{" +
+                "Имя='" + name + '\'' +
+                ", Описание='" + description + '\'' +
                 ", ID=" + id +
-                ", status=" + status +
+                ", Статус=" + status +
                 '}';
     }
 }

@@ -21,22 +21,14 @@ public class SubTask extends Task {
         return task;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
-        return "tasks.SubTask{" +
-                "task=" + task.getName() +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
+        return "Подзадача{" +
+                "Имя эпика=" + task.getName() +
+                ", Имя подзадачи='" + name + '\'' +
+                ", Описание='" + description + '\'' +
+                ", ID=" + id +
+                ", Статус=" + status +
                 '}';
     }
 
