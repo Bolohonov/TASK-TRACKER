@@ -6,7 +6,7 @@ import java.util.Scanner;
 import repository.SubTaskStorage;
 import repository.TaskStorage;
 
-//Не сразу увидел слово бэкэнд, поэтому наворотил тут меню (да и вообще много лишнего!
+//Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню (да и вообще много лишнего!).
 // Если нужно сразу переделать, то готов поправить, удалив лишнее!
 
 public class CommandManager {
@@ -58,7 +58,7 @@ public class CommandManager {
                     break;
                 case 5:
                     try {
-                    Print.printSubTaskList(SubTaskStorage.getSubTasksListFromUserSelect());
+                        Print.printSubTaskList(SubTaskStorage.getSubTasksListFromUserSelect());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
@@ -80,7 +80,7 @@ public class CommandManager {
                     break;
                 case 8:
                     try {
-                    TaskStorage.removeAllTasks();
+                        TaskStorage.removeAllTasks();
                     } catch (NullPointerException exp) {
                         System.out.println("В списке не было задач");
                     }
@@ -98,7 +98,7 @@ public class CommandManager {
                     try {
                         SubTaskStorage.removeSubTaskById();
                     } catch (NullPointerException exp) {
-                    System.out.println("Неверный ввод!");
+                        System.out.println("Неверный ввод!");
                     }
                     Print.printDeleted();
                 case 0:

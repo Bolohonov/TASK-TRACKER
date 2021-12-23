@@ -3,11 +3,11 @@ package tasks;
 import repository.TaskStatus;
 
 public class SubTask extends Task {
-        Task task;
-        String name;
-        String description;
-        long id;
-        TaskStatus status;
+    Task task;
+    String name;
+    String description;
+    long id;
+    TaskStatus status;
 
     public SubTask(Task task, String name, String description, long id, TaskStatus status) {
         this.task = task;

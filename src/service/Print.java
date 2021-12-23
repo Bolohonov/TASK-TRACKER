@@ -52,10 +52,10 @@ public class Print {
     static void printSaved() {
         System.out.println("Задача сохранена!");
     }
+
     static void printMistake() {
         System.out.println("Вы ввели неверное значение!");
     }
-
 
     static void printExit() {
         System.out.println("Работа программы завершена!");

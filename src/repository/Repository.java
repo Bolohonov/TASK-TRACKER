@@ -6,7 +6,6 @@ import tasks.Task;
 import java.util.LinkedList;
 
 public class Repository<Object extends Task> {
-
     private LinkedList<Object> tasks = new LinkedList<>();
     Object obj;
 
