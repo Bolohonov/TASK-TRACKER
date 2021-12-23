@@ -4,6 +4,7 @@ import repository.TaskStatus;
 import repository.EpicStatus;
 import tasks.Task;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TaskSaver {
@@ -12,10 +13,10 @@ public class TaskSaver {
         Task task = null;
         String[] userTask = TaskSaver.saveUserTask();
         if (!userTask[0].equals(null)) {
-            int id = 0;
+            long id = 0;
             task = new Task(userTask[0], userTask[1], id,
                     TaskStatus.NEW, EpicStatus.NOT_EPIC);
-            id = task.hashCode();
+            id = task.calcAndCheckId();
             task.setId(id);
             task = SubTaskSaver.saveSubTaskFromTask(task);
         } else {
@@ -27,12 +28,15 @@ public class TaskSaver {
 
     public static String[] saveUserTask() {
         String[] userTask = new String[2];
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите название задачи: ");
-        userTask[0] = scanner.nextLine();
-        System.out.println("Введите описание задачи: ");
-        userTask[1] = scanner.nextLine();
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Введите название задачи: ");
+            userTask[0] = scanner.nextLine();
+            System.out.println("Введите описание задачи: ");
+            userTask[1] = scanner.nextLine();
+        } catch (InputMismatchException exp) {
+            System.out.println("Вы ввели неверное значение!");
+        }
         return userTask;
     }
-
 }

@@ -1,9 +1,13 @@
 package service;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import repository.SubTaskStorage;
 import repository.TaskStorage;
+
+//Не сразу увидел слово бэкэнд, поэтому наворотил тут меню (да и вообще много лишнего!
+// Если нужно сразу переделать, то готов поправить, удалив лишнее!
 
 public class CommandManager {
 
@@ -14,7 +18,12 @@ public class CommandManager {
 
         while (command != 0) {
             Print.printMenu();
-            command = scanner.nextInt();
+            try {
+                command = scanner.nextInt();
+            } catch (InputMismatchException exp) {
+                System.out.println("Вы ввели неверное значение!");
+                command = 0;
+            }
 
             switch (command) {
                 case 1:
@@ -42,7 +51,7 @@ public class CommandManager {
                     break;
                 case 4:
                     try {
-                        Print.printEpicList(TaskStorage.getEpics());
+                        Print.printTaskList(TaskStorage.getEpics());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
@@ -56,14 +65,17 @@ public class CommandManager {
                     break;
                 case 6:
                     try {
-                        TaskStorage.getObjectByInt();
+                        TaskStorage.printObjectByInt();
                     } catch (NullPointerException exp) {
                         System.out.println("Неверный ввод!");
                     }
                     break;
                 case 7:
-                    TaskUpdater.updateTask();
-                    TaskUpdater.updateSubTask();
+                    try {
+                        TaskUpdater.updateObjectByInt();
+                    } catch (NullPointerException exp) {
+                        System.out.println("Неверный ввод!");
+                    }
                     Print.printSaved();
                     break;
                 case 8:
@@ -88,7 +100,6 @@ public class CommandManager {
                     } catch (NullPointerException exp) {
                     System.out.println("Неверный ввод!");
                     }
-                    SubTaskStorage.removeSubTaskById();
                     Print.printDeleted();
                 case 0:
                     Print.printExit();

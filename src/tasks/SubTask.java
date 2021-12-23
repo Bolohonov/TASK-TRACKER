@@ -6,10 +6,10 @@ public class SubTask extends Task {
         Task task;
         String name;
         String description;
-        int id;
+        long id;
         TaskStatus status;
 
-    public SubTask(Task task, String name, String description, int id, TaskStatus status) {
+    public SubTask(Task task, String name, String description, long id, TaskStatus status) {
         this.task = task;
         this.name = name;
         this.description = description;
@@ -21,12 +21,12 @@ public class SubTask extends Task {
         return task;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int hash) {
-        this.id = hash;
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override

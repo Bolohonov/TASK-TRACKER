@@ -6,6 +6,7 @@ import service.TaskUpdater;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -83,7 +84,6 @@ public class SubTaskStorage {
         }
     }
 
-
     public static int getSubTaskIndex(SubTask subTask) {
         int index = -1;
         if (subTask != null) {
@@ -94,6 +94,19 @@ public class SubTaskStorage {
             }
         }
         return index;
+    }
+
+    public static SubTask getSubTaskByID(long id) {
+        SubTask subTask = null;
+        for (SubTask taskSelect : SubTaskStorage.getSubTasksList()) {
+            if (taskSelect.getId() == id) {
+                subTask = taskSelect;
+            }
+        }
+        if (subTask == null) {
+            System.out.println("Вы ввели неверный ID задачи");
+        }
+        return subTask;
     }
 
     public static SubTask selectUserSubTaskByID() {
@@ -114,7 +127,12 @@ public class SubTaskStorage {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
         Print.printSubTaskList(getSubTasksList());
-        int id = scanner.nextInt();
+        int id = 0;
+        try {
+            id = scanner.nextInt();
+        } catch (InputMismatchException exp) {
+            System.out.println("Вы ввели неверное значение!");
+        }
         return id;
     }
 

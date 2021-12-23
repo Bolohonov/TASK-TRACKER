@@ -10,7 +10,7 @@ public class Repository<Object extends Task> {
     private LinkedList<Object> tasks = new LinkedList<>();
     Object obj;
 
-    public Object returnObject(int id) {
+    public Object returnObject(long id) {
         for (Task task : TaskStorage.getTasks()) {
             if (task.getId() == id) {
                 obj = (Object) task;

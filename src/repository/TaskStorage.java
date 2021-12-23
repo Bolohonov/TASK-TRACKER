@@ -2,9 +2,9 @@ package repository;
 
 import service.Print;
 import service.TaskSaver;
-import tasks.SubTask;
 import tasks.Task;
 
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -26,7 +26,7 @@ public class TaskStorage {
     public static LinkedList<Task> getEpics() {
         LinkedList<Task> epicList = new LinkedList<>();
         for (Task task : tasks) {
-            if (task.getStatus().equals(EpicStatus.EPIC)) {
+            if (task.getEpic().equals(EpicStatus.EPIC)) {
                 epicList.add(task);
             }
         }
@@ -64,6 +64,16 @@ public class TaskStorage {
         return index;
     }
 
+    public static Task getTaskByID(long id) {
+        Task task = null;
+        for (Task t : tasks) {
+            if (t.getId() == id) {
+                task = t;
+            }
+        }
+        return task;
+    }
+
     public static Task selectUserTaskByID() {
         int id = selectId();
         Task task = null;
@@ -82,11 +92,17 @@ public class TaskStorage {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
         Print.printTaskList(TaskStorage.tasks);
-        int id = scanner.nextInt();
+        int id = 0;
+        try {
+            id = scanner.nextInt();
+        } catch (InputMismatchException exp) {
+            System.out.println("Вы ввели неверное значение!");
+        }
+
         return id;
     }
 
-    public static void getObjectByInt() {
+    public static void printObjectByInt() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
         int id = scanner.nextInt();

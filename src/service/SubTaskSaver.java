@@ -7,16 +7,17 @@ import repository.EpicStatus;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SubTaskSaver extends TaskSaver {
 
     public static SubTask saveSubTask(Task task) {
         String[] userTask = saveUserTask();
-        int id = 0;
+        long id = 0;
         SubTask subTask = new SubTask(task, userTask[0], userTask[1], id,
                 TaskStatus.NEW);
-        id = subTask.hashCode();
+        id = subTask.calcAndCheckId();
         subTask.setId(id);
         return subTask;
     }
@@ -35,7 +36,12 @@ public class SubTaskSaver extends TaskSaver {
         while (command != 0) {
             Print.printMenuToAddSubTask();
             Scanner scanner = new Scanner(System.in);
-            command = scanner.nextInt();
+            try {
+                command = scanner.nextInt();
+            } catch (InputMismatchException exp) {
+                System.out.println("Вы ввели неверное значение!");
+                command = 0;
+            }
             switch (command) {
                 case 0:
                     break;

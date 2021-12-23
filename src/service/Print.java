@@ -37,14 +37,6 @@ public class Print {
         }
     }
 
-    public static void printEpicList(LinkedList<Task> list) {
-        if (list.isEmpty()) {
-            System.out.println("Список пуст!");
-        } else {
-            list.forEach((Task task) -> System.out.println(task));
-        }
-    }
-
     public static void printSubTaskList(LinkedList<SubTask> list) {
         if (list.isEmpty()) {
             System.out.println("Список пуст!");

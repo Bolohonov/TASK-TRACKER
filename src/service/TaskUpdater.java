@@ -1,62 +1,17 @@
 package service;
 
-import repository.SubTaskStorage;
-import repository.TaskStatus;
-import repository.TaskStorage;
-import repository.EpicStatus;
+import repository.*;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class TaskUpdater {
 
-    public static void updateTask() {
-        Task task = TaskStorage.selectUserTaskByID();
-        int index = TaskStorage.getTaskIndex(task);
-        int command = -1;
-        while (command != 0) {
-            Print.printMenuToUpdateTask();
-            Scanner scanner = new Scanner(System.in);
-            command = scanner.nextInt();
-            switch (command) {
-                case 0:
-                    break;
-                case 1:
-                    System.out.println("Введите новое название задачи");
-                    scanner = new Scanner(System.in);
-                    String name = scanner.nextLine();
-                    if (name != null) {
-                        task.setName(name);
-                    }
-                    TaskStorage.replaceTask(index, task);
-                    break;
-                case 2:
-                    System.out.println("Введите новое описание задачи");
-                    scanner = new Scanner(System.in);
-                    String description = scanner.nextLine();
-                    if (description != null) {
-                        task.setDescription(description);
-                    }
-                    TaskStorage.replaceTask(index, task);
-                    break;
-                case 3:
-                    if (!checkEpicStatus(task)) {
-                        task = setStatus(task);
-                    } else {
-                        System.out.println("Статус не подлежит изменению!");
-                    }
-                    break;
-                default:
-                    Print.printMistake();
-                    break;
-            }
-        }
-    }
-
     public static boolean checkEpicStatus(Task task) {
-        if (task.getStatus().equals(EpicStatus.EPIC)) {
+        if (task.getEpic().equals(EpicStatus.EPIC)) {
             return true;
         } else {
             return false;
@@ -81,7 +36,13 @@ public class TaskUpdater {
         System.out.println("Выберите статус");
         Print.printStatusList();
         Scanner scanner = new Scanner(System.in);
-        int statusIndex = scanner.nextInt();
+        int statusIndex = 0;
+        try {
+            statusIndex = scanner.nextInt();
+        } catch (InputMismatchException exp) {
+            System.out.println("Вы ввели неверное значение!");
+            statusIndex = 0;
+        }
         switch (statusIndex) {
             case 2:
                 updateTaskStatus(task, TaskStatus.IN_PROGRESS);
@@ -143,8 +104,25 @@ public class TaskUpdater {
         SubTaskStorage.replaceSubTask(index, subTask);
     }
 
-    public static void updateSubTask() {
-        SubTask subTask = SubTaskStorage.selectUserSubTaskByID();
+    public static void updateObjectByInt() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        int id = 0;
+        try {
+            id = scanner.nextInt();
+        } catch (NullPointerException exp) {
+            System.out.println("Список был пуст!");
+        }
+        Repository rep = new Repository();
+        if (rep.returnObject(id) instanceof SubTask) {
+            updateSubTaskById(id);
+        } else {
+            updateTaskById(id);
+        }
+    }
+
+    public static void updateSubTaskById(long id) {
+        SubTask subTask = SubTaskStorage.getSubTaskByID(id);
         int index = SubTaskStorage.getSubTaskIndex(subTask);
         int command = -1;
         while (command != 0) {
@@ -180,6 +158,54 @@ public class TaskUpdater {
                     if (subTask.getStatus().equals(TaskStatus.IN_PROGRESS)
                             && checkStatusInProgressOrDone(subTask)) {
                         updateTaskStatus(subTask.getTask(), TaskStatus.IN_PROGRESS);
+                    }
+                    break;
+                default:
+                    Print.printMistake();
+                    break;
+            }
+        }
+    }
+
+    public static void updateTaskById(int id) {
+        Task task = TaskStorage.getTaskByID(id);
+        int index = TaskStorage.getTaskIndex(task);
+        int command = -1;
+        while (command != 0) {
+            Print.printMenuToUpdateTask();
+            Scanner scanner = new Scanner(System.in);
+            try {
+                command = scanner.nextInt();
+            } catch (InputMismatchException exp) {
+                System.out.println("Вы ввели неверное значение!");
+                command = 0;
+            }
+            switch (command) {
+                case 0:
+                    break;
+                case 1:
+                    System.out.println("Введите новое название задачи");
+                    scanner = new Scanner(System.in);
+                    String name = scanner.nextLine();
+                    if (name != null) {
+                        task.setName(name);
+                    }
+                    TaskStorage.replaceTask(index, task);
+                    break;
+                case 2:
+                    System.out.println("Введите новое описание задачи");
+                    scanner = new Scanner(System.in);
+                    String description = scanner.nextLine();
+                    if (description != null) {
+                        task.setDescription(description);
+                    }
+                    TaskStorage.replaceTask(index, task);
+                    break;
+                case 3:
+                    if (!checkEpicStatus(task)) {
+                        task = setStatus(task);
+                    } else {
+                        System.out.println("Статус не подлежит изменению!");
                     }
                     break;
                 default:

@@ -1,17 +1,18 @@
 package tasks;
 
 import repository.EpicStatus;
+import repository.Repository;
 import repository.TaskStatus;
 
 public class Task {
 
     private String name;
     private String description;
-    private int id;
+    private long id;
     private TaskStatus status;
     private EpicStatus epic;
 
-    public Task(String name, String description, int id, TaskStatus status, EpicStatus epic) {
+    public Task(String name, String description, long id, TaskStatus status, EpicStatus epic) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -61,12 +62,12 @@ public class Task {
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int hash) {
-        this.id = hash;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public TaskStatus getStatus() {
@@ -93,5 +94,15 @@ public class Task {
                 ", ID=" + id +
                 ", Статус=" + status +
                 '}';
+    }
+
+    public long calcAndCheckId() {
+        long id = (long)(Math.random()*17+Math.random()*137);
+        Repository rep = new Repository();
+        if (rep.returnObject(id) == null) {
+        } else {
+            calcAndCheckId();
+        }
+        return id;
     }
 }
