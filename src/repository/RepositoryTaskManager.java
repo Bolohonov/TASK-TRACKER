@@ -1,5 +1,9 @@
 package repository;
 
+import service.EpicTaskSaver;
+import service.Scan;
+import service.SubTaskSaver;
+import service.TaskSaver;
 import tasks.Task;
 import tasks.EpicTask;
 import tasks.SubTask;
@@ -22,6 +26,17 @@ public class RepositoryTaskManager<T extends Task> {
         this.obj = obj;
     }
 
+    public void saveFromCommand() {
+        int command = Scan.selectTaskTypeFromUser();
+        if (command == 1) {
+            TaskSaver.createTask();
+        } else if (command == 2){
+            EpicTaskSaver.createTask();
+        } else if (command == 3) {
+            SubTaskSaver.createTask();
+        }
+    }
+
     public T returnObject(long id) {
         for (SingleTask singleTask : TaskRepository.getTasks()) {
             if (singleTask.getId() == id) {
@@ -39,6 +54,14 @@ public class RepositoryTaskManager<T extends Task> {
             }
         }
         return obj;
+    }
+
+    public static void printTaskList(LinkedList<T> list) {
+        if (list.isEmpty()) {
+            System.out.println("Список пуст!");
+        } else {
+            list.forEach((T task) -> System.out.println(task));
+        }
     }
 
     public void setObjectToRepository(T obj) {

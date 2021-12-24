@@ -1,12 +1,13 @@
 package service;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import repository.EpicTaskRepository;
+import repository.RepositoryTaskManager;
 import repository.SubTaskRepository;
 import repository.TaskRepository;
 
-//Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню (да и вообще много лишнего!).
+//Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню.
 // Если нужно сразу переделать, то готов поправить, удалив лишнее!
 
 public class CommandManager {
@@ -18,7 +19,7 @@ public class CommandManager {
 
         while (command != 0) {
             Print.printMenu();
-            command = Scan.getScanOrZero();
+            command = Scan.getScanIntCommandOrZero();
 
             switch (command) {
                 case 1:
@@ -46,21 +47,21 @@ public class CommandManager {
                     break;
                 case 3:
                     try {
-                        Print.printSubTaskList(SubTaskRepository.getSubTasksList());
+                        RepositoryTaskManager.printTaskList(SubTaskRepository.getSubTasksList());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 4:
                     try {
-                        Print.printTaskList(TaskRepository.getEpics());
+                        RepositoryTaskManager.printTaskList(EpicTaskRepository.getTasks());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 5:
                     try {
-                        Print.printSubTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
+                        RepositoryTaskManager.printTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }

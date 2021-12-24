@@ -1,11 +1,14 @@
 package service;
 
+import repository.EpicTaskRepository;
+import repository.RepositoryTaskManager;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Scan {
 
-    public static int getScanOrZero() {
+    public static int getScanIntCommandOrZero() {
         Scanner scanner;
         int command;
         scanner = new java.util.Scanner(System.in);
@@ -16,6 +19,11 @@ public class Scan {
             command = 0;
         }
         return command;
+    }
+
+    public static int selectTaskTypeFromUser() {
+        Print.printMenuToSaveTask();
+        return Scan.getScanIntCommandOrZero();
     }
 
     public static String[] saveLinesFromUser() {
@@ -30,5 +38,13 @@ public class Scan {
             System.out.println("Вы ввели неверное значение!");
         }
         return userTask;
+    }
+
+    public static int selectId() {
+        System.out.println("Выберите задачу по ID: ");
+        RepositoryTaskManager.printTaskList(EpicTaskRepository.epicTasks);
+        int id = getScanIntCommandOrZero();
+
+        return id;
     }
 }

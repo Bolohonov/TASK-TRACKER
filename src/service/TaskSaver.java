@@ -1,31 +1,13 @@
 package service;
 
 import repository.TaskStatus;
-import repository.EpicStatus;
 import tasks.SingleTask;
-
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import tasks.Task;
 
 public class TaskSaver extends TaskFactory{
 
-    public static int selectType() {
-        Print.printMenuToSaveTask();
-        return Scan.getScanOrZero();
-    }
-
-    public static void saveFromCommand() {
-        int command = selectType();
-        if (command == 1) {
-            TaskSaver.createTask();
-        } else if (command == 2){
-            EpicTaskSaver.saveUserTask();
-
-        }
-    }
-
     @Override
-    public static SingleTask createTask() {
+    public Task createTask() {
         SingleTask singleTask = null;
         String[] userTask = Scan.saveLinesFromUser();
         if (!userTask[0].equals(null)) {

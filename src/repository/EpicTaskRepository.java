@@ -1,7 +1,6 @@
 package repository;
 
 import service.EpicTaskSaver;
-import service.Print;
 import tasks.EpicTask;
 import tasks.SingleTask;
 
@@ -24,22 +23,12 @@ public class EpicTaskRepository {
         return epicTasks;
     }
 
-    public static LinkedList<SingleTask> getEpics() {
-        LinkedList<SingleTask> epicList = new LinkedList<>();
-        for (SingleTask singleTask : tasks) {
-            if (singleTask.getEpic().equals(EpicStatus.EPIC)) {
-                epicList.add(singleTask);
-            }
-        }
-        return epicList;
-    }
-
     public static void removeTask() {
         SingleTask singleTask = selectUserTaskByID();
         if (singleTask != null) {
             SubTaskRepository.removeSubTask(singleTask);
             if (SubTaskRepository.getSubTasksListByTask(singleTask).isEmpty()) {
-                EpicTaskRepository.tasks.remove(singleTask);
+                EpicTaskRepository.epicTask.remove(singleTask);
             }
         }
     }
@@ -49,16 +38,16 @@ public class EpicTaskRepository {
         EpicTaskRepository.getTasks().clear();
     }
 
-    public static void replaceTask(int index, SingleTask singleTask) {
-        tasks.set(index, singleTask);
+    public static void replaceTask(int index, EpicTask epicTask) {
+        epicTasks.set(index, epicTask);
     }
 
-    public static int getTaskIndex(SingleTask singleTask) {
+    public static int getTaskIndex(EpicTask epicTask) {
         int index = -1;
-        if (singleTask != null) {
-            for (SingleTask t : tasks) {
-                if (t.equals(singleTask)) {
-                    index = tasks.indexOf(t);
+        if (epicTask != null) {
+            for (EpicTask et : epicTasks) {
+                if (et.equals(epicTask)) {
+                    index = epicTask.indexOf(et);
                 }
             }
         }
@@ -80,30 +69,16 @@ public class EpicTaskRepository {
 
     public static SingleTask selectUserTaskByID() {
         int id = selectId();
-        SingleTask singleTask = null;
-        for (SingleTask singleTaskSelect : EpicTaskRepository.getTasks()) {
-            if (singleTaskSelect.getId() == id) {
-                singleTask = singleTaskSelect;
+        EpicTask epicTask = null;
+        for (EpicTask epicTaskSelect : EpicTaskRepository.getTasks()) {
+            if (epicTaskSelect.getId() == id) {
+                epicTaskSelect = epicTaskSelect;
             }
         }
         if (singleTask == null) {
             System.out.println("Вы ввели неверный ID задачи");
         }
         return singleTask;
-    }
-
-    public static int selectId() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите задачу по ID: ");
-        Print.printTaskList(EpicTaskRepository.tasks);
-        int id = 0;
-        try {
-            id = scanner.nextInt();
-        } catch (InputMismatchException exp) {
-            System.out.println("Вы ввели неверное значение!");
-        }
-
-        return id;
     }
 
     public static void printObjectById() {

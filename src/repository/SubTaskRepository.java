@@ -15,7 +15,7 @@ public class SubTaskRepository {
     private static LinkedList<SubTask> subTasks = new LinkedList<>();
 
     public static void setSubTaskStorage(EpicTask epicTask) {
-        SubTask subTask = SubTaskSaver.createSubTask(epicTask);
+        SubTask subTask = SubTaskSaver.createTask(epicTask);
         if (subTask != null) {
             subTasks.add(subTask);
         }

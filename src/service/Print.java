@@ -1,6 +1,7 @@
 package service;
 
 import repository.TaskStatus;
+import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
 
@@ -35,22 +36,6 @@ public class Print {
         System.out.println("1 - Для обновления названия: ");
         System.out.println("2 - Для обновления описания: ");
         System.out.println("3 - Для обновления статуса: ");
-    }
-
-    public static void printTaskList(LinkedList<SingleTask> list) {
-        if (list.isEmpty()) {
-            System.out.println("Список пуст!");
-        } else {
-            list.forEach((SingleTask singleTask) -> System.out.println(singleTask));
-        }
-    }
-
-    public static void printSubTaskList(LinkedList<SubTask> list) {
-        if (list.isEmpty()) {
-            System.out.println("Список пуст!");
-        } else {
-            list.forEach((SubTask subtask) -> System.out.println(subtask));
-        }
     }
 
     static void printDeleted() {

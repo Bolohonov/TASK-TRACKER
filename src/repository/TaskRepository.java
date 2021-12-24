@@ -1,6 +1,5 @@
 package repository;
 
-import service.Print;
 import service.TaskSaver;
 import tasks.SingleTask;
 
@@ -94,7 +93,7 @@ public class TaskRepository {
     public static int selectId() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
-        Print.printTaskList(TaskRepository.singleTasks);
+        RepositoryTaskManager.printTaskList(TaskRepository.singleTasks);
         int id = 0;
         try {
             id = scanner.nextInt();
