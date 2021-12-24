@@ -11,7 +11,7 @@ public class TaskRepository extends Repository{
 
     private TaskFactory taskFactory = new SingleTaskFactory();
 
-    private static HashMap<Long, ArrayList<SingleTask>> singleTasks = new HashMap<>();
+    private static HashMap<Long, SingleTask> singleTasks = new HashMap<>();
 
     public static void setTaskStorage() {
         SingleTask singleTask = taskFactory.createTask();
@@ -20,11 +20,11 @@ public class TaskRepository extends Repository{
         }
     }
 
-    public static HashMap<Long, ArrayList<SingleTask>> getTasks() {
+    public static HashMap<Long, SingleTask> getTasks() {
         return singleTasks;
     }
 
-    public static LinkedList<SingleTask> getEpics() {
+    public static HashMap<SingleTask> getEpics() {
         LinkedList<SingleTask> epicList = new LinkedList<>();
         for (SingleTask singleTask : singleTasks) {
             if (singleTask.getEpic().equals(EpicStatus.EPIC)) {

@@ -1,19 +1,22 @@
 package repository;
 
-import tasks.EpicTask;
-import tasks.SubTask;
 import tasks.Task;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public abstract class Repository {
 
-    private HashMap<Long, ArrayList<Task>> tasks;
+    private static HashMap<Long, Task> tasks;
 
-    public HashMap<Long, ArrayList<Task>> getTasks() {
+    public HashMap<Long, Task> getTasks() {
         return tasks;
+    }
+    public Task getTaskById(Long id) {
+        return tasks.get(id);
+    }
+
+    public void setTask(Task task) {
+        tasks.put(task.getId(), task);
     }
 
 }

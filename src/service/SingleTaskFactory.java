@@ -7,15 +7,12 @@ import tasks.Task;
 public class SingleTaskFactory extends TaskFactory{
 
     private static Task singleTask;
-
     @Override
     public Task createTask() {
         if (!Scan.getLinesFromUser()[0].equals(null)) {
-            long id = 0;
-            singleTask = new SingleTask(Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], id,
+            singleTask = new SingleTask(Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], 0,
                     TaskStatus.NEW);
-            id = singleTask.calcAndCheckId();
-            singleTask.setId(id);
+            singleTask.setId(singleTask.calcAndCheckId());
         } else {
             System.out.println("Поле Название должно быть заполнено");
             return singleTask;
