@@ -1,24 +1,26 @@
 package repository;
 
 import service.SingleTaskFactory;
+import service.TaskFactory;
 import tasks.SingleTask;
+import tasks.Task;
 
-import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
-public class TaskRepository {
+public class TaskRepository extends Repository{
 
-    private static LinkedList<SingleTask> singleTasks = new LinkedList<>();
+    private TaskFactory taskFactory = new SingleTaskFactory();
+
+    private static HashMap<Long, ArrayList<SingleTask>> singleTasks = new HashMap<>();
 
     public static void setTaskStorage() {
-        SingleTask singleTask = SingleTaskFactory.createTask();
+        SingleTask singleTask = taskFactory.createTask();
         if (singleTask != null) {
             singleTasks.add(singleTask);
         }
     }
 
-    public static LinkedList<SingleTask> getTasks() {
+    public static HashMap<Long, ArrayList<SingleTask>> getTasks() {
         return singleTasks;
     }
 

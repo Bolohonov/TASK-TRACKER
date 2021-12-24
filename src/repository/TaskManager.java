@@ -39,6 +39,7 @@ public class TaskManager<T extends Task> {
         }
     }
 
+
     public T returnObject(long id) {
         for (SingleTask singleTask : TaskRepository.getTasks()) {
             if (singleTask.getId() == id) {
@@ -58,7 +59,7 @@ public class TaskManager<T extends Task> {
         return obj;
     }
 
-    public static void printTaskList(LinkedList<T> list) {
+    public void printTaskList(LinkedList<T> list) {
         if (list.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
