@@ -3,8 +3,8 @@ package service;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import repository.SubTaskStorage;
-import repository.TaskStorage;
+import repository.SubTaskRepository;
+import repository.TaskRepository;
 
 //Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню (да и вообще много лишнего!).
 // Если нужно сразу переделать, то готов поправить, удалив лишнее!
@@ -28,7 +28,7 @@ public class CommandManager {
             switch (command) {
                 case 1:
                     try {
-                        TaskStorage.setTaskStorage();
+                        TaskRepository.setTaskStorage();
                         Print.printSaved();
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
@@ -36,7 +36,7 @@ public class CommandManager {
                     break;
                 case 2:
                     try {
-                        SubTaskStorage.setSubTaskFromUserSelect();
+                        SubTaskRepository.setSubTaskFromUserSelect();
                         Print.printSaved();
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
@@ -44,28 +44,28 @@ public class CommandManager {
                     break;
                 case 3:
                     try {
-                        Print.printSubTaskList(SubTaskStorage.getSubTasksList());
+                        Print.printSubTaskList(SubTaskRepository.getSubTasksList());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 4:
                     try {
-                        Print.printTaskList(TaskStorage.getEpics());
+                        Print.printTaskList(TaskRepository.getEpics());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 5:
                     try {
-                        Print.printSubTaskList(SubTaskStorage.getSubTasksListFromUserSelect());
+                        Print.printSubTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 6:
                     try {
-                        TaskStorage.printObjectById();
+                        TaskRepository.printObjectById();
                     } catch (NullPointerException exp) {
                         System.out.println("Неверный ввод!");
                     }
@@ -80,7 +80,7 @@ public class CommandManager {
                     break;
                 case 8:
                     try {
-                        TaskStorage.removeAllTasks();
+                        TaskRepository.removeAllTasks();
                     } catch (NullPointerException exp) {
                         System.out.println("В списке не было задач");
                     }
@@ -88,7 +88,7 @@ public class CommandManager {
                     break;
                 case 9:
                     try {
-                        TaskStorage.removeTask();
+                        TaskRepository.removeTask();
                     } catch (NullPointerException exp) {
                         System.out.println("Неверный ввод!");
                     }
@@ -96,7 +96,7 @@ public class CommandManager {
                     break;
                 case 10:
                     try {
-                        SubTaskStorage.removeSubTaskById();
+                        SubTaskRepository.removeSubTaskById();
                     } catch (NullPointerException exp) {
                         System.out.println("Неверный ввод!");
                     }

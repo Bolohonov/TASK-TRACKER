@@ -19,7 +19,7 @@ public class TaskUpdater {
     }
 
     public static boolean checkStatusAllDone(SubTask subTask) {
-        LinkedList<SubTask> subTaskList = SubTaskStorage.getSubTasksListBySubTask(subTask);
+        LinkedList<SubTask> subTaskList = SubTaskRepository.getSubTasksListBySubTask(subTask);
         boolean status = true;
         if (subTask != null) {
             for (SubTask subT : subTaskList) {
@@ -88,20 +88,20 @@ public class TaskUpdater {
 
     public static void updateTaskStatus(Task task, TaskStatus status) {
         task.setStatus(status);
-        int index = TaskStorage.getTaskIndex(task);
-        TaskStorage.replaceTask(index, task);
+        int index = TaskRepository.getTaskIndex(task);
+        TaskRepository.replaceTask(index, task);
     }
 
     public static void updateEpicStatus(Task task, EpicStatus status) {
         task.setEpic(status);
-        int index = TaskStorage.getTaskIndex(task);
-        TaskStorage.replaceTask(index, task);
+        int index = TaskRepository.getTaskIndex(task);
+        TaskRepository.replaceTask(index, task);
     }
 
     public static void updateSubTaskStatus(SubTask subTask, TaskStatus status) {
         subTask.setStatus(status);
-        int index = SubTaskStorage.getSubTaskIndex(subTask);
-        SubTaskStorage.replaceSubTask(index, subTask);
+        int index = SubTaskRepository.getSubTaskIndex(subTask);
+        SubTaskRepository.replaceSubTask(index, subTask);
     }
 
     public static void updateObjectByInt() {
@@ -113,7 +113,7 @@ public class TaskUpdater {
         } catch (NullPointerException exp) {
             System.out.println("Список был пуст!");
         }
-        Repository rep = new Repository();
+        RepositoryTaskManager rep = new RepositoryTaskManager();
         if (rep.returnObject(id) instanceof SubTask) {
             updateSubTaskById(id);
         } else {
@@ -122,8 +122,8 @@ public class TaskUpdater {
     }
 
     public static void updateSubTaskById(long id) {
-        SubTask subTask = SubTaskStorage.getSubTaskByID(id);
-        int index = SubTaskStorage.getSubTaskIndex(subTask);
+        SubTask subTask = SubTaskRepository.getSubTaskByID(id);
+        int index = SubTaskRepository.getSubTaskIndex(subTask);
         int command = -1;
         while (command != 0) {
             Print.printMenuToUpdateTask();
@@ -139,7 +139,7 @@ public class TaskUpdater {
                     if (name != null) {
                         subTask.setName(name);
                     }
-                    SubTaskStorage.replaceSubTask(index, subTask);
+                    SubTaskRepository.replaceSubTask(index, subTask);
                     break;
                 case 2:
                     System.out.println("Введите новое описание подзадачи");
@@ -148,7 +148,7 @@ public class TaskUpdater {
                     if (description != null) {
                         subTask.setDescription(description);
                     }
-                    TaskStorage.replaceTask(index, subTask);
+                    TaskRepository.replaceTask(index, subTask);
                     break;
                 case 3:
                     subTask = setStatus(subTask);
@@ -168,8 +168,8 @@ public class TaskUpdater {
     }
 
     public static void updateTaskById(int id) {
-        Task task = TaskStorage.getTaskByID(id);
-        int index = TaskStorage.getTaskIndex(task);
+        Task task = TaskRepository.getTaskByID(id);
+        int index = TaskRepository.getTaskIndex(task);
         int command = -1;
         while (command != 0) {
             Print.printMenuToUpdateTask();
@@ -190,7 +190,7 @@ public class TaskUpdater {
                     if (name != null) {
                         task.setName(name);
                     }
-                    TaskStorage.replaceTask(index, task);
+                    TaskRepository.replaceTask(index, task);
                     break;
                 case 2:
                     System.out.println("Введите новое описание задачи");
@@ -199,7 +199,7 @@ public class TaskUpdater {
                     if (description != null) {
                         task.setDescription(description);
                     }
-                    TaskStorage.replaceTask(index, task);
+                    TaskRepository.replaceTask(index, task);
                     break;
                 case 3:
                     if (!checkEpicStatus(task)) {

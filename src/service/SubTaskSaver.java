@@ -1,8 +1,8 @@
 package service;
 
-import repository.SubTaskStorage;
+import repository.SubTaskRepository;
 import repository.TaskStatus;
-import repository.TaskStorage;
+import repository.TaskRepository;
 import repository.EpicStatus;
 import tasks.SubTask;
 import tasks.Task;
@@ -23,7 +23,7 @@ public class SubTaskSaver extends TaskSaver {
     }
 
     public static SubTask saveSubTaskFromUserSelect() {
-        Task task = TaskStorage.selectUserTaskByID();
+        Task task = TaskRepository.selectUserTaskByID();
         if (task != null) {
             return saveSubTask(task);
         } else {
@@ -47,7 +47,7 @@ public class SubTaskSaver extends TaskSaver {
                     break;
                 case 1:
                     task.setEpic(EpicStatus.EPIC);
-                    SubTaskStorage.setSubTaskStorage(task);
+                    SubTaskRepository.setSubTaskStorage(task);
                     task.setStatus(TaskStatus.IN_PROGRESS);
                     break;
                 default:

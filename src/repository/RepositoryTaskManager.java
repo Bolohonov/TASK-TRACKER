@@ -5,25 +5,28 @@ import tasks.Task;
 
 import java.util.LinkedList;
 
-public class Repository<T extends Task> {
+public class RepositoryTaskManager<T extends Task> {
+
     private LinkedList<T> tasks = new LinkedList<>();
-    Repository<T> repository;
+
+    RepositoryTaskManager<T> repositoryTaskManager;
+
     T obj;
 
-    public Repository() {
+    public RepositoryTaskManager() {
     }
 
-    public Repository(T obj) {
+    public RepositoryTaskManager(T obj) {
         this.obj = obj;
     }
 
     public T returnObject(long id) {
-        for (Task task : TaskStorage.getTasks()) {
+        for (Task task : TaskRepository.getTasks()) {
             if (task.getId() == id) {
                 obj = (T) task;
             }
         }
-        for (SubTask subtask : SubTaskStorage.getSubTasksList()) {
+        for (SubTask subtask : SubTaskRepository.getSubTasksList()) {
             if (subtask.getId() == id) {
                 obj = (T) subtask;
             }
@@ -37,15 +40,15 @@ public class Repository<T extends Task> {
 
     public void setObjectToRepository() {
         if (obj.getClass().equals(Task.class)) {
-            TaskStorage.setTaskStorage();
+            TaskRepository.setTaskStorage();
         } else if (obj.getClass().equals(SubTask.class)) {
-            SubTaskStorage.setSubTaskFromUserSelect();
+            SubTaskRepository.setSubTaskFromUserSelect();
         }
 
     }
 
-    public Repository getRepositoryObj(T obj) {
-        return repository = new Repository<T>();
+    public RepositoryTaskManager getRepositoryObj(T obj) {
+        return repositoryTaskManager = new RepositoryTaskManager<T>();
     }
 
 }

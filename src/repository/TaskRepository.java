@@ -8,7 +8,7 @@ import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class TaskStorage {
+public class TaskRepository {
 
     private static LinkedList<Task> tasks = new LinkedList<>();
 
@@ -36,16 +36,16 @@ public class TaskStorage {
     public static void removeTask() {
         Task task = selectUserTaskByID();
         if (task != null) {
-            SubTaskStorage.removeSubTask(task);
-            if (SubTaskStorage.getSubTasksListByTask(task).isEmpty()) {
-                TaskStorage.tasks.remove(task);
+            SubTaskRepository.removeSubTask(task);
+            if (SubTaskRepository.getSubTasksListByTask(task).isEmpty()) {
+                TaskRepository.tasks.remove(task);
             }
         }
     }
 
     public static void removeAllTasks() {
-        SubTaskStorage.getSubTasksList().clear();
-        TaskStorage.getTasks().clear();
+        SubTaskRepository.getSubTasksList().clear();
+        TaskRepository.getTasks().clear();
     }
 
     public static void replaceTask(int index, Task task) {
@@ -80,7 +80,7 @@ public class TaskStorage {
     public static Task selectUserTaskByID() {
         int id = selectId();
         Task task = null;
-        for (Task taskSelect : TaskStorage.getTasks()) {
+        for (Task taskSelect : TaskRepository.getTasks()) {
             if (taskSelect.getId() == id) {
                 task = taskSelect;
             }
@@ -94,7 +94,7 @@ public class TaskStorage {
     public static int selectId() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
-        Print.printTaskList(TaskStorage.tasks);
+        Print.printTaskList(TaskRepository.tasks);
         int id = 0;
         try {
             id = scanner.nextInt();
@@ -115,7 +115,7 @@ public class TaskStorage {
             System.out.println("Введите числовое значение!");
             id=0;
         }
-        Repository rep = new Repository();
+        RepositoryTaskManager rep = new RepositoryTaskManager();
         System.out.println(rep.returnObject(id).toString());
     }
 }
