@@ -2,6 +2,8 @@ package tasks;
 
 import repository.TaskStatus;
 
+import java.util.Objects;
+
 public class SubTask extends Task {
     Task task;
     String name;
@@ -21,14 +23,6 @@ public class SubTask extends Task {
         return task;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "Подзадача{" +
@@ -41,19 +35,28 @@ public class SubTask extends Task {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SubTask subtask = (SubTask) o;
+        return id == subtask.id &&
+                Objects.equals(name, subtask.name) &&
+                Objects.equals(description, subtask.description) &&
+                Objects.equals(status, subtask.status) &&
+                (task.equals(subtask.task));
     }
 
     @Override
     public int hashCode() {
-        int hash = 37;
-        if (name != null) {
-            hash = name.hashCode();
-        }
-        if (description != null) {
-            hash = hash + description.hashCode();
-        }
-        return hash;
+        int result = Objects.hash(name, description, id, status);
+        result = 31 * result + task.hashCode();
+        return result;
+    }
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

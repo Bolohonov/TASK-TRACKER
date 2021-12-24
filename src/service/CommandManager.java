@@ -65,7 +65,7 @@ public class CommandManager {
                     break;
                 case 6:
                     try {
-                        TaskStorage.printObjectByInt();
+                        TaskStorage.printObjectById();
                     } catch (NullPointerException exp) {
                         System.out.println("Неверный ввод!");
                     }

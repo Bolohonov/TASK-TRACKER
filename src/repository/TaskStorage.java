@@ -71,6 +71,9 @@ public class TaskStorage {
                 task = t;
             }
         }
+        if (task == null) {
+            System.out.println("Вы ввели неверный ID задачи");
+        }
         return task;
     }
 
@@ -102,10 +105,16 @@ public class TaskStorage {
         return id;
     }
 
-    public static void printObjectByInt() {
-        Scanner scanner = new Scanner(System.in);
+    public static void printObjectById() {
         System.out.println("Выберите задачу по ID: ");
-        int id = scanner.nextInt();
+        int id;
+        try {
+            Scanner scanner = new Scanner(System.in);
+            id = scanner.nextInt();
+        } catch(InputMismatchException exp) {
+            System.out.println("Введите числовое значение!");
+            id=0;
+        }
         Repository rep = new Repository();
         System.out.println(rep.returnObject(id).toString());
     }

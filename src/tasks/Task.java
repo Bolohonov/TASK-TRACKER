@@ -4,6 +4,8 @@ import repository.EpicStatus;
 import repository.Repository;
 import repository.TaskStatus;
 
+import java.util.Objects;
+
 public class Task {
 
     private String name;
@@ -28,22 +30,42 @@ public class Task {
         this.epic = EpicStatus.NOT_EPIC;
     }
 
+    public long calcAndCheckId() {
+        long id = (long)(Math.random()*17+Math.random()*137);
+        Repository rep = new Repository();
+        if (rep.returnObject(id) == null) {
+        } else {
+            calcAndCheckId();
+        }
+        return id;
+    }
+
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public String toString() {
+        return "Задача{" +
+                "Имя='" + name + '\'' +
+                ", Описание='" + description + '\'' +
+                ", ID=" + id +
+                ", Статус=" + status +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id &&
+                Objects.equals(name, task.name) &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(status, task.status);
     }
 
     @Override
     public int hashCode() {
-        int hash = 17;
-        int random = (int)(Math.random() * 131);
-        if (name != null) {
-            hash = name.hashCode();
-        }
-        if (description != null) {
-            hash = hash + description.hashCode()+random;
-        }
-        return hash;
+        int result = Objects.hash(name, description, id, status);
+        result = 31 * result;
+        return result;
     }
 
     public String getName() {
@@ -52,10 +74,6 @@ public class Task {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public void setDescription(String description) {
@@ -86,23 +104,4 @@ public class Task {
         this.epic = epic;
     }
 
-    @Override
-    public String toString() {
-        return "Задача{" +
-                "Имя='" + name + '\'' +
-                ", Описание='" + description + '\'' +
-                ", ID=" + id +
-                ", Статус=" + status +
-                '}';
-    }
-
-    public long calcAndCheckId() {
-        long id = (long)(Math.random()*17+Math.random()*137);
-        Repository rep = new Repository();
-        if (rep.returnObject(id) == null) {
-        } else {
-            calcAndCheckId();
-        }
-        return id;
-    }
 }
