@@ -113,7 +113,7 @@ public class TaskUpdater {
         } catch (NullPointerException exp) {
             System.out.println("Список был пуст!");
         }
-        RepositoryTaskManager rep = new RepositoryTaskManager();
+        TaskManager rep = new TaskManager();
         if (rep.returnObject(id) instanceof SubTask) {
             updateSubTaskById(id);
         } else {

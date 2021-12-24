@@ -1,9 +1,6 @@
 package repository;
 
-import service.EpicTaskSaver;
-import service.Scan;
-import service.SubTaskSaver;
-import service.TaskSaver;
+import service.*;
 import tasks.Task;
 import tasks.EpicTask;
 import tasks.SubTask;
@@ -11,29 +8,34 @@ import tasks.SingleTask;
 
 import java.util.LinkedList;
 
-public class RepositoryTaskManager<T extends Task> {
+public class TaskManager<T extends Task> {
 
     private LinkedList<T> tasks = new LinkedList<>();
 
-    RepositoryTaskManager<T> repositoryTaskManager;
+    TaskManager<T> taskManager;
+
+    private static TaskFactory taskFactory;
 
     T obj;
 
-    public RepositoryTaskManager() {
+    public TaskManager() {
     }
 
-    public RepositoryTaskManager(T obj) {
+    public TaskManager(T obj) {
         this.obj = obj;
     }
 
     public void saveFromCommand() {
         int command = Scan.selectTaskTypeFromUser();
         if (command == 1) {
-            TaskSaver.createTask();
+            taskFactory = new SingleTaskFactory();
+            taskFactory.createTask();
         } else if (command == 2){
-            EpicTaskSaver.createTask();
+            taskFactory = new EpicAndSubTaskFactory();
+            taskFactory.createTask();
         } else if (command == 3) {
-            SubTaskSaver.createTask();
+            taskFactory = new EpicAndSubTaskFactory();
+            taskFactory.createTask();
         }
     }
 
@@ -77,8 +79,8 @@ public class RepositoryTaskManager<T extends Task> {
 
     }
 
-    public RepositoryTaskManager getRepositoryObj(T obj) {
-        return repositoryTaskManager = new RepositoryTaskManager<T>();
+    public TaskManager getRepositoryObj(T obj) {
+        return taskManager = new TaskManager<T>();
     }
 
 }

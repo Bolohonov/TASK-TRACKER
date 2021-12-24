@@ -3,7 +3,7 @@ package service;
 import java.util.Scanner;
 
 import repository.EpicTaskRepository;
-import repository.RepositoryTaskManager;
+import repository.TaskManager;
 import repository.SubTaskRepository;
 import repository.TaskRepository;
 
@@ -12,7 +12,8 @@ import repository.TaskRepository;
 
 public class CommandManager {
 
-    Scanner scanner = new Scanner(System.in);
+    TaskManager manager = new TaskManager();
+
 
     public void getCommandPanel() {
         int command = -1;
@@ -23,19 +24,9 @@ public class CommandManager {
 
             switch (command) {
                 case 1:
-                    try {
-                        Print.printSaved();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Список был пуст!");
-                    }
-
-
-                    try {
-                        TaskRepository.setTaskStorage();
-                        Print.printSaved();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Список был пуст!");
-                    }
+                    Print.printMenuToSaveTask();
+                    manager.saveFromCommand();
+                    Print.printSaved();
                     break;
                 case 2:
                     try {
@@ -47,21 +38,21 @@ public class CommandManager {
                     break;
                 case 3:
                     try {
-                        RepositoryTaskManager.printTaskList(SubTaskRepository.getSubTasksList());
+                        manager.printTaskList(SubTaskRepository.getSubTasksList());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 4:
                     try {
-                        RepositoryTaskManager.printTaskList(EpicTaskRepository.getTasks());
+                        TaskManager.printTaskList(EpicTaskRepository.getTasks());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 5:
                     try {
-                        RepositoryTaskManager.printTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
+                        TaskManager.printTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }

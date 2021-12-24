@@ -1,6 +1,6 @@
 package tasks;
 
-import repository.RepositoryTaskManager;
+import repository.TaskManager;
 import repository.TaskStatus;
 
 public abstract class Task {
@@ -22,7 +22,7 @@ public abstract class Task {
 
     public long calcAndCheckId() {
         long id = (long)(Math.random()*17+Math.random()*137);
-        RepositoryTaskManager rep = new RepositoryTaskManager();
+        TaskManager rep = new TaskManager();
         if (rep.returnObject(id) == null) {
         } else {
             calcAndCheckId();

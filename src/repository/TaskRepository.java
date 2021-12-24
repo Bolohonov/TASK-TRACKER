@@ -1,6 +1,6 @@
 package repository;
 
-import service.TaskSaver;
+import service.SingleTaskFactory;
 import tasks.SingleTask;
 
 import java.util.InputMismatchException;
@@ -12,7 +12,7 @@ public class TaskRepository {
     private static LinkedList<SingleTask> singleTasks = new LinkedList<>();
 
     public static void setTaskStorage() {
-        SingleTask singleTask = TaskSaver.createTask();
+        SingleTask singleTask = SingleTaskFactory.createTask();
         if (singleTask != null) {
             singleTasks.add(singleTask);
         }
@@ -93,7 +93,7 @@ public class TaskRepository {
     public static int selectId() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
-        RepositoryTaskManager.printTaskList(TaskRepository.singleTasks);
+        TaskManager.printTaskList(TaskRepository.singleTasks);
         int id = 0;
         try {
             id = scanner.nextInt();
@@ -114,7 +114,7 @@ public class TaskRepository {
             System.out.println("Введите числовое значение!");
             id=0;
         }
-        RepositoryTaskManager rep = new RepositoryTaskManager();
+        TaskManager rep = new TaskManager();
         System.out.println(rep.returnObject(id).toString());
     }
 }

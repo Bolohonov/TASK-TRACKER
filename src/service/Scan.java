@@ -1,8 +1,5 @@
 package service;
 
-import repository.EpicTaskRepository;
-import repository.RepositoryTaskManager;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -26,7 +23,7 @@ public class Scan {
         return Scan.getScanIntCommandOrZero();
     }
 
-    public static String[] saveLinesFromUser() {
+    public static String[] getLinesFromUser() {
         String[] userTask = new String[2];
         try {
             Scanner scanner = new Scanner(System.in);
@@ -42,9 +39,7 @@ public class Scan {
 
     public static int selectId() {
         System.out.println("Выберите задачу по ID: ");
-        RepositoryTaskManager.printTaskList(EpicTaskRepository.epicTasks);
         int id = getScanIntCommandOrZero();
-
         return id;
     }
 }

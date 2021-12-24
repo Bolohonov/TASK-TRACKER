@@ -7,45 +7,40 @@ import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.Task;
 
-public class EpicTaskSaver extends TaskFactory{
+public class EpicAndSubTaskFactory extends TaskFactory{
 
+    private static Task task;
     @Override
     public Task createTask() {
-        EpicTask epicTask = null;
-        String[] userTask = Scan.saveLinesFromUser();
-        if (!userTask[0].equals(null)) {
-            long id = 0;
-            epicTask = new EpicTask(userTask[0], userTask[1], id,
+        if (!Scan.getLinesFromUser()[0].equals(null)) {
+            task = new EpicTask(Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], 0,
                     TaskStatus.NEW);
-            id = epicTask.calcAndCheckId();
-            epicTask.setId(id);
+            task.setId(task.calcAndCheckId());
         } else {
             System.out.println("Поле Название должно быть заполнено");
-            return epicTask;
+            return task;
         }
-        return epicTask;
+        return task;
     }
 
-    public SubTask createSubTask(EpicTask epicTask) {
-        String[] userTask = Scan.saveLinesFromUser();
-        long id = 0;
-        SubTask subTask = new SubTask(epicTask, userTask[0], userTask[1], id,
+    public Task createSubTask(EpicTask epicTask) {
+        Scan.getLinesFromUser();
+        task = new SubTask(epicTask, Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], 0,
                 TaskStatus.NEW);
-        id = subTask.calcAndCheckId();
-        subTask.setId(id);
-        return subTask;
+        task.setId(task.calcAndCheckId());
+        return task;
     }
 
-    public static SubTask saveSubTaskFromUserSelect() {
-        EpicTask epicTask = EpicTaskRepository.selectUserTaskByID();
-        if (epicTask != null) {
-            return createTask(epicTask);
+    public Task createSubTaskFromUserSelect() {
+        task = EpicTaskRepository.selectUserTaskByID();
+        if (task != null) {
+            return createSubTask((EpicTask) task);
         } else {
             return null;
         }
     }
 
-    public static EpicTask saveSubTaskFromEpicTask(EpicTask epicTask) {
+    public static Task createSubTaskFromEpicTask(EpicTask epicTask) {
         int command = -1;
         while (command != 0) {
             Print.printMenuToAddSubTask();

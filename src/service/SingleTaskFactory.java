@@ -4,15 +4,15 @@ import repository.TaskStatus;
 import tasks.SingleTask;
 import tasks.Task;
 
-public class TaskSaver extends TaskFactory{
+public class SingleTaskFactory extends TaskFactory{
+
+    private static Task singleTask;
 
     @Override
     public Task createTask() {
-        SingleTask singleTask = null;
-        String[] userTask = Scan.saveLinesFromUser();
-        if (!userTask[0].equals(null)) {
+        if (!Scan.getLinesFromUser()[0].equals(null)) {
             long id = 0;
-            singleTask = new SingleTask(userTask[0], userTask[1], id,
+            singleTask = new SingleTask(Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], id,
                     TaskStatus.NEW);
             id = singleTask.calcAndCheckId();
             singleTask.setId(id);
@@ -22,6 +22,4 @@ public class TaskSaver extends TaskFactory{
         }
         return singleTask;
     }
-
-
 }

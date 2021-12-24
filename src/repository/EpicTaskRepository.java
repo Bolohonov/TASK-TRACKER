@@ -1,6 +1,7 @@
 package repository;
 
-import service.EpicTaskSaver;
+import service.EpicAndSubTaskFactory;
+import service.Scan;
 import tasks.EpicTask;
 import tasks.SingleTask;
 
@@ -13,7 +14,7 @@ public class EpicTaskRepository {
     private static LinkedList<EpicTask> epicTasks = new LinkedList<>();
 
     public static void setTaskStorage() {
-        EpicTask task = EpicTaskSaver.createTask();
+        EpicTask task = EpicAndSubTaskFactory.createTask();
         if (task != null) {
             epicTasks.add(task);
         }
@@ -68,7 +69,7 @@ public class EpicTaskRepository {
     }
 
     public static SingleTask selectUserTaskByID() {
-        int id = selectId();
+        int id = Scan.selectId();
         EpicTask epicTask = null;
         for (EpicTask epicTaskSelect : EpicTaskRepository.getTasks()) {
             if (epicTaskSelect.getId() == id) {
@@ -91,7 +92,7 @@ public class EpicTaskRepository {
             System.out.println("Введите числовое значение!");
             id=0;
         }
-        RepositoryTaskManager rep = new RepositoryTaskManager();
+        TaskManager rep = new TaskManager();
         System.out.println(rep.returnObject(id).toString());
     }
 }

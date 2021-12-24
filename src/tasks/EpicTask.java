@@ -1,6 +1,6 @@
 package tasks;
 
-import repository.RepositoryTaskManager;
+import repository.TaskManager;
 import repository.TaskStatus;
 
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class EpicTask extends Task {
 
     public long calcAndCheckId() {
         long id = (long)(Math.random()*17+Math.random()*137);
-        RepositoryTaskManager rep = new RepositoryTaskManager();
+        TaskManager rep = new TaskManager();
         if (rep.returnObject(id) == null) {
         } else {
             calcAndCheckId();
