@@ -18,15 +18,17 @@ public class CommandManager {
 
         while (command != 0) {
             Print.printMenu();
-            try {
-                command = scanner.nextInt();
-            } catch (InputMismatchException exp) {
-                System.out.println("Вы ввели неверное значение!");
-                command = 0;
-            }
+            command = Scan.getScanOrZero();
 
             switch (command) {
                 case 1:
+                    try {
+                        Print.printSaved();
+                    } catch (NullPointerException exp) {
+                        System.out.println("Список был пуст!");
+                    }
+
+
                     try {
                         TaskRepository.setTaskStorage();
                         Print.printSaved();

@@ -5,28 +5,28 @@ import repository.TaskStatus;
 import java.util.Objects;
 
 public class SubTask extends Task {
-    Task task;
+    EpicTask epicTask;
     String name;
     String description;
     long id;
     TaskStatus status;
 
-    public SubTask(Task task, String name, String description, long id, TaskStatus status) {
-        this.task = task;
+    public SubTask(EpicTask epicTask, String name, String description, long id, TaskStatus status) {
+        this.epicTask = epicTask;
         this.name = name;
         this.description = description;
         this.id = id;
         this.status = status;
     }
 
-    public Task getTask() {
-        return task;
+    public EpicTask getTask() {
+        return epicTask;
     }
 
     @Override
     public String toString() {
         return "Подзадача{" +
-                "Имя эпика=" + task.getName() +
+                "Имя эпика=" + epicTask.getName() +
                 ", Имя подзадачи='" + name + '\'' +
                 ", Описание='" + description + '\'' +
                 ", ID=" + id +
@@ -43,20 +43,13 @@ public class SubTask extends Task {
                 Objects.equals(name, subtask.name) &&
                 Objects.equals(description, subtask.description) &&
                 Objects.equals(status, subtask.status) &&
-                (task.equals(subtask.task));
+                (epicTask.equals(subtask.epicTask));
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(name, description, id, status);
-        result = 31 * result + task.hashCode();
+        result = 31 * result + epicTask.hashCode();
         return result;
-    }
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

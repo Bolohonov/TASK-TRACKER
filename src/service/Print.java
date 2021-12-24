@@ -2,7 +2,7 @@ package service;
 
 import repository.TaskStatus;
 import tasks.SubTask;
-import tasks.Task;
+import tasks.SingleTask;
 
 import java.util.LinkedList;
 
@@ -21,6 +21,14 @@ public class Print {
         System.out.println("1 - Для для добавления подзадач: ");
     }
 
+    static void printMenuToSaveTask() {
+        System.out.println("Что вы хотите сохранить: ");
+        System.out.println("0 - Для выхода в меню: ");
+        System.out.println("1 - Задачу: ");
+        System.out.println("2 - Эпик: ");
+        System.out.println("3 - Подзадачу: ");
+    }
+
     static void printMenuToUpdateTask() {
         System.out.println("Что вы хотите обновить: ");
         System.out.println("0 - Для выхода в меню: ");
@@ -29,11 +37,11 @@ public class Print {
         System.out.println("3 - Для обновления статуса: ");
     }
 
-    public static void printTaskList(LinkedList<Task> list) {
+    public static void printTaskList(LinkedList<SingleTask> list) {
         if (list.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
-            list.forEach((Task task) -> System.out.println(task));
+            list.forEach((SingleTask singleTask) -> System.out.println(singleTask));
         }
     }
 

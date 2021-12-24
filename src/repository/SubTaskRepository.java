@@ -2,9 +2,9 @@ package repository;
 
 import service.Print;
 import service.SubTaskSaver;
-import service.TaskUpdater;
+import tasks.EpicTask;
 import tasks.SubTask;
-import tasks.Task;
+import tasks.SingleTask;
 
 import java.util.InputMismatchException;
 import java.util.LinkedList;
@@ -14,8 +14,8 @@ public class SubTaskRepository {
 
     private static LinkedList<SubTask> subTasks = new LinkedList<>();
 
-    public static void setSubTaskStorage(Task task) {
-        SubTask subTask = SubTaskSaver.saveSubTask(task);
+    public static void setSubTaskStorage(EpicTask epicTask) {
+        SubTask subTask = SubTaskSaver.createSubTask(epicTask);
         if (subTask != null) {
             subTasks.add(subTask);
         }
@@ -29,11 +29,11 @@ public class SubTaskRepository {
     }
 
     public static LinkedList<SubTask> getSubTasksListFromUserSelect() {
-        Task task = TaskRepository.selectUserTaskByID();
+        SingleTask singleTask = TaskRepository.selectUserTaskByID();
         LinkedList<SubTask> subTasksListFromSelect = new LinkedList<>();
-        if (task != null) {
+        if (singleTask != null) {
             for (SubTask subTask : subTasks) {
-                if (subTask.getTask().equals(task)) {
+                if (subTask.getTask().equals(singleTask)) {
                     subTasksListFromSelect.add(subTask);
                 }
             }
@@ -41,11 +41,11 @@ public class SubTaskRepository {
         return subTasksListFromSelect;
     }
 
-    public static LinkedList<SubTask> getSubTasksListByTask(Task task) {
+    public static LinkedList<SubTask> getSubTasksListByTask(SingleTask singleTask) {
         LinkedList<SubTask> subTasksListByTask = new LinkedList<>();
-        if (task != null) {
+        if (singleTask != null) {
             for (SubTask subTask : subTasks) {
-                if (subTask.getTask().equals(task)) {
+                if (subTask.getTask().equals(singleTask)) {
                     subTasksListByTask.add(subTask);
                 }
             }
@@ -55,10 +55,10 @@ public class SubTaskRepository {
 
     public static LinkedList<SubTask> getSubTasksListBySubTask(SubTask subTask) {
         LinkedList<SubTask> subTasksListBySubTask = new LinkedList<>();
-        Task task = subTask.getTask();
-        if (task != null) {
+        EpicTask epicTask = subTask.getTask();
+        if (epicTask != null) {
             for (SubTask subT : subTasks) {
-                if (subT.getTask().equals(task)) {
+                if (subT.getTask().equals(epicTask)) {
                     subTasksListBySubTask.add(subT);
                 }
             }
@@ -70,18 +70,14 @@ public class SubTaskRepository {
         return subTasks;
     }
 
-    public static void removeSubTask(Task task) {
-        LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(task);
+    public static void removeSubTask(SingleTask singleTask) {
+        LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(singleTask);
         subTasks.removeAll(subTasksListByTask);
     }
 
     public static void removeSubTaskById() {
         SubTask selectedTask = selectUserSubTaskByID();
-        Task task = selectedTask.getTask();
         subTasks.remove(selectedTask);
-        if (!TaskUpdater.checkEpicStatus(task)) {
-            TaskUpdater.updateEpicStatus(task, EpicStatus.NOT_EPIC);
-        }
     }
 
     public static int getSubTaskIndex(SubTask subTask) {

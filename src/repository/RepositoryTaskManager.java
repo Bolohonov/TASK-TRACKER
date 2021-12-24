@@ -1,7 +1,9 @@
 package repository;
 
-import tasks.SubTask;
 import tasks.Task;
+import tasks.EpicTask;
+import tasks.SubTask;
+import tasks.SingleTask;
 
 import java.util.LinkedList;
 
@@ -21,9 +23,14 @@ public class RepositoryTaskManager<T extends Task> {
     }
 
     public T returnObject(long id) {
-        for (Task task : TaskRepository.getTasks()) {
-            if (task.getId() == id) {
-                obj = (T) task;
+        for (SingleTask singleTask : TaskRepository.getTasks()) {
+            if (singleTask.getId() == id) {
+                obj = (T) singleTask;
+            }
+        }
+        for (EpicTask epicTask : EpicTaskRepository.getTasks()) {
+            if (epicTask.getId() == id) {
+                obj = (T) epicTask;
             }
         }
         for (SubTask subtask : SubTaskRepository.getSubTasksList()) {
@@ -39,7 +46,7 @@ public class RepositoryTaskManager<T extends Task> {
     }
 
     public void setObjectToRepository() {
-        if (obj.getClass().equals(Task.class)) {
+        if (obj.getClass().equals(SingleTask.class)) {
             TaskRepository.setTaskStorage();
         } else if (obj.getClass().equals(SubTask.class)) {
             SubTaskRepository.setSubTaskFromUserSelect();

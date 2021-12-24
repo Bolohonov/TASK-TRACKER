@@ -2,7 +2,7 @@ package service;
 
 import repository.*;
 import tasks.SubTask;
-import tasks.Task;
+import tasks.SingleTask;
 
 import java.util.InputMismatchException;
 import java.util.LinkedList;
@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 public class TaskUpdater {
 
-    public static boolean checkEpicStatus(Task task) {
-        if (task.getEpic().equals(EpicStatus.EPIC)) {
+    public static boolean checkEpicStatus(SingleTask singleTask) {
+        if (singleTask.getEpic().equals(EpicStatus.EPIC)) {
             return true;
         } else {
             return false;
@@ -31,8 +31,8 @@ public class TaskUpdater {
         return status;
     }
 
-    public static Task setStatus(Task task) {
-        System.out.println("Текущий статус" + task.getStatus());
+    public static SingleTask setStatus(SingleTask singleTask) {
+        System.out.println("Текущий статус" + singleTask.getStatus());
         System.out.println("Выберите статус");
         Print.printStatusList();
         Scanner scanner = new Scanner(System.in);
@@ -45,16 +45,16 @@ public class TaskUpdater {
         }
         switch (statusIndex) {
             case 2:
-                updateTaskStatus(task, TaskStatus.IN_PROGRESS);
+                updateTaskStatus(singleTask, TaskStatus.IN_PROGRESS);
                 break;
             case 3:
-                updateTaskStatus(task, TaskStatus.DONE);
+                updateTaskStatus(singleTask, TaskStatus.DONE);
                 break;
             default:
                 Print.printMistake();
                 break;
         }
-        return task;
+        return singleTask;
     }
 
     public static SubTask setStatus(SubTask subTask) {
@@ -78,24 +78,24 @@ public class TaskUpdater {
     }
 
     public static boolean checkStatusInProgressOrDone(SubTask subTask) {
-        Task task = subTask.getTask();
-        if (task.getStatus().equals(TaskStatus.IN_PROGRESS) || task.getStatus().equals(TaskStatus.DONE)) {
+        SingleTask singleTask = subTask.getTask();
+        if (singleTask.getStatus().equals(TaskStatus.IN_PROGRESS) || singleTask.getStatus().equals(TaskStatus.DONE)) {
             return true;
         } else {
             return false;
         }
     }
 
-    public static void updateTaskStatus(Task task, TaskStatus status) {
-        task.setStatus(status);
-        int index = TaskRepository.getTaskIndex(task);
-        TaskRepository.replaceTask(index, task);
+    public static void updateTaskStatus(SingleTask singleTask, TaskStatus status) {
+        singleTask.setStatus(status);
+        int index = TaskRepository.getTaskIndex(singleTask);
+        TaskRepository.replaceTask(index, singleTask);
     }
 
-    public static void updateEpicStatus(Task task, EpicStatus status) {
-        task.setEpic(status);
-        int index = TaskRepository.getTaskIndex(task);
-        TaskRepository.replaceTask(index, task);
+    public static void updateEpicStatus(SingleTask singleTask, EpicStatus status) {
+        singleTask.setEpic(status);
+        int index = TaskRepository.getTaskIndex(singleTask);
+        TaskRepository.replaceTask(index, singleTask);
     }
 
     public static void updateSubTaskStatus(SubTask subTask, TaskStatus status) {
@@ -168,8 +168,8 @@ public class TaskUpdater {
     }
 
     public static void updateTaskById(int id) {
-        Task task = TaskRepository.getTaskByID(id);
-        int index = TaskRepository.getTaskIndex(task);
+        SingleTask singleTask = TaskRepository.getTaskByID(id);
+        int index = TaskRepository.getTaskIndex(singleTask);
         int command = -1;
         while (command != 0) {
             Print.printMenuToUpdateTask();
@@ -188,22 +188,22 @@ public class TaskUpdater {
                     scanner = new Scanner(System.in);
                     String name = scanner.nextLine();
                     if (name != null) {
-                        task.setName(name);
+                        singleTask.setName(name);
                     }
-                    TaskRepository.replaceTask(index, task);
+                    TaskRepository.replaceTask(index, singleTask);
                     break;
                 case 2:
                     System.out.println("Введите новое описание задачи");
                     scanner = new Scanner(System.in);
                     String description = scanner.nextLine();
                     if (description != null) {
-                        task.setDescription(description);
+                        singleTask.setDescription(description);
                     }
-                    TaskRepository.replaceTask(index, task);
+                    TaskRepository.replaceTask(index, singleTask);
                     break;
                 case 3:
-                    if (!checkEpicStatus(task)) {
-                        task = setStatus(task);
+                    if (!checkEpicStatus(singleTask)) {
+                        singleTask = setStatus(singleTask);
                     } else {
                         System.out.println("Статус не подлежит изменению!");
                     }

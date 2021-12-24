@@ -1,19 +1,16 @@
 package tasks;
 
-import repository.EpicStatus;
 import repository.RepositoryTaskManager;
 import repository.TaskStatus;
 
-import java.util.Objects;
-
-public class Task {
+public abstract class Task {
 
     private String name;
     private String description;
     private long id;
     private TaskStatus status;
 
-    public Task(String name, String description, long id, TaskStatus status, EpicStatus epic) {
+    public Task(String name, String description, long id, TaskStatus status) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -21,10 +18,6 @@ public class Task {
     }
 
     public Task() {
-        this.name = null;
-        this.description = null;
-        this.id = 0;
-        this.status = TaskStatus.NEW;
     }
 
     public long calcAndCheckId() {
@@ -37,40 +30,16 @@ public class Task {
         return id;
     }
 
-    @Override
-    public String toString() {
-        return "Задача{" +
-                "Имя='" + name + '\'' +
-                ", Описание='" + description + '\'' +
-                ", ID=" + id +
-                ", Статус=" + status +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return id == task.id &&
-                Objects.equals(name, task.name) &&
-                Objects.equals(description, task.description) &&
-                Objects.equals(status, task.status);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(name, description, id, status);
-        result = 31 * result;
-        return result;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return name;
     }
 
     public void setDescription(String description) {
@@ -92,5 +61,4 @@ public class Task {
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
-
 }

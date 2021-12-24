@@ -3,19 +3,17 @@ package service;
 import repository.SubTaskRepository;
 import repository.TaskStatus;
 import repository.TaskRepository;
-import repository.EpicStatus;
+import tasks.EpicTask;
 import tasks.SubTask;
-import tasks.Task;
+import tasks.SingleTask;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
+public class SubTaskSaver extends TaskFactory {
 
-public class SubTaskSaver extends TaskSaver {
-
-    public static SubTask saveSubTask(Task task) {
-        String[] userTask = saveUserTask();
+    @Override
+    public static SubTask createSubTask(EpicTask epicTask) {
+        String[] userTask = Scan.saveLinesFromUser();
         long id = 0;
-        SubTask subTask = new SubTask(task, userTask[0], userTask[1], id,
+        SubTask subTask = new SubTask(epicTask, userTask[0], userTask[1], id,
                 TaskStatus.NEW);
         id = subTask.calcAndCheckId();
         subTask.setId(id);
@@ -23,38 +21,31 @@ public class SubTaskSaver extends TaskSaver {
     }
 
     public static SubTask saveSubTaskFromUserSelect() {
-        Task task = TaskRepository.selectUserTaskByID();
-        if (task != null) {
-            return saveSubTask(task);
+        SingleTask singleTask = TaskRepository.selectUserTaskByID();
+        if (singleTask != null) {
+            return saveSubTask(singleTask);
         } else {
             return null;
         }
     }
 
-    public static Task saveSubTaskFromTask(Task task) {
+    public static EpicTask saveSubTaskFromEpicTask(EpicTask epicTask) {
         int command = -1;
         while (command != 0) {
             Print.printMenuToAddSubTask();
-            Scanner scanner = new Scanner(System.in);
-            try {
-                command = scanner.nextInt();
-            } catch (InputMismatchException exp) {
-                System.out.println("Вы ввели неверное значение!");
-                command = 0;
-            }
+            command = Scan.getScanOrZero();
             switch (command) {
                 case 0:
                     break;
                 case 1:
-                    task.setEpic(EpicStatus.EPIC);
-                    SubTaskRepository.setSubTaskStorage(task);
-                    task.setStatus(TaskStatus.IN_PROGRESS);
+                    SubTaskRepository.setSubTaskStorage(epicTask);
+                    epicTask.setStatus(TaskStatus.IN_PROGRESS);
                     break;
                 default:
                     System.out.println("Вы ввели неверное значение!");
                     break;
             }
         }
-        return task;
+        return epicTask;
     }
 }

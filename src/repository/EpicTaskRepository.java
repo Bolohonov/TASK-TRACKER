@@ -1,8 +1,9 @@
 package repository;
 
+import service.EpicTaskSaver;
 import service.Print;
-import service.TaskSaver;
-import tasks.Task;
+import tasks.EpicTask;
+import tasks.SingleTask;
 
 import java.util.InputMismatchException;
 import java.util.LinkedList;
@@ -10,35 +11,35 @@ import java.util.Scanner;
 
 public class EpicTaskRepository {
 
-    private static LinkedList<Task> tasks = new LinkedList<>();
+    private static LinkedList<EpicTask> epicTasks = new LinkedList<>();
 
     public static void setTaskStorage() {
-        Task task = TaskSaver.saveTask();
+        EpicTask task = EpicTaskSaver.createTask();
         if (task != null) {
-            tasks.add(task);
+            epicTasks.add(task);
         }
     }
 
-    public static LinkedList<Task> getTasks() {
-        return tasks;
+    public static LinkedList<EpicTask> getTasks() {
+        return epicTasks;
     }
 
-    public static LinkedList<Task> getEpics() {
-        LinkedList<Task> epicList = new LinkedList<>();
-        for (Task task : tasks) {
-            if (task.getEpic().equals(EpicStatus.EPIC)) {
-                epicList.add(task);
+    public static LinkedList<SingleTask> getEpics() {
+        LinkedList<SingleTask> epicList = new LinkedList<>();
+        for (SingleTask singleTask : tasks) {
+            if (singleTask.getEpic().equals(EpicStatus.EPIC)) {
+                epicList.add(singleTask);
             }
         }
         return epicList;
     }
 
     public static void removeTask() {
-        Task task = selectUserTaskByID();
-        if (task != null) {
-            SubTaskRepository.removeSubTask(task);
-            if (SubTaskRepository.getSubTasksListByTask(task).isEmpty()) {
-                EpicTaskRepository.tasks.remove(task);
+        SingleTask singleTask = selectUserTaskByID();
+        if (singleTask != null) {
+            SubTaskRepository.removeSubTask(singleTask);
+            if (SubTaskRepository.getSubTasksListByTask(singleTask).isEmpty()) {
+                EpicTaskRepository.tasks.remove(singleTask);
             }
         }
     }
@@ -48,15 +49,15 @@ public class EpicTaskRepository {
         EpicTaskRepository.getTasks().clear();
     }
 
-    public static void replaceTask(int index, Task task) {
-        tasks.set(index, task);
+    public static void replaceTask(int index, SingleTask singleTask) {
+        tasks.set(index, singleTask);
     }
 
-    public static int getTaskIndex(Task task) {
+    public static int getTaskIndex(SingleTask singleTask) {
         int index = -1;
-        if (task != null) {
-            for (Task t : tasks) {
-                if (t.equals(task)) {
+        if (singleTask != null) {
+            for (SingleTask t : tasks) {
+                if (t.equals(singleTask)) {
                     index = tasks.indexOf(t);
                 }
             }
@@ -64,31 +65,31 @@ public class EpicTaskRepository {
         return index;
     }
 
-    public static Task getTaskByID(long id) {
-        Task task = null;
-        for (Task t : tasks) {
+    public static SingleTask getTaskByID(long id) {
+        SingleTask singleTask = null;
+        for (SingleTask t : tasks) {
             if (t.getId() == id) {
-                task = t;
+                singleTask = t;
             }
         }
-        if (task == null) {
+        if (singleTask == null) {
             System.out.println("Вы ввели неверный ID задачи");
         }
-        return task;
+        return singleTask;
     }
 
-    public static Task selectUserTaskByID() {
+    public static SingleTask selectUserTaskByID() {
         int id = selectId();
-        Task task = null;
-        for (Task taskSelect : EpicTaskRepository.getTasks()) {
-            if (taskSelect.getId() == id) {
-                task = taskSelect;
+        SingleTask singleTask = null;
+        for (SingleTask singleTaskSelect : EpicTaskRepository.getTasks()) {
+            if (singleTaskSelect.getId() == id) {
+                singleTask = singleTaskSelect;
             }
         }
-        if (task == null) {
+        if (singleTask == null) {
             System.out.println("Вы ввели неверный ID задачи");
         }
-        return task;
+        return singleTask;
     }
 
     public static int selectId() {
