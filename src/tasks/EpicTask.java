@@ -6,21 +6,21 @@ import repository.TaskStatus;
 
 import java.util.Objects;
 
-public class Task {
+public class EpicTask extends Task{
 
     private String name;
     private String description;
     private long id;
     private TaskStatus status;
 
-    public Task(String name, String description, long id, TaskStatus status, EpicStatus epic) {
+    public EpicTask(String name, String description, long id, TaskStatus status, EpicStatus epic) {
         this.name = name;
         this.description = description;
         this.id = id;
         this.status = status;
     }
 
-    public Task() {
+    public EpicTask() {
         this.name = null;
         this.description = null;
         this.id = 0;
@@ -51,7 +51,7 @@ public class Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
+        EpicTask task = (EpicTask) o;
         return id == task.id &&
                 Objects.equals(name, task.name) &&
                 Objects.equals(description, task.description) &&
