@@ -47,6 +47,7 @@ public class CommandManager {
                     break;
                 case 10:
                     manager.removeSubTaskById();
+                    break;
                 case 0:
                     Print.printExit();
                     break;

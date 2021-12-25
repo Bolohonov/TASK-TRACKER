@@ -27,6 +27,7 @@ public class Print {
         System.out.println("0 - Для выхода в меню: ");
         System.out.println("1 - Задачу: ");
         System.out.println("2 - Эпик: ");
+        System.out.println("3 - Подзадачу: ");
     }
 
     public static void printMenuToUpdateTask() {

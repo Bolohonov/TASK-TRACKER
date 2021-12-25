@@ -22,6 +22,34 @@ public class SingleTask {
     public SingleTask() {
     }
 
+    @Override
+    public String toString() {
+        return "Задача{" +
+                "Имя='" + name + '\'' +
+                ", Описание='" + description + '\'' +
+                ", ID=" + id +
+                ", Статус=" + status +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SingleTask task = (SingleTask) o;
+        return id == task.id &&
+                Objects.equals(name, task.name) &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(status, task.status);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(name, description, id, status);
+        result = 31 * result;
+        return result;
+    }
+
     public String getName() {
         return name;
     }
