@@ -25,16 +25,6 @@ public class EpicTask extends Task {
         this.id = 0;
     }
 
-    public long calcAndCheckId() {
-        long id = (long)(Math.random()*17+Math.random()*137);
-        TaskManager rep = new TaskManager();
-        if (rep.returnObject(id) == null) {
-        } else {
-            calcAndCheckId();
-        }
-        return id;
-    }
-
     @Override
     public String toString() {
         return "Эпик{" +

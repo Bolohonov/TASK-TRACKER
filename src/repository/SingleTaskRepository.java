@@ -1,38 +1,39 @@
 package repository;
 
-import service.SingleTaskFactory;
+import service.TaskSaver;
 import tasks.SingleTask;
 
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.Scanner;
 
-public class SingleTaskRepository {
+public class TaskRepository {
 
-    private static HashMap<Long, SingleTask> singleTasks = new HashMap<>();
-    static SingleTaskFactory singleTaskFactory = new SingleTaskFactory();
+    private static LinkedList<SingleTask> singleTasks = new LinkedList<>();
 
     public static void setTaskStorage() {
-        SingleTask singleTask = singleTaskFactory.createTask();
+        SingleTask singleTask = TaskSaver.createTask();
         if (singleTask != null) {
-            singleTasks.put(singleTask.getId(),singleTask);
+            singleTasks.add(singleTask);
         }
     }
 
-    public static HashMap<Long, SingleTask> getTasks() {
+    public static LinkedList<SingleTask> getTasks() {
         return singleTasks;
     }
 
-    public static void removeTask() {
-        SingleTask singleTask = selectUserTaskByID();
-        if (singleTask != null) {
-            SubTaskRepository.removeSubTask(singleTask);
-            if (SubTaskRepository.getSubTasksListByTask(singleTask).isEmpty()) {
-                TaskRepository.singleTasks.remove(singleTask);
-            }
-        }
-    }
+//    public static void removeTask() {
+//        EpicTask epicTask = selectUserTaskByID();
+//        if (singleTask != null) {
+//            SubTaskRepository.removeSubTask(singleTask);
+//            if (SubTaskRepository.getSubTasksListByTask(singleTask).isEmpty()) {
+//                TaskRepository.singleTasks.remove(singleTask);
+//            }
+//        }
+//    }
 
     public static void removeAllTasks() {
-        SubTaskRepository.getTasks().clear();
+        SubTaskRepository.getSubTasksList().clear();
         TaskRepository.getTasks().clear();
     }
 
@@ -63,34 +64,6 @@ public class SingleTaskRepository {
             System.out.println("Вы ввели неверный ID задачи");
         }
         return singleTask;
-    }
-
-    public static SingleTask selectUserTaskByID() {
-        int id = selectId();
-        SingleTask singleTask = null;
-        for (SingleTask singleTaskSelect : TaskRepository.getTasks()) {
-            if (singleTaskSelect.getId() == id) {
-                singleTask = singleTaskSelect;
-            }
-        }
-        if (singleTask == null) {
-            System.out.println("Вы ввели неверный ID задачи");
-        }
-        return singleTask;
-    }
-
-    public static int selectId() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите задачу по ID: ");
-        TaskManager.printTaskMap(TaskRepository.singleTasks);
-        int id = 0;
-        try {
-            id = scanner.nextInt();
-        } catch (InputMismatchException exp) {
-            System.out.println("Вы ввели неверное значение!");
-        }
-
-        return id;
     }
 
     public static void printObjectById() {

@@ -1,11 +1,14 @@
 package service;
 
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 import repository.EpicTaskRepository;
-import repository.TaskManager;
 import repository.SubTaskRepository;
+import repository.TaskManager;
 import repository.TaskRepository;
 
-//Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню.
+//Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню (да и вообще много лишнего!).
 // Если нужно сразу переделать, то готов поправить, удалив лишнее!
 
 public class CommandManager {
@@ -18,19 +21,20 @@ public class CommandManager {
 
         while (command != 0) {
             Print.printMenu();
-            command = Scan.getScanIntCommandOrZero();
+            command = Scan.getScanOrZero();
 
             switch (command) {
                 case 1:
-                    Print.printMenuToSaveTask();
-                    manager.saveFromCommand();
-                    Print.printSaved();
+                    try {
+                        manager.saveFromCommand();
+                        Print.printSaved();
+                    } catch (NullPointerException exp) {
+                        System.out.println("Список был пуст!");
+                    }
                     break;
                 case 2:
-
-
                     try {
-                        SubTaskRepository.setSubTaskFromUserSelect();
+                        manager.saveSubTaskFromCommand();
                         Print.printSaved();
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
@@ -38,21 +42,21 @@ public class CommandManager {
                     break;
                 case 3:
                     try {
-                        manager.printTaskMap(SubTaskRepository.getTasks());
+                        manager.printTasksList(SubTaskRepository.getSubTasksList());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 4:
                     try {
-                        manager.printTaskMap(EpicTaskRepository.getTasks());
+                        Print.printEpicTaskList(EpicTaskRepository.getTasks());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 5:
                     try {
-                        manager.printTaskMap(SubTaskRepository.getSubTasksListFromUserSelect());
+                        Print.printSubTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
@@ -66,7 +70,7 @@ public class CommandManager {
                     break;
                 case 7:
                     try {
-                        TaskUpdater.updateObjectByInt();
+                        //TaskUpdater.updateObjectByInt();
                     } catch (NullPointerException exp) {
                         System.out.println("Неверный ввод!");
                     }
@@ -82,7 +86,7 @@ public class CommandManager {
                     break;
                 case 9:
                     try {
-                        TaskRepository.removeTask();
+                        EpicTaskRepository.removeTask();
                     } catch (NullPointerException exp) {
                         System.out.println("Неверный ввод!");
                     }

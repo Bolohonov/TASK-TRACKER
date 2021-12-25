@@ -1,41 +1,39 @@
 package repository;
 
-import service.EpicAndSubTaskFactory;
 import service.Print;
+import service.SubTaskSaver;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
 
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class SubTaskRepository {
 
-    static EpicAndSubTaskFactory epicAndSubTaskFactory = new EpicAndSubTaskFactory();
-    private static HashMap<Long, SubTask> subTasks = new HashMap<>();
+    private static LinkedList<SubTask> subTasks = new LinkedList<>();
 
     public static void setSubTaskStorage(EpicTask epicTask) {
-        SubTask subTask = epicAndSubTaskFactory.createSubTask(epicTask);
+        SubTask subTask = SubTaskSaver.createSubTask(epicTask);
         if (subTask != null) {
-            subTasks.put(subTask.getId(), subTask);
+            subTasks.add(subTask);
         }
     }
 
     public static void setSubTaskFromUserSelect() {
-        SubTask subTask = epicAndSubTaskFactory.createSubTaskFromUserSelect();
+        SubTask subTask = SubTaskSaver.saveSubTaskFromUserSelect();
         if (subTask != null) {
             subTasks.add(subTask);
         }
     }
 
     public static LinkedList<SubTask> getSubTasksListFromUserSelect() {
-        SingleTask singleTask = TaskRepository.selectUserTaskByID();
+        EpicTask epicTask = EpicTaskRepository.selectUserTaskByID();
         LinkedList<SubTask> subTasksListFromSelect = new LinkedList<>();
-        if (singleTask != null) {
+        if (epicTask != null) {
             for (SubTask subTask : subTasks) {
-                if (subTask.getTask().equals(singleTask)) {
+                if (subTask.getTask().equals(epicTask)) {
                     subTasksListFromSelect.add(subTask);
                 }
             }
@@ -43,20 +41,20 @@ public class SubTaskRepository {
         return subTasksListFromSelect;
     }
 
-    public static LinkedList<SubTask> getSubTasksListByTask(SingleTask singleTask) {
-        LinkedList<SubTask> subTasksListByTask = new LinkedList<>();
-        if (singleTask != null) {
+    public static LinkedList<SubTask> getSubTasksListByTask(EpicTask epicTask) {
+        LinkedList<SubTask> epicTasksListByTask = new LinkedList<>();
+        if (epicTask != null) {
             for (SubTask subTask : subTasks) {
-                if (subTask.getTask().equals(singleTask)) {
-                    subTasksListByTask.add(subTask);
+                if (subTask.getTask().equals(epicTask)) {
+                    epicTasksListByTask.add(subTask);
                 }
             }
         }
-        return subTasksListByTask;
+        return epicTasksListByTask;
     }
 
     public static LinkedList<SubTask> getSubTasksListBySubTask(SubTask subTask) {
-        HashMap<Long, SubTask> subTasksMap = new HashMap<>();
+        LinkedList<SubTask> subTasksListBySubTask = new LinkedList<>();
         EpicTask epicTask = subTask.getTask();
         if (epicTask != null) {
             for (SubTask subT : subTasks) {
@@ -68,12 +66,12 @@ public class SubTaskRepository {
         return subTasksListBySubTask;
     }
 
-    public static HashMap<Long, SubTask> getTasks() {
+    public static LinkedList<SubTask> getSubTasksList() {
         return subTasks;
     }
 
     public static void removeSubTask(EpicTask epicTask) {
-        LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(singleTask);
+        LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(epicTask);
         subTasks.removeAll(subTasksListByTask);
     }
 
@@ -81,7 +79,6 @@ public class SubTaskRepository {
         SubTask selectedTask = selectUserSubTaskByID();
         subTasks.remove(selectedTask);
     }
-
 
     public static int getSubTaskIndex(SubTask subTask) {
         int index = -1;
@@ -97,7 +94,7 @@ public class SubTaskRepository {
 
     public static SubTask getSubTaskByID(long id) {
         SubTask subTask = null;
-        for (SubTask taskSelect : SubTaskRepository.getTasks()) {
+        for (SubTask taskSelect : SubTaskRepository.getSubTasksList()) {
             if (taskSelect.getId() == id) {
                 subTask = taskSelect;
             }
@@ -111,7 +108,7 @@ public class SubTaskRepository {
     public static SubTask selectUserSubTaskByID() {
         int id = selectSubTaskId();
         SubTask subTask = null;
-        for (SubTask taskSelect : SubTaskRepository.getTasks()) {
+        for (SubTask taskSelect : SubTaskRepository.getSubTasksList()) {
             if (taskSelect.getId() == id) {
                 subTask = taskSelect;
             }
@@ -125,7 +122,7 @@ public class SubTaskRepository {
     public static int selectSubTaskId() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
-        Print.printSubTaskList(getTasks());
+        Print.printSubTaskList(getSubTasksList());
         int id = 0;
         try {
             id = scanner.nextInt();

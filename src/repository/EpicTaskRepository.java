@@ -1,11 +1,9 @@
 package repository;
 
-import service.EpicAndSubTaskFactory;
-import service.Scan;
+import service.EpicTaskSaver;
+import service.Print;
 import tasks.EpicTask;
-import tasks.SingleTask;
 
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -15,28 +13,28 @@ public class EpicTaskRepository {
     private static LinkedList<EpicTask> epicTasks = new LinkedList<>();
 
     public static void setTaskStorage() {
-        EpicTask task = EpicAndSubTaskFactory.createTask();
+        EpicTask task = EpicTaskSaver.createTask();
         if (task != null) {
             epicTasks.add(task);
         }
     }
 
-    public static HashMap<Long, EpicTask> getTasks() {
+    public static LinkedList<EpicTask> getTasks() {
         return epicTasks;
     }
 
     public static void removeTask() {
-        EpicTask EpicTask = selectEpicTaskByID();
-        if (EpicTask != null) {
-            SubTaskRepository.removeSubTask(EpicTask);
-            if (SubTaskRepository.getSubTasksListByTask(singleTask).isEmpty()) {
-                EpicTaskRepository.epicTask.remove(singleTask);
+        EpicTask epicTask = selectUserTaskByID();
+        if (epicTask != null) {
+            SubTaskRepository.removeSubTask(epicTask);
+            if (SubTaskRepository.getSubTasksListByTask(epicTask).isEmpty()) {
+                EpicTaskRepository.epicTasks.remove(epicTask);
             }
         }
     }
 
     public static void removeAllTasks() {
-        SubTaskRepository.getTasks().clear();
+        SubTaskRepository.getSubTasksList().clear();
         EpicTaskRepository.getTasks().clear();
     }
 
@@ -47,40 +45,54 @@ public class EpicTaskRepository {
     public static int getTaskIndex(EpicTask epicTask) {
         int index = -1;
         if (epicTask != null) {
-            for (EpicTask et : epicTasks) {
-                if (et.equals(epicTask)) {
-                    index = epicTask.indexOf(et);
+            for (EpicTask t : epicTasks) {
+                if (t.equals(epicTask)) {
+                    index = epicTasks.indexOf(t);
                 }
             }
         }
         return index;
     }
 
-    public static SingleTask getTaskByID(long id) {
-        SingleTask singleTask = null;
-        for (SingleTask t : tasks) {
-            if (t.getId() == id) {
-                singleTask = t;
-            }
-        }
-        if (singleTask == null) {
-            System.out.println("Вы ввели неверный ID задачи");
-        }
-        return singleTask;
-    }
-
-    public static EpicTask selectEpicTaskByID() {
-        int id = Scan.selectId();
+    public static EpicTask getTaskByID(long id) {
         EpicTask epicTask = null;
-        for (EpicTask epicTaskSelect : EpicTaskRepository.getTasks()) {
-            if (epicTaskSelect.getId() == id) {
-                epicTaskSelect = epicTaskSelect;
+        for (EpicTask t : epicTasks) {
+            if (t.getId() == id) {
+                epicTask = t;
             }
         }
         if (epicTask == null) {
             System.out.println("Вы ввели неверный ID задачи");
         }
         return epicTask;
+    }
+
+    public static EpicTask selectUserTaskByID() {
+        int id = selectId();
+        EpicTask epicTask = null;
+        for (EpicTask epicTaskSelect : EpicTaskRepository.getTasks()) {
+            if (epicTaskSelect.getId() == id) {
+                epicTask = epicTaskSelect;
+            }
+        }
+        if (epicTask == null) {
+            System.out.println("Вы ввели неверный ID задачи");
+        }
+        return epicTask;
+    }
+
+    public static int selectId() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите задачу по ID: ");
+        Print.printEpicTaskList(EpicTaskRepository.epicTasks);
+        int id = 0;
+        try {
+            id = scanner.nextInt();
+        } catch (InputMismatchException exp) {
+            System.out.println("Вы ввели неверное значение!");
+        }
+
+        return id;
     }
 
     public static void printObjectById() {
