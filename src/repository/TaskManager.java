@@ -6,15 +6,21 @@ import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class TaskManager<T extends Task> {
 
-    private LinkedList<T> tasks = new LinkedList<>();
+    private final HashMap<Long, SingleTask> singleTasks = new HashMap<>();
+    private final HashMap<Long, EpicTask> epicTasks = new HashMap<>();
+    private final HashMap<Long, SubTask> subTasks = new HashMap<>();
+
+    SingleTaskFactory singleTaskFactory = new SingleTaskFactory();
+    EpicAndSubTaskFactory epicAndSubTaskFactory = new EpicAndSubTaskFactory();
+
+    private HashMap<Long, T> tasks = new HashMap<>();
 
     TaskManager<T> taskManager;
-
-    private static TaskFactory taskFactory;
 
     T obj;
 
@@ -25,55 +31,53 @@ public class TaskManager<T extends Task> {
         this.obj = obj;
     }
 
-    public void saveFromCommand() {
-        int command = Scan.selectTaskTypeFromUser();
-        if (command == 1) {
-            taskFactory = new SingleTaskFactory();
-            taskFactory.createTask();
-        } else if (command == 2){
-            taskFactory = new EpicAndSubTaskFactory();
-            taskFactory.createTask();
-        } else if (command == 3) {
-            taskFactory = new EpicAndSubTaskFactory();
-            taskFactory.createTask();
-        }
-    }
-
-
     public T returnObject(long id) {
-        for (SingleTask singleTask : TaskRepository.getTasks()) {
-            if (singleTask.getId() == id) {
-                obj = (T) singleTask;
+        for (Long i : SingleTaskRepository.getTasks().keySet()) {
+            if (i == id) {
+                obj = (T) SingleTaskRepository.getTasks().get(i);
             }
         }
-        for (EpicTask epicTask : EpicTaskRepository.getTasks()) {
-            if (epicTask.getId() == id) {
-                obj = (T) epicTask;
+        for (Long i : EpicTaskRepository.getTasks().keySet()) {
+            if (i == id) {
+                obj = (T) EpicTaskRepository.getTasks().get(i);
             }
         }
-        for (SubTask subtask : SubTaskRepository.getSubTasksList()) {
-            if (subtask.getId() == id) {
-                obj = (T) subtask;
+        for (Long i : SubTaskRepository.getTasks().keySet()) {
+            if (i == id) {
+                obj = (T) SubTaskRepository.getTasks().get(i);
             }
         }
         return obj;
     }
 
-    public void printTaskList(LinkedList<T> list) {
-        if (list.isEmpty()) {
+    public void printTaskMap(HashMap<Long, T> map) {
+        if (map.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
-            list.forEach((T task) -> System.out.println(task));
+            for (Long id : map.keySet()) {
+                System.out.println(map.get(id));
+            }
+        }
+    }
+
+    public void saveFromCommand() {
+        int command = Scan.selectTaskTypeFromUser();
+        if (command == 1) {
+            setObjectToRepository((T)singleTaskFactory.createTask());
+        } else if (command == 2){
+            setObjectToRepository((T)epicAndSubTaskFactory.createTask());
+        } else if (command == 3) {
+            setObjectToRepository((T)epicAndSubTaskFactory.createSubTaskFromUserSelect());
         }
     }
 
     public void setObjectToRepository(T obj) {
-        System.out.println(obj.getClass().toString());
+        tasks.put(obj.getId(), obj);
     }
 
     public void setObjectToRepository() {
         if (obj.getClass().equals(SingleTask.class)) {
-            TaskRepository.setTaskStorage();
+            SingleTaskRepository.setTaskStorage();
         } else if (obj.getClass().equals(SubTask.class)) {
             SubTaskRepository.setSubTaskFromUserSelect();
         }

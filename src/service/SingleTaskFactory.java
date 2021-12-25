@@ -4,11 +4,11 @@ import repository.TaskStatus;
 import tasks.SingleTask;
 import tasks.Task;
 
-public class SingleTaskFactory extends TaskFactory{
+public class SingleTaskFactory {
 
-    private static Task singleTask;
-    @Override
-    public Task createTask() {
+    private static SingleTask singleTask;
+
+    public SingleTask createTask() {
         if (!Scan.getLinesFromUser()[0].equals(null)) {
             singleTask = new SingleTask(Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], 0,
                     TaskStatus.NEW);
@@ -19,4 +19,6 @@ public class SingleTaskFactory extends TaskFactory{
         }
         return singleTask;
     }
+
+
 }

@@ -7,11 +7,12 @@ import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.Task;
 
-public class EpicAndSubTaskFactory extends TaskFactory{
+public class EpicAndSubTaskFactory {
 
-    private static Task task;
-    @Override
-    public Task createTask() {
+    private static EpicTask task;
+    private static SubTask subTask;
+
+    public EpicTask createTask() {
         if (!Scan.getLinesFromUser()[0].equals(null)) {
             task = new EpicTask(Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], 0,
                     TaskStatus.NEW);
@@ -23,18 +24,18 @@ public class EpicAndSubTaskFactory extends TaskFactory{
         return task;
     }
 
-    public Task createSubTask(EpicTask epicTask) {
+    public SubTask createSubTask(EpicTask epicTask) {
         Scan.getLinesFromUser();
-        task = new SubTask(epicTask, Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], 0,
+        subTask = new SubTask(epicTask, Scan.getLinesFromUser()[0], Scan.getLinesFromUser()[1], 0,
                 TaskStatus.NEW);
-        task.setId(task.calcAndCheckId());
-        return task;
+        subTask.setId(subTask.calcAndCheckId());
+        return subTask;
     }
 
-    public Task createSubTaskFromUserSelect() {
-        task = EpicTaskRepository.selectUserTaskByID();
+    public SubTask createSubTaskFromUserSelect() {
+        task = EpicTaskRepository.selectEpicTaskByID();
         if (task != null) {
-            return createSubTask((EpicTask) task);
+            return createSubTask(task);
         } else {
             return null;
         }

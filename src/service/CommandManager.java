@@ -1,7 +1,5 @@
 package service;
 
-import java.util.Scanner;
-
 import repository.EpicTaskRepository;
 import repository.TaskManager;
 import repository.SubTaskRepository;
@@ -40,21 +38,21 @@ public class CommandManager {
                     break;
                 case 3:
                     try {
-                        manager.printTaskList(SubTaskRepository.getSubTasksList());
+                        manager.printTaskMap(SubTaskRepository.getTasks());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 4:
                     try {
-                        TaskManager.printTaskList(EpicTaskRepository.getTasks());
+                        manager.printTaskMap(EpicTaskRepository.getTasks());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }
                     break;
                 case 5:
                     try {
-                        TaskManager.printTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
+                        manager.printTaskMap(SubTaskRepository.getSubTasksListFromUserSelect());
                     } catch (NullPointerException exp) {
                         System.out.println("Список был пуст!");
                     }

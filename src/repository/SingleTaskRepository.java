@@ -1,37 +1,24 @@
 package repository;
 
 import service.SingleTaskFactory;
-import service.TaskFactory;
 import tasks.SingleTask;
-import tasks.Task;
 
 import java.util.*;
 
-public class TaskRepository extends Repository{
-
-    private TaskFactory taskFactory = new SingleTaskFactory();
+public class SingleTaskRepository {
 
     private static HashMap<Long, SingleTask> singleTasks = new HashMap<>();
+    static SingleTaskFactory singleTaskFactory = new SingleTaskFactory();
 
     public static void setTaskStorage() {
-        SingleTask singleTask = taskFactory.createTask();
+        SingleTask singleTask = singleTaskFactory.createTask();
         if (singleTask != null) {
-            singleTasks.add(singleTask);
+            singleTasks.put(singleTask.getId(),singleTask);
         }
     }
 
     public static HashMap<Long, SingleTask> getTasks() {
         return singleTasks;
-    }
-
-    public static HashMap<SingleTask> getEpics() {
-        LinkedList<SingleTask> epicList = new LinkedList<>();
-        for (SingleTask singleTask : singleTasks) {
-            if (singleTask.getEpic().equals(EpicStatus.EPIC)) {
-                epicList.add(singleTask);
-            }
-        }
-        return epicList;
     }
 
     public static void removeTask() {
@@ -45,7 +32,7 @@ public class TaskRepository extends Repository{
     }
 
     public static void removeAllTasks() {
-        SubTaskRepository.getSubTasksList().clear();
+        SubTaskRepository.getTasks().clear();
         TaskRepository.getTasks().clear();
     }
 
@@ -95,7 +82,7 @@ public class TaskRepository extends Repository{
     public static int selectId() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
-        TaskManager.printTaskList(TaskRepository.singleTasks);
+        TaskManager.printTaskMap(TaskRepository.singleTasks);
         int id = 0;
         try {
             id = scanner.nextInt();

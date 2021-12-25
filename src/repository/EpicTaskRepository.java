@@ -5,6 +5,7 @@ import service.Scan;
 import tasks.EpicTask;
 import tasks.SingleTask;
 
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -20,14 +21,14 @@ public class EpicTaskRepository {
         }
     }
 
-    public static LinkedList<EpicTask> getTasks() {
+    public static HashMap<Long, EpicTask> getTasks() {
         return epicTasks;
     }
 
     public static void removeTask() {
-        SingleTask singleTask = selectUserTaskByID();
-        if (singleTask != null) {
-            SubTaskRepository.removeSubTask(singleTask);
+        EpicTask EpicTask = selectEpicTaskByID();
+        if (EpicTask != null) {
+            SubTaskRepository.removeSubTask(EpicTask);
             if (SubTaskRepository.getSubTasksListByTask(singleTask).isEmpty()) {
                 EpicTaskRepository.epicTask.remove(singleTask);
             }
@@ -35,7 +36,7 @@ public class EpicTaskRepository {
     }
 
     public static void removeAllTasks() {
-        SubTaskRepository.getSubTasksList().clear();
+        SubTaskRepository.getTasks().clear();
         EpicTaskRepository.getTasks().clear();
     }
 
@@ -68,7 +69,7 @@ public class EpicTaskRepository {
         return singleTask;
     }
 
-    public static SingleTask selectUserTaskByID() {
+    public static EpicTask selectEpicTaskByID() {
         int id = Scan.selectId();
         EpicTask epicTask = null;
         for (EpicTask epicTaskSelect : EpicTaskRepository.getTasks()) {
@@ -76,10 +77,10 @@ public class EpicTaskRepository {
                 epicTaskSelect = epicTaskSelect;
             }
         }
-        if (singleTask == null) {
+        if (epicTask == null) {
             System.out.println("Вы ввели неверный ID задачи");
         }
-        return singleTask;
+        return epicTask;
     }
 
     public static void printObjectById() {
