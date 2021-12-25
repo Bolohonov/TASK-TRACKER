@@ -15,7 +15,7 @@ public class CommandManager {
 
         while (command != 0) {
             Print.printMenu();
-            command = Scan.getScanOrZero();
+            command = Scan.getIntOrZero();
 
             switch (command) {
                 case 1:
@@ -25,7 +25,7 @@ public class CommandManager {
                     manager.saveSubTaskFromCommand();
                     break;
                 case 3:
-                    manager.printSubTasks();
+                    manager.printTasks();
                     break;
                 case 4:
                     manager.printEpics();

@@ -28,7 +28,7 @@ public class SubTaskSaver {
         int command = -1;
         while (command != 0) {
             Print.printMenuToAddSubTask();
-            command = Scan.getScanOrZero();
+            command = Scan.getIntOrZero();
             switch (command) {
                 case 0:
                     break;

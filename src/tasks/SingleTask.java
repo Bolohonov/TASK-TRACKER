@@ -48,7 +48,6 @@ public class SingleTask {
 
     public long calcAndCheckId() {
         long id = (long)(Math.random()*17+Math.random()*137);
-        System.out.println(id);
         TaskManager rep = new TaskManager();
         if (rep.returnObject(id) == null) {
         } else {

@@ -67,18 +67,4 @@ public class EpicTaskRepository {
         }
         return epicTask;
     }
-
-    public static void printObjectById() {
-        System.out.println("Выберите задачу по ID: ");
-        int id;
-        try {
-            Scanner scanner = new Scanner(System.in);
-            id = scanner.nextInt();
-        } catch(InputMismatchException exp) {
-            System.out.println("Введите числовое значение!");
-            id=0;
-        }
-        TaskManager rep = new TaskManager();
-        System.out.println(rep.returnObject(id).toString());
-    }
 }

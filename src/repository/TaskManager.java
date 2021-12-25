@@ -2,11 +2,11 @@ package repository;
 
 import service.Print;
 import service.Scan;
+import service.TaskUpdater;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
 
-import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -35,25 +35,27 @@ public class TaskManager<T extends SingleTask> {
             singleTaskRepository.setTaskStorage();
         } else if (command == 2){
             epicTaskRepository.setTaskStorage();
+        } else if (command == 3) {
+            subTaskRepository.setSubTaskFromUserSelect();
         }
     }
 
     public static void saveSubTaskFromCommand() {
-        SubTaskRepository.setSubTaskFromUserSelect();
+        subTaskRepository.setSubTaskFromUserSelect();
     }
 
     public T returnObject(long id) {
-        for (SingleTask singleTask : SingleTaskRepository.getTasks()) {
+        for (SingleTask singleTask : singleTaskRepository.getTasks()) {
             if (singleTask.getId() == id) {
                 obj = (T) singleTask;
             }
         }
-        for (EpicTask epicTask : EpicTaskRepository.getTasks()) {
+        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
             if (epicTask.getId() == id) {
                 obj = (T) epicTask;
             }
         }
-        for (SubTask subtask : SubTaskRepository.getSubTasks()) {
+        for (SubTask subtask : subTaskRepository.getSubTasks()) {
             if (subtask.getId() == id) {
                 obj = (T) subtask;
             }
@@ -61,98 +63,20 @@ public class TaskManager<T extends SingleTask> {
         return obj;
     }
 
-    public T setStatus(T task) {
-        System.out.println("Текущий статус" + task.getStatus());
-        System.out.println("Выберите статус");
-        Print.printStatusList();
-        int statusIndex = Scan.getScanOrZero();
-        switch (statusIndex) {
-            case 2:
-                updateTaskStatus(task, TaskStatus.IN_PROGRESS);
-                break;
-            case 3:
-                updateTaskStatus(task, TaskStatus.DONE);
-                break;
-            default:
-                Print.printMistake();
-                break;
-        }
-        return task;
-    }
-
-    public void replaceTask(T task) {
-        if (task.getClass().equals(SingleTask.class)) {
-            for (SingleTask task : singleTaskRepository.getTasks()) {
-                if (task.getId() == )
+    public void updateTask(T task) {
+        try {
+            if (task.getClass().equals(SingleTask.class)) {
+                TaskUpdater.updateTask(task);
+            } else if (task.getClass().equals(EpicTask.class)) {
+                TaskUpdater.updateEpicTask((EpicTask) task);
+            } else if (task.getClass().equals(SubTask.class)) {
+                TaskUpdater.updateSubTask((SubTask) task);
             }
-            singleTaskRepository.getTasks();
-                    singleTasks.set(index, singleTask);
-        }
-        for (SingleTask singleTask : SingleTaskRepository.getTasks()) {
-            if (singleTask.getId() == id) {
-                obj = (T) singleTask;
-            }
-        }
-        for (EpicTask epicTask : EpicTaskRepository.getTasks()) {
-            if (epicTask.getId() == id) {
-                obj = (T) epicTask;
-            }
-        }
-        for (SubTask subtask : SubTaskRepository.getSubTasks()) {
-            if (subtask.getId() == id) {
-                obj = (T) subtask;
-            }
-        }
-        return obj;
-    }
-
-    public static void updateTaskById(T task) {
-        int command = -1;
-        while (command != 0) {
-            Print.printMenuToUpdateTask();
-            Scan.getScanOrZero();
-            switch (command) {
-                case 0:
-                    break;
-                case 1:
-                    System.out.println("Введите новое название задачи");
-                    scanner = new Scanner(System.in);
-                    String name = scanner.nextLine();
-                    if (name != null) {
-                        singleTask.setName(name);
-                    }
-                    TaskRepository.replaceTask(index, singleTask);
-                    break;
-                case 2:
-                    System.out.println("Введите новое описание задачи");
-                    scanner = new Scanner(System.in);
-                    String description = scanner.nextLine();
-                    if (description != null) {
-                        singleTask.setDescription(description);
-                    }
-                    TaskRepository.replaceTask(index, singleTask);
-                    break;
-                case 3:
-                    if (!checkEpicStatus(singleTask)) {
-                        singleTask = setStatus(singleTask);
-                    } else {
-                        System.out.println("Статус не подлежит изменению!");
-                    }
-                    break;
-                default:
-                    Print.printMistake();
-                    break;
-            }
+        } catch (NullPointerException exp) {
+            Print.printWrongValue();
         }
     }
 
-    public void updateTaskStatus(T task, TaskStatus status) {
-        task.setStatus(status);
-        task.getId();
-
-        int index = TaskRepository.getTaskIndex(singleTask);
-        TaskRepository.replaceTask(index, singleTask);
-    }
 
     public void printTask(T task) {
         try {
@@ -160,47 +84,38 @@ public class TaskManager<T extends SingleTask> {
         } catch (NullPointerException exp) {
             System.out.println("Значение не найдено!");
         }
-
     }
 
-//    public void printTasks() {
-//        if (singleTaskRepository.getTasks().isEmpty()) {
-//            System.out.println("Список пуст!");
-//        } else {
-//            singleTaskRepository.getTasks().forEach((SingleTask task) -> System.out.println(task));
-//        }
-//    }
-
     public static void printEpics() {
-        if (epicTaskRepository.getTasks().isEmpty()) {
+        LinkedList<EpicTask> list = epicTaskRepository.getTasks();
+        if (list.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
-            epicTaskRepository.getTasks().forEach((EpicTask epicTask)
-                    -> System.out.println(epicTask));
+            list.forEach((EpicTask epicTask) -> System.out.println(epicTask));
         }
     }
 
-    public static void printSubTasks() {
-        if (subTaskRepository.getSubTasks().isEmpty()) {
+    public static void printTasks() {
+        LinkedList<SingleTask> list = singleTaskRepository.getTasks();
+        if (list.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
-            subTaskRepository.getSubTasks().forEach((SubTask subtask)
-                    -> System.out.println(subtask));
+            list.forEach((SingleTask singleTask) -> System.out.println(singleTask));
         }
     }
 
     public static void printSubTasksFromUserSelect() {
-        if (subTaskRepository.getSubTasksListFromUserSelect().isEmpty()) {
+        LinkedList<SubTask> list = subTaskRepository.getSubTasksListFromUserSelect();
+        if (list.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
-            subTaskRepository.getSubTasksListFromUserSelect().forEach((SubTask subtask)
-                    -> System.out.println(subtask));
+            list.forEach((SubTask subtask) -> System.out.println(subtask));
         }
     }
 
     public void removeAllTasks() {
         try {
-            SingleTaskRepository.removeAllTasks();
+            singleTaskRepository.removeAllTasks();
         } catch (NullPointerException exp) {
             System.out.println("В списке не было задач");
         }
@@ -208,7 +123,7 @@ public class TaskManager<T extends SingleTask> {
 
     public void removeEpicTask() {
         try {
-            EpicTaskRepository.removeTask();
+            epicTaskRepository.removeTask();
         } catch (NullPointerException exp) {
             System.out.println("Неверный ввод!");
         }
@@ -216,15 +131,9 @@ public class TaskManager<T extends SingleTask> {
 
     public void removeSubTaskById() {
         try {
-            SubTaskRepository.removeSubTaskById();
+            subTaskRepository.removeSubTaskById();
         } catch (NullPointerException exp) {
             System.out.println("Неверный ввод!");
         }
     }
-
-    public void updateTask(T task) {
-
-    }
-
-
 }

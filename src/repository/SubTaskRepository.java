@@ -1,7 +1,9 @@
 package repository;
 
+import service.Scan;
 import service.SubTaskSaver;
 import tasks.EpicTask;
+import tasks.SingleTask;
 import tasks.SubTask;
 
 import java.util.InputMismatchException;
@@ -104,7 +106,7 @@ public class SubTaskRepository {
     }
 
     public static SubTask selectUserSubTaskByID() {
-        int id = selectSubTaskId();
+        int id = Scan.selectId();
         SubTask subTask = null;
         for (SubTask taskSelect : SubTaskRepository.getSubTasks()) {
             if (taskSelect.getId() == id) {
@@ -117,17 +119,16 @@ public class SubTaskRepository {
         return subTask;
     }
 
-    public static int selectSubTaskId() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите задачу по ID: ");
-        //Print.printSubTaskList(getSubTasksList());
-        int id = 0;
-        try {
-            id = scanner.nextInt();
-        } catch (InputMismatchException exp) {
-            System.out.println("Вы ввели неверное значение!");
+    public static int getTaskIndex(SubTask subTask) {
+        int index = -1;
+        if (subTask != null) {
+            for (SubTask t : subTasks) {
+                if (t.equals(subTask)) {
+                    index = subTasks.indexOf(t);
+                }
+            }
         }
-        return id;
+        return index;
     }
 
     public static void replaceSubTask(int index, SubTask subTask) {
