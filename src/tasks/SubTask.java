@@ -4,19 +4,19 @@ import repository.TaskStatus;
 
 import java.util.Objects;
 
-public class SubTask extends Task {
+public class SubTask extends SingleTask {
     EpicTask epicTask;
     String name;
     String description;
     long id;
     TaskStatus status;
 
-    public SubTask(EpicTask epicTask, String name, String description, long id, TaskStatus status) {
+    public SubTask(EpicTask epicTask, String name, String description) {
         this.epicTask = epicTask;
         this.name = name;
         this.description = description;
-        this.id = id;
-        this.status = status;
+        this.id = calcAndCheckId();
+        this.status = TaskStatus.NEW;
     }
 
     public EpicTask getTask() {
@@ -51,5 +51,37 @@ public class SubTask extends Task {
         int result = Objects.hash(name, description, id, status);
         result = 31 * result + epicTask.hashCode();
         return result;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 }

@@ -1,7 +1,7 @@
 package repository;
 
 import service.EpicTaskSaver;
-import service.Print;
+import service.Scan;
 import tasks.EpicTask;
 
 import java.util.InputMismatchException;
@@ -34,7 +34,7 @@ public class EpicTaskRepository {
     }
 
     public static void removeAllTasks() {
-        SubTaskRepository.getSubTasksList().clear();
+        SubTaskRepository.getSubTasks().clear();
         EpicTaskRepository.getTasks().clear();
     }
 
@@ -54,21 +54,8 @@ public class EpicTaskRepository {
         return index;
     }
 
-    public static EpicTask getTaskByID(long id) {
-        EpicTask epicTask = null;
-        for (EpicTask t : epicTasks) {
-            if (t.getId() == id) {
-                epicTask = t;
-            }
-        }
-        if (epicTask == null) {
-            System.out.println("Вы ввели неверный ID задачи");
-        }
-        return epicTask;
-    }
-
     public static EpicTask selectUserTaskByID() {
-        int id = selectId();
+        int id = Scan.selectId();
         EpicTask epicTask = null;
         for (EpicTask epicTaskSelect : EpicTaskRepository.getTasks()) {
             if (epicTaskSelect.getId() == id) {
@@ -79,20 +66,6 @@ public class EpicTaskRepository {
             System.out.println("Вы ввели неверный ID задачи");
         }
         return epicTask;
-    }
-
-    public static int selectId() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите задачу по ID: ");
-        Print.printEpicTaskList(EpicTaskRepository.epicTasks);
-        int id = 0;
-        try {
-            id = scanner.nextInt();
-        } catch (InputMismatchException exp) {
-            System.out.println("Вы ввели неверное значение!");
-        }
-
-        return id;
     }
 
     public static void printObjectById() {

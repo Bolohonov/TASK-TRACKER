@@ -7,12 +7,13 @@ import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class TaskRepository {
+public class SingleTaskRepository {
 
     private static LinkedList<SingleTask> singleTasks = new LinkedList<>();
 
     public static void setTaskStorage() {
-        SingleTask singleTask = TaskSaver.createTask();
+        TaskSaver taskSaver = new TaskSaver();
+        SingleTask singleTask = (SingleTask) taskSaver.createTask();
         if (singleTask != null) {
             singleTasks.add(singleTask);
         }
@@ -33,8 +34,7 @@ public class TaskRepository {
 //    }
 
     public static void removeAllTasks() {
-        SubTaskRepository.getSubTasksList().clear();
-        TaskRepository.getTasks().clear();
+        SingleTaskRepository.getTasks().clear();
     }
 
     public static void replaceTask(int index, SingleTask singleTask) {

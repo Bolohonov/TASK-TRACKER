@@ -30,7 +30,7 @@ public class Print {
         System.out.println("3 - Подзадачу: ");
     }
 
-    static void printMenuToUpdateTask() {
+    public static void printMenuToUpdateTask() {
         System.out.println("Что вы хотите обновить: ");
         System.out.println("0 - Для выхода в меню: ");
         System.out.println("1 - Для обновления названия: ");
@@ -46,7 +46,7 @@ public class Print {
         System.out.println("Задача сохранена!");
     }
 
-    static void printMistake() {
+    public static void printMistake() {
         System.out.println("Вы ввели неверное значение!");
     }
 
@@ -58,7 +58,7 @@ public class Print {
         System.out.println("Извините, такой команды пока нет.");
     }
 
-    static void printStatusList() {
+    public static void printStatusList() {
         for (TaskStatus taskStatus : TaskStatus.values()) {
             System.out.println(taskStatus.getStatus());
         }

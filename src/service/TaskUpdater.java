@@ -10,13 +10,7 @@
 //
 //public class TaskUpdater {
 //
-//    public static boolean checkEpicStatus(SingleTask singleTask) {
-//        if (singleTask.getEpic().equals(EpicStatus.EPIC)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+//    TaskManager manager = new TaskManager();
 //
 //    public static boolean checkStatusAllDone(SubTask subTask) {
 //        LinkedList<SubTask> subTaskList = SubTaskRepository.getSubTasksListBySubTask(subTask);
@@ -35,14 +29,7 @@
 //        System.out.println("Текущий статус" + singleTask.getStatus());
 //        System.out.println("Выберите статус");
 //        Print.printStatusList();
-//        Scanner scanner = new Scanner(System.in);
-//        int statusIndex = 0;
-//        try {
-//            statusIndex = scanner.nextInt();
-//        } catch (InputMismatchException exp) {
-//            System.out.println("Вы ввели неверное значение!");
-//            statusIndex = 0;
-//        }
+//        int statusIndex = Scan.getScanOrZero();
 //        switch (statusIndex) {
 //            case 2:
 //                updateTaskStatus(singleTask, TaskStatus.IN_PROGRESS);
@@ -61,8 +48,7 @@
 //        System.out.println("Текущий статус" + subTask.getStatus());
 //        System.out.println("Выберите статус");
 //        Print.printStatusList();
-//        Scanner scanner = new Scanner(System.in);
-//        int statusIndex = scanner.nextInt();
+//        int statusIndex = Scan.getScanOrZero();
 //        switch (statusIndex) {
 //            case 2:
 //                updateSubTaskStatus(subTask, TaskStatus.IN_PROGRESS);
@@ -117,7 +103,7 @@
 //        if (rep.returnObject(id) instanceof SubTask) {
 //            updateSubTaskById(id);
 //        } else {
-//            updateTaskById(id);
+//            updateEpicTaskById(id);
 //        }
 //    }
 //
@@ -167,8 +153,8 @@
 //        }
 //    }
 //
-//    public static void updateTaskById(int id) {
-//        SingleTask singleTask = TaskRepository.getTaskByID(id);
+//    public static void updateEpicTaskById(int id) {
+//        manager.returnObject(id); - obj
 //        int index = TaskRepository.getTaskIndex(singleTask);
 //        int command = -1;
 //        while (command != 0) {

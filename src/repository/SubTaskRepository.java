@@ -1,10 +1,8 @@
 package repository;
 
-import service.Print;
 import service.SubTaskSaver;
 import tasks.EpicTask;
 import tasks.SubTask;
-import tasks.SingleTask;
 
 import java.util.InputMismatchException;
 import java.util.LinkedList;
@@ -22,7 +20,7 @@ public class SubTaskRepository {
     }
 
     public static void setSubTaskFromUserSelect() {
-        SubTask subTask = SubTaskSaver.saveSubTaskFromUserSelect();
+        SubTask subTask = SubTaskSaver.createSubTaskFromUserSelect();
         if (subTask != null) {
             subTasks.add(subTask);
         }
@@ -66,7 +64,7 @@ public class SubTaskRepository {
         return subTasksListBySubTask;
     }
 
-    public static LinkedList<SubTask> getSubTasksList() {
+    public static LinkedList<SubTask> getSubTasks() {
         return subTasks;
     }
 
@@ -94,7 +92,7 @@ public class SubTaskRepository {
 
     public static SubTask getSubTaskByID(long id) {
         SubTask subTask = null;
-        for (SubTask taskSelect : SubTaskRepository.getSubTasksList()) {
+        for (SubTask taskSelect : SubTaskRepository.getSubTasks()) {
             if (taskSelect.getId() == id) {
                 subTask = taskSelect;
             }
@@ -108,7 +106,7 @@ public class SubTaskRepository {
     public static SubTask selectUserSubTaskByID() {
         int id = selectSubTaskId();
         SubTask subTask = null;
-        for (SubTask taskSelect : SubTaskRepository.getSubTasksList()) {
+        for (SubTask taskSelect : SubTaskRepository.getSubTasks()) {
             if (taskSelect.getId() == id) {
                 subTask = taskSelect;
             }
@@ -122,7 +120,7 @@ public class SubTaskRepository {
     public static int selectSubTaskId() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите задачу по ID: ");
-        Print.printSubTaskList(getSubTasksList());
+        //Print.printSubTaskList(getSubTasksList());
         int id = 0;
         try {
             id = scanner.nextInt();

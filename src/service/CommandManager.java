@@ -1,12 +1,6 @@
 package service;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
-import repository.EpicTaskRepository;
-import repository.SubTaskRepository;
 import repository.TaskManager;
-import repository.TaskRepository;
 
 //Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню (да и вообще много лишнего!).
 // Если нужно сразу переделать, то готов поправить, удалив лишнее!
@@ -25,80 +19,34 @@ public class CommandManager {
 
             switch (command) {
                 case 1:
-                    try {
-                        manager.saveFromCommand();
-                        Print.printSaved();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Список был пуст!");
-                    }
+                    manager.saveFromCommand();
                     break;
                 case 2:
-                    try {
-                        manager.saveSubTaskFromCommand();
-                        Print.printSaved();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Список был пуст!");
-                    }
+                    manager.saveSubTaskFromCommand();
                     break;
                 case 3:
-                    try {
-                        manager.printTasksList(SubTaskRepository.getSubTasksList());
-                    } catch (NullPointerException exp) {
-                        System.out.println("Список был пуст!");
-                    }
+                    manager.printSubTasks();
                     break;
                 case 4:
-                    try {
-                        Print.printEpicTaskList(EpicTaskRepository.getTasks());
-                    } catch (NullPointerException exp) {
-                        System.out.println("Список был пуст!");
-                    }
+                    manager.printEpics();
                     break;
                 case 5:
-                    try {
-                        Print.printSubTaskList(SubTaskRepository.getSubTasksListFromUserSelect());
-                    } catch (NullPointerException exp) {
-                        System.out.println("Список был пуст!");
-                    }
+                    manager.printSubTasksFromUserSelect();
                     break;
                 case 6:
-                    try {
-                        TaskRepository.printObjectById();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Неверный ввод!");
-                    }
+                    manager.printTask(manager.returnObject(Scan.selectId()));
                     break;
                 case 7:
-                    try {
-                        //TaskUpdater.updateObjectByInt();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Неверный ввод!");
-                    }
-                    Print.printSaved();
+                    manager.updateTask(manager.returnObject(Scan.selectId()));
                     break;
                 case 8:
-                    try {
-                        TaskRepository.removeAllTasks();
-                    } catch (NullPointerException exp) {
-                        System.out.println("В списке не было задач");
-                    }
-                    Print.printDeleted();
+                    manager.removeAllTasks();
                     break;
                 case 9:
-                    try {
-                        EpicTaskRepository.removeTask();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Неверный ввод!");
-                    }
-                    Print.printDeleted();
+                    manager.removeEpicTask();
                     break;
                 case 10:
-                    try {
-                        SubTaskRepository.removeSubTaskById();
-                    } catch (NullPointerException exp) {
-                        System.out.println("Неверный ввод!");
-                    }
-                    Print.printDeleted();
+                    manager.removeSubTaskById();
                 case 0:
                     Print.printExit();
                     break;
