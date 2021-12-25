@@ -82,6 +82,7 @@ public class SubTaskRepository {
         subTasks.remove(selectedTask);
     }
 
+
     public static int getSubTaskIndex(SubTask subTask) {
         int index = -1;
         if (subTask != null) {
