@@ -9,7 +9,7 @@ public class SingleTask {
 
     private String name;
     private String description;
-    private long id;
+    private int id;
     private TaskStatus status;
 
     public SingleTask(String name, String description) {
@@ -46,7 +46,7 @@ public class SingleTask {
     @Override
     public int hashCode() {
         int result = Objects.hash(name, description, id, status);
-        result = 31 * result;
+        result = 31 * result + id;
         return result;
     }
 
@@ -66,8 +66,8 @@ public class SingleTask {
         return id;
     }
 
-    public long calcAndCheckId() {
-        long id = (long) (Math.random() * 17 + Math.random() * 137);
+    public int calcAndCheckId() {
+        int id = (int) (Math.random() * 17 + Math.random() * 137);
         TaskManager manager = new TaskManager();
         if (manager.returnObject(id) == null) {
         } else {

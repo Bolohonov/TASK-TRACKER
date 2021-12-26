@@ -9,7 +9,7 @@ public class EpicTask extends SingleTask{
 
     private String name;
     private String description;
-    private long id;
+    private int id;
     private TaskStatus status;
 
     public EpicTask(String name, String description) {
@@ -43,7 +43,7 @@ public class EpicTask extends SingleTask{
     @Override
     public int hashCode() {
         int result = Objects.hash(name, description, id, status);
-        result = 37 * result;
+        result = 37 * result + id;
         return result;
     }
 
@@ -63,8 +63,8 @@ public class EpicTask extends SingleTask{
         return id;
     }
 
-    public long calcAndCheckId() {
-        long id = (long) (Math.random() * 17 + Math.random() * 137);
+    public int calcAndCheckId() {
+        int id = (int) (Math.random() * 17 + Math.random() * 137);
         TaskManager manager = new TaskManager();
         if (manager.returnObject(id) == null) {
         } else {

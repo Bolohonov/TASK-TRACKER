@@ -9,7 +9,7 @@ public class SubTask extends SingleTask {
     EpicTask epicTask;
     String name;
     String description;
-    long id;
+    int id;
     TaskStatus status;
 
     public SubTask(EpicTask epicTask, String name, String description) {
@@ -50,7 +50,7 @@ public class SubTask extends SingleTask {
     @Override
     public int hashCode() {
         int result = Objects.hash(name, description, id, status);
-        result = 41 * result + epicTask.hashCode();
+        result = 41 * result + epicTask.hashCode() + id;
         return result;
     }
 
@@ -70,8 +70,8 @@ public class SubTask extends SingleTask {
         return id;
     }
 
-    public long calcAndCheckId() {
-        long id = (long) (Math.random() * 17 + Math.random() * 137);
+    public int calcAndCheckId() {
+        int id = (int) (Math.random() * 17 + Math.random() * 137);
         TaskManager manager = new TaskManager();
         if (manager.returnObject(id) == null) {
         } else {
