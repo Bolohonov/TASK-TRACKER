@@ -9,8 +9,6 @@ public class EpicTaskRepository {
 
     private static LinkedList<EpicTask> epicTasks = new LinkedList<>();
 
-    private static final SubTaskRepository subTaskRepository = new SubTaskRepository();
-
     static void createTask() {
         EpicTask epicTask;
         String[] userTask = Scan.saveLinesFromUser();
@@ -18,7 +16,7 @@ public class EpicTaskRepository {
         if (epicTask != null) {
             epicTasks.add(epicTask);
         }
-        subTaskRepository.createSubTaskFromEpicTask(epicTask);
+        SubTaskRepository.createSubTaskFromEpicTask(epicTask);
     }
 
     static LinkedList<EpicTask> getTasks() {
@@ -28,8 +26,8 @@ public class EpicTaskRepository {
     static void removeTask() {
         EpicTask epicTask = selectUserTaskByID();
         if (epicTask != null) {
-            subTaskRepository.removeSubTask(epicTask);
-            if (subTaskRepository.getSubTasksListByTask(epicTask).isEmpty()) {
+            SubTaskRepository.removeSubTask(epicTask);
+            if (SubTaskRepository.getSubTasksListByTask(epicTask).isEmpty()) {
                 EpicTaskRepository.epicTasks.remove(epicTask);
             }
         }

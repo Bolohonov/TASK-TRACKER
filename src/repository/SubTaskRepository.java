@@ -10,8 +10,6 @@ import java.util.LinkedList;
 public class SubTaskRepository {
 
     private static LinkedList<SubTask> subTasks = new LinkedList<>();
-    private static SingleTaskRepository singleTaskRepository = new SingleTaskRepository();
-    private static EpicTaskRepository epicTaskRepository = new EpicTaskRepository();
 
 
     static void createSubTask(EpicTask epicTask) {
@@ -20,7 +18,6 @@ public class SubTaskRepository {
         subTask = new SubTask(epicTask, userTask[0], userTask[1]);
         subTasks.add(subTask);
         epicTask.setStatus(TaskStatus.IN_PROGRESS);
-        epicTaskRepository.replaceTask(epicTaskRepository.getTaskIndex(epicTask), epicTask);
     }
 
     static void createSubTaskFromUserSelect() {

@@ -25,9 +25,9 @@ public class TaskUpdater {
     }
 
     static boolean checkStatusInProgressOrDone(SubTask subTask) {
-        SingleTask singleTask = subTask.getTask();
-        if (singleTask.getStatus().equals(TaskStatus.IN_PROGRESS)
-                || singleTask.getStatus().equals(TaskStatus.DONE)) {
+        EpicTask epicTask = subTask.getTask();
+        if (epicTask.getStatus().equals(TaskStatus.IN_PROGRESS)
+                || epicTask.getStatus().equals(TaskStatus.DONE)) {
             return true;
         } else {
             return false;
