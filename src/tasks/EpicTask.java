@@ -59,7 +59,7 @@ public class EpicTask extends SingleTask{
         this.description = description;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

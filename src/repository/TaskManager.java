@@ -34,7 +34,7 @@ public class TaskManager<T extends SingleTask> {
         subTaskRepository.createSubTaskFromUserSelect();
     }
 
-    public T returnObject(long id) {
+    public T returnObject(int id) {
         for (SingleTask singleTask : singleTaskRepository.getTasks()) {
             if (singleTask.getId() == id) {
                 obj = (T) singleTask;
