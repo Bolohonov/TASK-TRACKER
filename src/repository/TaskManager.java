@@ -2,13 +2,11 @@ package repository;
 
 import service.Print;
 import service.Scan;
-import service.TaskUpdater;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
 
 import java.util.LinkedList;
-import java.util.Scanner;
 
 public class TaskManager<T extends SingleTask> {
 
@@ -18,22 +16,16 @@ public class TaskManager<T extends SingleTask> {
     private final static EpicTaskRepository epicTaskRepository = new EpicTaskRepository();
     private final static SubTaskRepository subTaskRepository = new SubTaskRepository();
 
-    TaskManager<T> taskManager;
-
     T obj;
 
     public TaskManager() {
-    }
-
-    public TaskManager(T obj) {
-        this.obj = obj;
     }
 
     public static void saveFromCommand() {
         int command = Scan.selectType();
         if (command == 1) {
             singleTaskRepository.setTaskStorage();
-        } else if (command == 2){
+        } else if (command == 2) {
             epicTaskRepository.setTaskStorage();
         } else if (command == 3) {
             subTaskRepository.setSubTaskFromUserSelect();

@@ -1,5 +1,6 @@
-package service;
+package repository;
 
+import service.Scan;
 import tasks.EpicTask;
 
 public class EpicTaskSaver {

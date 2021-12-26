@@ -1,8 +1,7 @@
-package service;
+package repository;
 
-import repository.EpicTaskRepository;
-import repository.SubTaskRepository;
-import repository.TaskStatus;
+import service.Print;
+import service.Scan;
 import tasks.EpicTask;
 import tasks.SubTask;
 

@@ -1,11 +1,6 @@
 package service;
 
 import repository.TaskStatus;
-import tasks.EpicTask;
-import tasks.SubTask;
-import tasks.SingleTask;
-
-import java.util.LinkedList;
 
 public class Print {
 
@@ -16,7 +11,7 @@ public class Print {
         }
     }
 
-    static void printMenuToAddSubTask() {
+    public static void printMenuToAddSubTask() {
         System.out.println("Введите: ");
         System.out.println("0 - Для выхода в меню: ");
         System.out.println("1 - Для для добавления подзадач: ");
@@ -40,14 +35,6 @@ public class Print {
 
     static void printSelectById() {
         System.out.println("Выберите задачу по ID: ");
-    }
-
-    static void printDeleted() {
-        System.out.println("Задача удалена!");
-    }
-
-    static void printSaved() {
-        System.out.println("Задача сохранена!");
     }
 
     public static void printWrongValue() {

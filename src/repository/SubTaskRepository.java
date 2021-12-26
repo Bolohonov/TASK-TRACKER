@@ -1,14 +1,10 @@
 package repository;
 
 import service.Scan;
-import service.SubTaskSaver;
 import tasks.EpicTask;
-import tasks.SingleTask;
 import tasks.SubTask;
 
-import java.util.InputMismatchException;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 public class SubTaskRepository {
 
@@ -80,7 +76,7 @@ public class SubTaskRepository {
         subTasks.remove(selectedTask);
     }
 
-    public static int getSubTaskIndex(SubTask subTask) {
+    public static int getTaskIndex(SubTask subTask) {
         int index = -1;
         if (subTask != null) {
             for (SubTask t : subTasks) {
@@ -90,19 +86,6 @@ public class SubTaskRepository {
             }
         }
         return index;
-    }
-
-    public static SubTask getSubTaskByID(long id) {
-        SubTask subTask = null;
-        for (SubTask taskSelect : SubTaskRepository.getSubTasks()) {
-            if (taskSelect.getId() == id) {
-                subTask = taskSelect;
-            }
-        }
-        if (subTask == null) {
-            System.out.println("Вы ввели неверный ID задачи");
-        }
-        return subTask;
     }
 
     public static SubTask selectUserSubTaskByID() {
@@ -117,18 +100,6 @@ public class SubTaskRepository {
             System.out.println("Вы ввели неверный ID задачи");
         }
         return subTask;
-    }
-
-    public static int getTaskIndex(SubTask subTask) {
-        int index = -1;
-        if (subTask != null) {
-            for (SubTask t : subTasks) {
-                if (t.equals(subTask)) {
-                    index = subTasks.indexOf(t);
-                }
-            }
-        }
-        return index;
     }
 
     public static void replaceSubTask(int index, SubTask subTask) {

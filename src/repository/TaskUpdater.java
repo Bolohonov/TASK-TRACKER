@@ -1,6 +1,7 @@
-package service;
+package repository;
 
-import repository.*;
+import service.Print;
+import service.Scan;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
@@ -9,8 +10,6 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class TaskUpdater {
-
-    TaskManager manager = new TaskManager();
 
     public static boolean checkStatusAllDone(SubTask subTask) {
         LinkedList<SubTask> subTaskList = SubTaskRepository.getSubTasksListBySubTask(subTask);
@@ -23,25 +22,6 @@ public class TaskUpdater {
             }
         }
         return status;
-    }
-
-    public static SubTask setSubTaskStatus(SubTask subTask) {
-        System.out.println("Текущий статус" + subTask.getStatus());
-        System.out.println("Выберите статус");
-        Print.printStatusList();
-        int statusIndex = Scan.getIntOrZero();
-        switch (statusIndex) {
-            case 2:
-                updateSubTaskStatus(subTask, TaskStatus.IN_PROGRESS);
-                break;
-            case 3:
-                updateSubTaskStatus(subTask, TaskStatus.DONE);
-                break;
-            default:
-                Print.printWrongValue();
-                break;
-        }
-        return subTask;
     }
 
     public static boolean checkStatusInProgressOrDone(SubTask subTask) {
@@ -58,18 +38,6 @@ public class TaskUpdater {
         epicTask.setStatus(status);
         int index = EpicTaskRepository.getTaskIndex(epicTask);
         EpicTaskRepository.replaceTask(index, epicTask);
-    }
-
-    public static void updateTaskStatus(SingleTask singleTask, TaskStatus status) {
-        singleTask.setStatus(status);
-        int index = SingleTaskRepository.getTaskIndex(singleTask);
-        SingleTaskRepository.replaceTask(index, singleTask);
-    }
-
-    public static void updateSubTaskStatus(SubTask subTask, TaskStatus status) {
-        subTask.setStatus(status);
-        int index = SubTaskRepository.getSubTaskIndex(subTask);
-        SubTaskRepository.replaceSubTask(index, subTask);
     }
 
     public static void updateTask(SingleTask task) {
@@ -169,5 +137,4 @@ public class TaskUpdater {
             }
         }
     }
-
 }

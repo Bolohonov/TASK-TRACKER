@@ -49,7 +49,7 @@ public class SubTask extends SingleTask {
     @Override
     public int hashCode() {
         int result = Objects.hash(name, description, id, status);
-        result = 31 * result + epicTask.hashCode();
+        result = 41 * result + epicTask.hashCode();
         return result;
     }
 
@@ -61,20 +61,12 @@ public class SubTask extends SingleTask {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public TaskStatus getStatus() {

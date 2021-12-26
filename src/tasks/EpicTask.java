@@ -1,11 +1,10 @@
 package tasks;
 
-import repository.TaskManager;
 import repository.TaskStatus;
 
 import java.util.Objects;
 
-public class EpicTask extends SingleTask{
+public class EpicTask extends SingleTask {
 
     private String name;
     private String description;
@@ -43,7 +42,7 @@ public class EpicTask extends SingleTask{
     @Override
     public int hashCode() {
         int result = Objects.hash(name, description, id, status);
-        result = 31 * result;
+        result = 37 * result;
         return result;
     }
 
@@ -55,20 +54,12 @@ public class EpicTask extends SingleTask{
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public TaskStatus getStatus() {

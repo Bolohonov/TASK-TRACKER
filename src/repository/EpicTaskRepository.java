@@ -1,12 +1,9 @@
 package repository;
 
-import service.EpicTaskSaver;
 import service.Scan;
 import tasks.EpicTask;
 
-import java.util.InputMismatchException;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 public class EpicTaskRepository {
 
@@ -31,11 +28,6 @@ public class EpicTaskRepository {
                 EpicTaskRepository.epicTasks.remove(epicTask);
             }
         }
-    }
-
-    public static void removeAllTasks() {
-        SubTaskRepository.getSubTasks().clear();
-        EpicTaskRepository.getTasks().clear();
     }
 
     public static void replaceTask(int index, EpicTask epicTask) {

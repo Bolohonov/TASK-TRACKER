@@ -44,8 +44,8 @@ public class Scan {
         } else {
             Print.printWrongValue();
             return null;
-            }
         }
+    }
 
     public static String[] saveLinesFromUser() {
         String[] userTask = new String[2];

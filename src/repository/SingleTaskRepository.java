@@ -1,6 +1,5 @@
 package repository;
 
-import service.TaskSaver;
 import tasks.SingleTask;
 
 import java.util.LinkedList;
@@ -10,8 +9,8 @@ public class SingleTaskRepository {
     private static LinkedList<SingleTask> singleTasks = new LinkedList<>();
 
     public static void setTaskStorage() {
-        TaskSaver taskSaver = new TaskSaver();
-        SingleTask singleTask = (SingleTask) taskSaver.createTask();
+        SingleTaskSaver singleTaskSaver = new SingleTaskSaver();
+        SingleTask singleTask = singleTaskSaver.createTask();
         if (singleTask != null) {
             singleTasks.add(singleTask);
         }

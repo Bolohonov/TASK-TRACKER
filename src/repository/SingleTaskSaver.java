@@ -1,8 +1,9 @@
-package service;
+package repository;
 
+import service.Scan;
 import tasks.SingleTask;
 
-public class TaskSaver {
+public class SingleTaskSaver {
 
     public static SingleTask createTask() {
         SingleTask singleTask;
