@@ -58,6 +58,10 @@ public class SingleTask {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -66,10 +70,14 @@ public class SingleTask {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long calcAndCheckId() {
         long id = (long) (Math.random() * 17 + Math.random() * 137);
-        TaskManager rep = new TaskManager();
-        if (rep.returnObject(id) == null) {
+        TaskManager manager = new TaskManager();
+        if (manager.returnObject(id) == null) {
         } else {
             calcAndCheckId();
         }

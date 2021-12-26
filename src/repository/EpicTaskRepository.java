@@ -9,32 +9,37 @@ public class EpicTaskRepository {
 
     private static LinkedList<EpicTask> epicTasks = new LinkedList<>();
 
-    public static void setTaskStorage() {
-        EpicTask task = EpicTaskSaver.createTask();
-        if (task != null) {
-            epicTasks.add(task);
+    private static final SubTaskRepository subTaskRepository = new SubTaskRepository();
+
+    static void createTask() {
+        EpicTask epicTask;
+        String[] userTask = Scan.saveLinesFromUser();
+        epicTask = new EpicTask(userTask[0], userTask[1]);
+        if (epicTask != null) {
+            epicTasks.add(epicTask);
         }
+        subTaskRepository.createSubTaskFromEpicTask(epicTask);
     }
 
-    public static LinkedList<EpicTask> getTasks() {
+    static LinkedList<EpicTask> getTasks() {
         return epicTasks;
     }
 
-    public static void removeTask() {
+    static void removeTask() {
         EpicTask epicTask = selectUserTaskByID();
         if (epicTask != null) {
-            SubTaskRepository.removeSubTask(epicTask);
-            if (SubTaskRepository.getSubTasksListByTask(epicTask).isEmpty()) {
+            subTaskRepository.removeSubTask(epicTask);
+            if (subTaskRepository.getSubTasksListByTask(epicTask).isEmpty()) {
                 EpicTaskRepository.epicTasks.remove(epicTask);
             }
         }
     }
 
-    public static void replaceTask(int index, EpicTask epicTask) {
+    static void replaceTask(int index, EpicTask epicTask) {
         epicTasks.set(index, epicTask);
     }
 
-    public static int getTaskIndex(EpicTask epicTask) {
+    static int getTaskIndex(EpicTask epicTask) {
         int index = -1;
         if (epicTask != null) {
             for (EpicTask t : epicTasks) {
@@ -46,7 +51,7 @@ public class EpicTaskRepository {
         return index;
     }
 
-    public static EpicTask selectUserTaskByID() {
+    static EpicTask selectUserTaskByID() {
         int id = Scan.selectId();
         EpicTask epicTask = null;
         for (EpicTask epicTaskSelect : EpicTaskRepository.getTasks()) {

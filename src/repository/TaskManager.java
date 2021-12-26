@@ -10,11 +10,9 @@ import java.util.LinkedList;
 
 public class TaskManager<T extends SingleTask> {
 
-    private LinkedList<T> tasks = new LinkedList<>();
-
-    private final static SingleTaskRepository singleTaskRepository = new SingleTaskRepository();
-    private final static EpicTaskRepository epicTaskRepository = new EpicTaskRepository();
-    private final static SubTaskRepository subTaskRepository = new SubTaskRepository();
+    private static final SingleTaskRepository singleTaskRepository = new SingleTaskRepository();
+    private static final EpicTaskRepository epicTaskRepository = new EpicTaskRepository();
+    private static final SubTaskRepository subTaskRepository = new SubTaskRepository();
 
     T obj;
 
@@ -24,16 +22,16 @@ public class TaskManager<T extends SingleTask> {
     public static void saveFromCommand() {
         int command = Scan.selectType();
         if (command == 1) {
-            singleTaskRepository.setTaskStorage();
+            singleTaskRepository.createTask();
         } else if (command == 2) {
-            epicTaskRepository.setTaskStorage();
+            epicTaskRepository.createTask();
         } else if (command == 3) {
-            subTaskRepository.setSubTaskFromUserSelect();
+            subTaskRepository.createSubTaskFromUserSelect();
         }
     }
 
     public static void saveSubTaskFromCommand() {
-        subTaskRepository.setSubTaskFromUserSelect();
+        subTaskRepository.createSubTaskFromUserSelect();
     }
 
     public T returnObject(long id) {
@@ -47,7 +45,7 @@ public class TaskManager<T extends SingleTask> {
                 obj = (T) epicTask;
             }
         }
-        for (SubTask subtask : subTaskRepository.getSubTasks()) {
+        for (SubTask subtask : subTaskRepository.getTasks()) {
             if (subtask.getId() == id) {
                 obj = (T) subtask;
             }
@@ -68,7 +66,6 @@ public class TaskManager<T extends SingleTask> {
             Print.printWrongValue();
         }
     }
-
 
     public void printTask(T task) {
         try {

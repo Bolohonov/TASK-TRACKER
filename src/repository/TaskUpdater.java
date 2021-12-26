@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class TaskUpdater {
 
-    public static boolean checkStatusAllDone(SubTask subTask) {
+    static boolean checkStatusAllDone(SubTask subTask) {
         LinkedList<SubTask> subTaskList = SubTaskRepository.getSubTasksListBySubTask(subTask);
         boolean status = true;
         if (subTask != null) {
@@ -24,7 +24,7 @@ public class TaskUpdater {
         return status;
     }
 
-    public static boolean checkStatusInProgressOrDone(SubTask subTask) {
+    static boolean checkStatusInProgressOrDone(SubTask subTask) {
         SingleTask singleTask = subTask.getTask();
         if (singleTask.getStatus().equals(TaskStatus.IN_PROGRESS)
                 || singleTask.getStatus().equals(TaskStatus.DONE)) {
@@ -34,13 +34,13 @@ public class TaskUpdater {
         }
     }
 
-    public static void updateEpicTaskStatus(EpicTask epicTask, TaskStatus status) {
+    static void updateEpicTaskStatus(EpicTask epicTask, TaskStatus status) {
         epicTask.setStatus(status);
         int index = EpicTaskRepository.getTaskIndex(epicTask);
         EpicTaskRepository.replaceTask(index, epicTask);
     }
 
-    public static void updateTask(SingleTask task) {
+    static void updateTask(SingleTask task) {
         int command = -1;
         int index = SingleTaskRepository.getTaskIndex(task);
         while (command != 0) {
@@ -71,7 +71,7 @@ public class TaskUpdater {
         }
     }
 
-    public static void updateEpicTask(EpicTask task) {
+    static void updateEpicTask(EpicTask task) {
         int command = -1;
         int index = EpicTaskRepository.getTaskIndex(task);
         while (command != 0) {
@@ -100,7 +100,7 @@ public class TaskUpdater {
         }
     }
 
-    public static void updateSubTask(SubTask task) {
+    static void updateSubTask(SubTask task) {
         int command = -1;
         int index = SubTaskRepository.getTaskIndex(task);
         while (command != 0) {

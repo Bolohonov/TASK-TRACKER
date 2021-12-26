@@ -1,6 +1,6 @@
 package service;
 
-public enum Menu {
+enum Menu {
 
     ONE("1 - Добавить новую задачу, эпик или подзадачу"),
     TWO("2 - Добавить новую подзадачу в эпик по идентификатору"),
@@ -21,7 +21,7 @@ public enum Menu {
         this.menuCommand = menuCommand;
     }
 
-    public String getMenu() {
+    String getMenu() {
         return this.menuCommand;
     }
 

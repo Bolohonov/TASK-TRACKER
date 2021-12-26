@@ -26,7 +26,6 @@ public class Scan {
     public static TaskStatus selectStatus() {
         Scanner scanner;
         int command;
-        TaskStatus status;
         scanner = new Scanner(System.in);
         try {
             command = scanner.nextInt();
@@ -38,9 +37,9 @@ public class Scan {
             command = 0;
         }
         if (command == 2) {
-            return status = TaskStatus.IN_PROGRESS;
+            return TaskStatus.IN_PROGRESS;
         } else if (command == 3) {
-            return status = TaskStatus.DONE;
+            return TaskStatus.DONE;
         } else {
             Print.printWrongValue();
             return null;

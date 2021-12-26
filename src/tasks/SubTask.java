@@ -1,5 +1,6 @@
 package tasks;
 
+import repository.TaskManager;
 import repository.TaskStatus;
 
 import java.util.Objects;
@@ -61,11 +62,29 @@ public class SubTask extends SingleTask {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
 
     public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long calcAndCheckId() {
+        long id = (long) (Math.random() * 17 + Math.random() * 137);
+        TaskManager manager = new TaskManager();
+        if (manager.returnObject(id) == null) {
+        } else {
+            calcAndCheckId();
+        }
         return id;
     }
 
