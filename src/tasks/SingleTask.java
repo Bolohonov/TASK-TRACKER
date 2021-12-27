@@ -69,9 +69,8 @@ public class SingleTask {
     public int calcAndCheckId() {
         int id = (int) (Math.random() * 17 + Math.random() * 137);
         TaskManager manager = new TaskManager();
-        if (manager.returnObject(id) == null) {
-        } else {
-            calcAndCheckId();
+        if (manager.returnObject(id) != null) {
+            return calcAndCheckId();
         }
         return id;
     }

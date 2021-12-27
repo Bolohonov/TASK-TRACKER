@@ -11,31 +11,31 @@ import java.util.Scanner;
 
 public class TaskUpdater {
 
-    static boolean checkStatusAllDone(SubTask subTask) {
-        LinkedList<SubTask> subTaskList = SubTaskRepository.getSubTasksListBySubTask(subTask);
-        boolean status = true;
-        if (subTask != null) {
-            for (SubTask subT : subTaskList) {
-                if (!subT.getStatus().equals(TaskStatus.DONE)) {
-                    status = false;
-                }
-            }
-        }
-        return status;
-    }
+//    static boolean checkStatusAllDone(SubTask subTask) {
+//        LinkedList<SubTask> subTaskList = SubTaskRepository.getSubTasksListBySubTask(subTask);
+//        boolean status = true;
+//        if (subTask != null) {
+//            for (SubTask subT : subTaskList) {
+//                if (!subT.getStatus().equals(TaskStatus.DONE)) {
+//                    status = false;
+//                }
+//            }
+//        }
+//        return status;
+//    }
 
-    static boolean checkStatusInProgressOrDone(SubTask subTask) {
-        EpicTask epicTask = subTask.getTask();
-        if (epicTask.getStatus().equals(TaskStatus.IN_PROGRESS)
-                || epicTask.getStatus().equals(TaskStatus.DONE)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    static boolean checkStatusInProgressOrDone(SubTask subTask) {
+//        EpicTask epicTask = subTask.getEpicTask();
+//        if (epicTask.getStatus().equals(TaskStatus.IN_PROGRESS)
+//                || epicTask.getStatus().equals(TaskStatus.DONE)) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
-    static void updateEpicTaskStatus(EpicTask epicTask, TaskStatus status) {
-        epicTask.setStatus(status);
+    static void updateEpicTaskStatus(EpicTask epicTask) {
+        epicTask.setStatus();
         int index = EpicTaskRepository.getTaskIndex(epicTask);
         EpicTaskRepository.replaceTask(index, epicTask);
     }
@@ -123,13 +123,7 @@ public class TaskUpdater {
                 case 3:
                     Print.printStatusList();
                     task.setStatus(Scan.selectStatus());
-                    if (checkStatusAllDone(task)) {
-                        updateEpicTaskStatus(task.getTask(), TaskStatus.DONE);
-                    }
-                    if (task.getStatus().equals(TaskStatus.IN_PROGRESS)
-                            && checkStatusInProgressOrDone(task)) {
-                        updateEpicTaskStatus(task.getTask(), TaskStatus.IN_PROGRESS);
-                    }
+                    task.getEpicTask().setStatus();
                     break;
                 default:
                     Print.printWrongValue();

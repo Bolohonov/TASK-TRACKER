@@ -6,22 +6,26 @@ import repository.TaskStatus;
 import java.util.Objects;
 
 public class SubTask extends SingleTask {
-    EpicTask epicTask;
-    String name;
-    String description;
-    int id;
-    TaskStatus status;
+    private EpicTask epicTask;
+    private String name;
+    private String description;
+    private int id;
+    private TaskStatus status;
 
-    public SubTask(EpicTask epicTask, String name, String description) {
-        this.epicTask = epicTask;
+    public SubTask(String name, String description) {
+        this.epicTask = getEpicTask();
         this.name = name;
         this.description = description;
         this.id = calcAndCheckId();
         this.status = TaskStatus.NEW;
     }
 
-    public EpicTask getTask() {
+    public EpicTask getEpicTask() {
         return epicTask;
+    }
+
+    public void setEpicTask(EpicTask epicTask) {
+        this.epicTask = epicTask;
     }
 
     @Override
@@ -73,9 +77,8 @@ public class SubTask extends SingleTask {
     public int calcAndCheckId() {
         int id = (int) (Math.random() * 17 + Math.random() * 137);
         TaskManager manager = new TaskManager();
-        if (manager.returnObject(id) == null) {
-        } else {
-            calcAndCheckId();
+        if (manager.returnObject(id) != null) {
+            return calcAndCheckId();
         }
         return id;
     }
