@@ -26,7 +26,7 @@ public class EpicTaskRepository {
     static void removeTask() {
         EpicTask epicTask = selectUserTaskByID();
         if (epicTask != null) {
-            SubTaskRepository.removeSubTask(epicTask);
+            SubTaskRepository.removeSubTasks(epicTask);
             if (SubTaskRepository.getSubTasksListByTask(epicTask).isEmpty()) {
                 EpicTaskRepository.epicTasks.remove(epicTask);
             }

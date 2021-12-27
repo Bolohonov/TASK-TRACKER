@@ -24,7 +24,11 @@ public class EpicTask extends SingleTask{
     }
 
     public LinkedList<SubTask> getSubTasksList() {
-        return subTasksList;
+        try {
+            return subTasksList;
+        } catch (NullPointerException exp) {
+            return subTasksList = new LinkedList<>();
+        }
     }
 
     public LinkedList<SubTask> setSubTaskToList(SubTask subTask) {

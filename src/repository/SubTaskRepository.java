@@ -78,15 +78,18 @@ public class SubTaskRepository {
         return subTasks;
     }
 
-    static void removeSubTask(EpicTask epicTask) {
+    static void removeSubTasks(EpicTask epicTask) {
         LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(epicTask);
         epicTask.removeAllSubTasksFromList();
+        epicTask.setStatus();
         subTasks.removeAll(subTasksListByTask);
     }
 
     static void removeSubTaskById() {
         SubTask selectedTask = selectUserSubTaskByID();
-        selectedTask.getEpicTask().removeSubTaskFromList(selectedTask);
+        EpicTask epicTask = selectedTask.getEpicTask();
+        epicTask.removeSubTaskFromList(selectedTask);
+        epicTask.setStatus();
         subTasks.remove(selectedTask);
     }
 
