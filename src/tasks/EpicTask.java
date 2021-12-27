@@ -1,12 +1,12 @@
 package tasks;
 
-import repository.TaskManager;
+import repository.TaskIdentifier;
 import repository.TaskStatus;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
-public class EpicTask extends SingleTask{
+public class EpicTask extends SingleTask {
 
     private String name;
     private String description;
@@ -93,12 +93,8 @@ public class EpicTask extends SingleTask{
     }
 
     public int calcAndCheckId() {
-        int id = (int) (Math.random() * 17 + Math.random() * 137);
-        TaskManager manager = new TaskManager();
-        if (manager.returnObject(id) != null) {
-            return calcAndCheckId();
-        }
-        return id;
+        TaskIdentifier identifier = new TaskIdentifier();
+        return identifier.getId();
     }
 
     public TaskStatus getStatus() {
@@ -117,7 +113,7 @@ public class EpicTask extends SingleTask{
                 }
             }
         }
-        if (allDone)  {
+        if (allDone) {
             setStatus(TaskStatus.DONE);
         }
     }
