@@ -2,6 +2,7 @@ package repository;
 
 import service.Scan;
 import tasks.EpicTask;
+import tasks.SubTask;
 
 import java.util.LinkedList;
 
@@ -23,11 +24,21 @@ public class EpicTaskRepository {
         return epicTasks;
     }
 
+    static LinkedList<SubTask> getSubTasks() {
+        LinkedList<SubTask> subTasks = new LinkedList<>();
+        for (EpicTask epicTask : epicTasks) {
+            if (!epicTask.getSubTasksList().isEmpty()) {
+                subTasks.addAll(epicTask.getSubTasksList());
+            }
+        }
+        return subTasks;
+    }
+
     static void removeTask() {
         EpicTask epicTask = selectUserTaskByID();
         if (epicTask != null) {
             SubTaskRepository.removeSubTasks(epicTask);
-            if (SubTaskRepository.getSubTasksListByTask(epicTask).isEmpty()) {
+            if (epicTask.getSubTasksList().isEmpty()) {
                 EpicTaskRepository.epicTasks.remove(epicTask);
             }
         }

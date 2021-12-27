@@ -9,9 +9,6 @@ import java.util.LinkedList;
 
 public class SubTaskRepository {
 
-    private static LinkedList<SubTask> subTasks = new LinkedList<>();
-
-
     static void createSubTask(EpicTask epicTask) {
         SubTask subTask;
         String[] userTask = Scan.saveLinesFromUser();
@@ -21,7 +18,6 @@ public class SubTaskRepository {
         } catch (NullPointerException exp) {
             System.out.println("Подзадача не найдена!");
         }
-        subTasks.add(subTask);
         epicTask.setStatus(TaskStatus.IN_PROGRESS);
     }
 
@@ -59,44 +55,28 @@ public class SubTaskRepository {
 
     static LinkedList<SubTask> getSubTasksListFromUserSelect() {
         EpicTask epicTask = EpicTaskRepository.selectUserTaskByID();
+        if (epicTask.getSubTasksList().isEmpty()) {
+            System.out.println("Список пуст!");
+        }
         return epicTask.getSubTasksList();
     }
 
-    static LinkedList<SubTask> getSubTasksListByTask(EpicTask epicTask) {
-        LinkedList<SubTask> epicTasksListByTask = new LinkedList<>();
-        if (epicTask != null) {
-            for (SubTask subTask : subTasks) {
-                if (subTask.getEpicTask().equals(epicTask)) {
-                    epicTasksListByTask.add(subTask);
-                }
-            }
-        }
-        return epicTasksListByTask;
-    }
-
-    static LinkedList<SubTask> getTasks() {
-        return subTasks;
-    }
-
     static void removeSubTasks(EpicTask epicTask) {
-        LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(epicTask);
         epicTask.removeAllSubTasksFromList();
         epicTask.setStatus();
-        subTasks.removeAll(subTasksListByTask);
     }
 
     static void removeSubTaskById() {
-        SubTask selectedTask = selectUserSubTaskByID();
-        EpicTask epicTask = selectedTask.getEpicTask();
-        epicTask.removeSubTaskFromList(selectedTask);
+        SubTask selectedSubTask = selectUserSubTaskByID();
+        EpicTask epicTask = selectedSubTask.getEpicTask();
+        epicTask.removeSubTaskFromList(selectedSubTask);
         epicTask.setStatus();
-        subTasks.remove(selectedTask);
     }
 
     static SubTask selectUserSubTaskByID() {
         int id = Scan.selectId();
         SubTask subTask = null;
-        for (SubTask taskSelect : SubTaskRepository.getTasks()) {
+        for (SubTask taskSelect : EpicTaskRepository.getSubTasks()) {
             if (taskSelect.getId() == id) {
                 subTask = taskSelect;
             }
@@ -107,20 +87,8 @@ public class SubTaskRepository {
         return subTask;
     }
 
-    static int getTaskIndex(SubTask subTask) {
-        int index = -1;
-        if (subTask != null) {
-            for (SubTask t : subTasks) {
-                if (t.equals(subTask)) {
-                    index = subTasks.indexOf(t);
-                }
-            }
-        }
-        return index;
-    }
-
-    static void replaceSubTask(int index, SubTask subTask) {
-        subTasks.set(index, subTask);
+    static void replaceSubTask(SubTask subTask) {
+        subTask.getEpicTask().setSubTaskToList(subTask);
     }
 
 }

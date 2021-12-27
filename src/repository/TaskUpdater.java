@@ -72,7 +72,6 @@ public class TaskUpdater {
 
     static void updateSubTask(SubTask task) {
         int command = -1;
-        int index = SubTaskRepository.getTaskIndex(task);
         while (command != 0) {
             Print.printMenuToUpdateTask();
             Scanner scanner = new Scanner(System.in);
@@ -83,12 +82,12 @@ public class TaskUpdater {
                 case 1:
                     Print.printName();
                     task.setName(Scan.selectString());
-                    SubTaskRepository.replaceSubTask(index, task);
+                    SubTaskRepository.replaceSubTask(task);
                     break;
                 case 2:
                     Print.printDescription();
                     task.setDescription(Scan.selectString());
-                    SubTaskRepository.replaceSubTask(index, task);
+                    SubTaskRepository.replaceSubTask(task);
                     break;
                 case 3:
                     Print.printStatusList();

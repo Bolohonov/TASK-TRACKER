@@ -45,10 +45,13 @@ public class TaskManager<T extends SingleTask> {
                 obj = (T) epicTask;
             }
         }
-        for (SubTask subtask : subTaskRepository.getTasks()) {
-            if (subtask.getId() == id) {
-                obj = (T) subtask;
+        try {
+            for (SubTask subtask : epicTaskRepository.getSubTasks()) {
+                if (subtask.getId() == id) {
+                    obj = (T) subtask;
+                }
             }
+        } catch (NullPointerException exp) {
         }
         return obj;
     }
@@ -94,11 +97,16 @@ public class TaskManager<T extends SingleTask> {
     }
 
     public static void printSubTasksFromUserSelect() {
-        LinkedList<SubTask> list = subTaskRepository.getSubTasksListFromUserSelect();
-         if (list.isEmpty()) {
-                System.out.println("Список пуст!");
-        } else {
+        LinkedList<SubTask> list = null;
+        try {
+            list = subTaskRepository.getSubTasksListFromUserSelect();
+        } catch (NullPointerException exp) {
+            System.out.println("Список пуст!");
+        }
+        try {
             list.forEach(System.out::println);
+        } catch (NullPointerException exp) {
+            System.out.println("Список пуст!");
         }
     }
 
