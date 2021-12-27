@@ -80,7 +80,7 @@ public class TaskManager<T extends SingleTask> {
         if (list.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
-            list.forEach((EpicTask epicTask) -> System.out.println(epicTask));
+            list.forEach(System.out::println);
         }
     }
 
@@ -89,16 +89,16 @@ public class TaskManager<T extends SingleTask> {
         if (list.isEmpty()) {
             System.out.println("Список пуст!");
         } else {
-            list.forEach((SingleTask singleTask) -> System.out.println(singleTask));
+            list.forEach(System.out::println);
         }
     }
 
     public static void printSubTasksFromUserSelect() {
         LinkedList<SubTask> list = subTaskRepository.getSubTasksListFromUserSelect();
-        if (list.isEmpty()) {
-            System.out.println("Список пуст!");
+         if (list.isEmpty()) {
+                System.out.println("Список пуст!");
         } else {
-            list.forEach((SubTask subtask) -> System.out.println(subtask));
+            list.forEach(System.out::println);
         }
     }
 

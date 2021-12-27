@@ -1,5 +1,6 @@
 package tasks;
 
+import repository.EpicTaskRepository;
 import repository.TaskManager;
 import repository.TaskStatus;
 
@@ -12,8 +13,8 @@ public class SubTask extends SingleTask {
     private int id;
     private TaskStatus status;
 
-    public SubTask(String name, String description) {
-        this.epicTask = getEpicTask();
+    public SubTask(EpicTask epicTask, String name, String description) {
+        setEpicTask(epicTask);
         this.name = name;
         this.description = description;
         this.id = calcAndCheckId();

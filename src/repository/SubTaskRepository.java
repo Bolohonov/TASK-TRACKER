@@ -15,11 +15,14 @@ public class SubTaskRepository {
     static void createSubTask(EpicTask epicTask) {
         SubTask subTask;
         String[] userTask = Scan.saveLinesFromUser();
-        subTask = new SubTask(userTask[0], userTask[1]);
-        subTask.setEpicTask(epicTask);
-        epicTask.setSubTaskToList(subTask);
+        subTask = new SubTask(epicTask, userTask[0], userTask[1]);
+        try {
+            epicTask.setSubTaskToList(subTask);
+        } catch (NullPointerException exp) {
+            System.out.println("Подзадача не найдена!");
+        }
         subTasks.add(subTask);
-        //epicTask.setStatus(TaskStatus.IN_PROGRESS);
+        epicTask.setStatus(TaskStatus.IN_PROGRESS);
     }
 
     static void createSubTaskFromUserSelect() {
@@ -45,7 +48,6 @@ public class SubTaskRepository {
                     } catch (NullPointerException exp) {
                         System.out.println("Эпика пока нет");
                     }
-                    //epicTask.setStatus(TaskStatus.IN_PROGRESS);
                     break;
                 default:
                     System.out.println("Вы ввели неверное значение!");
@@ -57,15 +59,7 @@ public class SubTaskRepository {
 
     static LinkedList<SubTask> getSubTasksListFromUserSelect() {
         EpicTask epicTask = EpicTaskRepository.selectUserTaskByID();
-        LinkedList<SubTask> subTasksListFromSelect = new LinkedList<>();
-        if (epicTask != null) {
-            for (SubTask subTask : subTasks) {
-                if (subTask.getEpicTask().equals(epicTask)) {
-                    subTasksListFromSelect.add(subTask);
-                }
-            }
-        }
-        return subTasksListFromSelect;
+        return epicTask.getSubTasksList();
     }
 
     static LinkedList<SubTask> getSubTasksListByTask(EpicTask epicTask) {
@@ -80,30 +74,19 @@ public class SubTaskRepository {
         return epicTasksListByTask;
     }
 
-    static LinkedList<SubTask> getSubTasksListBySubTask(SubTask subTask) {
-        LinkedList<SubTask> subTasksListBySubTask = new LinkedList<>();
-        EpicTask epicTask = subTask.getEpicTask();
-        if (epicTask != null) {
-            for (SubTask subT : subTasks) {
-                if (subT.getEpicTask().equals(epicTask)) {
-                    subTasksListBySubTask.add(subT);
-                }
-            }
-        }
-        return subTasksListBySubTask;
-    }
-
     static LinkedList<SubTask> getTasks() {
         return subTasks;
     }
 
     static void removeSubTask(EpicTask epicTask) {
         LinkedList<SubTask> subTasksListByTask = getSubTasksListByTask(epicTask);
+        epicTask.removeAllSubTasksFromList();
         subTasks.removeAll(subTasksListByTask);
     }
 
     static void removeSubTaskById() {
         SubTask selectedTask = selectUserSubTaskByID();
+        selectedTask.getEpicTask().removeSubTaskFromList(selectedTask);
         subTasks.remove(selectedTask);
     }
 

@@ -3,6 +3,7 @@ package tasks;
 import repository.TaskManager;
 import repository.TaskStatus;
 
+import java.sql.SQLOutput;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -19,18 +20,29 @@ public class EpicTask extends SingleTask{
         this.description = description;
         this.id = calcAndCheckId();
         this.status = TaskStatus.NEW;
-        this.subTasksList = getSubTasksList();
+        subTasksList = new LinkedList<>();
     }
 
     public LinkedList<SubTask> getSubTasksList() {
         return subTasksList;
     }
 
-    public void setSubTaskToList(SubTask subTask) {
-        subTasksList.add(subTask);
-        if (getStatus().equals(TaskStatus.NEW)) {
-            setStatus(TaskStatus.IN_PROGRESS);
+    public LinkedList<SubTask> setSubTaskToList(SubTask subTask) {
+        if (subTask != null) {
+            subTasksList.add(subTask);
         }
+        return subTasksList;
+    }
+
+    public LinkedList<SubTask> removeSubTaskFromList(SubTask subTask) {
+        if (subTask != null) {
+            subTasksList.remove(subTask);
+        }
+        return subTasksList;
+    }
+
+    public void removeAllSubTasksFromList() {
+        subTasksList.clear();
     }
 
     @Override

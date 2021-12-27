@@ -6,39 +6,9 @@ import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
 
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class TaskUpdater {
-
-//    static boolean checkStatusAllDone(SubTask subTask) {
-//        LinkedList<SubTask> subTaskList = SubTaskRepository.getSubTasksListBySubTask(subTask);
-//        boolean status = true;
-//        if (subTask != null) {
-//            for (SubTask subT : subTaskList) {
-//                if (!subT.getStatus().equals(TaskStatus.DONE)) {
-//                    status = false;
-//                }
-//            }
-//        }
-//        return status;
-//    }
-
-//    static boolean checkStatusInProgressOrDone(SubTask subTask) {
-//        EpicTask epicTask = subTask.getEpicTask();
-//        if (epicTask.getStatus().equals(TaskStatus.IN_PROGRESS)
-//                || epicTask.getStatus().equals(TaskStatus.DONE)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
-    static void updateEpicTaskStatus(EpicTask epicTask) {
-        epicTask.setStatus();
-        int index = EpicTaskRepository.getTaskIndex(epicTask);
-        EpicTaskRepository.replaceTask(index, epicTask);
-    }
 
     static void updateTask(SingleTask task) {
         int command = -1;
