@@ -12,13 +12,12 @@ public class SubTaskRepository {
     static void createSubTask(EpicTask epicTask) {
         SubTask subTask;
         String[] userTask = Scan.saveLinesFromUser();
-        subTask = new SubTask(epicTask, userTask[0], userTask[1]);
+        subTask = new SubTask(epicTask, userTask[0], userTask[1], TaskManager.getId());
         try {
             epicTask.setSubTaskToList(subTask);
         } catch (NullPointerException exp) {
             System.out.println("Подзадача не найдена!");
         }
-        epicTask.setStatus(TaskStatus.IN_PROGRESS);
     }
 
     static void createSubTaskFromUserSelect() {
@@ -63,14 +62,12 @@ public class SubTaskRepository {
 
     static void removeSubTasks(EpicTask epicTask) {
         epicTask.removeAllSubTasksFromList();
-        epicTask.setStatus();
     }
 
     static void removeSubTaskById() {
         SubTask selectedSubTask = selectUserSubTaskByID();
         EpicTask epicTask = selectedSubTask.getEpicTask();
         epicTask.removeSubTaskFromList(selectedSubTask);
-        epicTask.setStatus();
     }
 
     static SubTask selectUserSubTaskByID() {

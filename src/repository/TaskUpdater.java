@@ -92,7 +92,7 @@ public class TaskUpdater {
                 case 3:
                     Print.printStatusList();
                     task.setStatus(Scan.selectStatus());
-                    task.getEpicTask().setStatus();
+                    task.getEpicTask().getStatus();
                     break;
                 default:
                     Print.printWrongValue();

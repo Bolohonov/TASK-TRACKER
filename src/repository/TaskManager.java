@@ -14,6 +14,7 @@ public class TaskManager<T extends SingleTask> {
     private static final EpicTaskRepository epicTaskRepository = new EpicTaskRepository();
     private static final SubTaskRepository subTaskRepository = new SubTaskRepository();
 
+    static int id;
     T obj;
 
     public TaskManager() {
@@ -55,6 +56,39 @@ public class TaskManager<T extends SingleTask> {
         }
         return obj;
     }
+
+    private static boolean checkIdNumber(int id) {
+        boolean isIDAlreadyExist = false;
+        for (SingleTask singleTask : SingleTaskRepository.getTasks()) {
+            if (singleTask.getId() == id) {
+                isIDAlreadyExist = true;
+            }
+        }
+        for (EpicTask epicTask : EpicTaskRepository.getTasks()) {
+            if (epicTask.getId() == id) {
+                isIDAlreadyExist = true;
+            }
+        }
+        try {
+            for (SubTask subtask : EpicTaskRepository.getSubTasks()) {
+                if (subtask.getId() == id) {
+                    isIDAlreadyExist = true;
+                }
+            }
+        } catch (NullPointerException exp) {
+        }
+        return isIDAlreadyExist;
+    }
+
+    public static int getId() {
+        ++id;
+        if ((!checkIdNumber(id)) && (id != 0)) {
+            return id;
+        } else {
+            return getId();
+        }
+    }
+
 
     public void updateTask(T task) {
         try {

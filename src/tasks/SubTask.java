@@ -1,6 +1,5 @@
 package tasks;
 
-import repository.TaskIdentifier;
 import repository.TaskStatus;
 
 import java.util.Objects;
@@ -12,11 +11,11 @@ public class SubTask extends SingleTask {
     private int id;
     private TaskStatus status;
 
-    public SubTask(EpicTask epicTask, String name, String description) {
+    public SubTask(EpicTask epicTask, String name, String description, int id) {
         setEpicTask(epicTask);
         this.name = name;
         this.description = description;
-        this.id = calcAndCheckId();
+        this.id = id;
         this.status = TaskStatus.NEW;
     }
 
@@ -72,11 +71,6 @@ public class SubTask extends SingleTask {
 
     public int getId() {
         return id;
-    }
-
-    public int calcAndCheckId() {
-        TaskIdentifier identifier = new TaskIdentifier();
-        return identifier.getId();
     }
 
     public TaskStatus getStatus() {

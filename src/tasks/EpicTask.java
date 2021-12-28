@@ -1,6 +1,5 @@
 package tasks;
 
-import repository.TaskIdentifier;
 import repository.TaskStatus;
 
 import java.util.LinkedList;
@@ -14,11 +13,11 @@ public class EpicTask extends SingleTask {
     private TaskStatus status;
     private LinkedList<SubTask> subTasksList;
 
-    public EpicTask(String name, String description) {
+    public EpicTask(String name, String description, int id) {
         this.name = name;
         this.description = description;
-        this.id = calcAndCheckId();
-        this.status = TaskStatus.NEW;
+        this.id = id;
+        this.status = getStatus();
         subTasksList = new LinkedList<>();
     }
 
@@ -92,18 +91,10 @@ public class EpicTask extends SingleTask {
         return id;
     }
 
-    public int calcAndCheckId() {
-        TaskIdentifier identifier = new TaskIdentifier();
-        return identifier.getId();
-    }
-
     public TaskStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus() {
         boolean allDone = true;
-        if (subTasksList.isEmpty()) {
+        boolean inProgress = false;
+        if (subTasksList == null || subTasksList.isEmpty()) {
             this.status = TaskStatus.NEW;
         } else {
             for (SubTask st : subTasksList) {
@@ -111,14 +102,18 @@ public class EpicTask extends SingleTask {
                         || st.getStatus().equals(TaskStatus.IN_PROGRESS)) {
                     allDone = false;
                 }
+                if (st.getStatus().equals(TaskStatus.DONE)
+                        || st.getStatus().equals(TaskStatus.IN_PROGRESS)) {
+                    inProgress = true;
+                }
             }
         }
-        if (allDone) {
-            setStatus(TaskStatus.DONE);
+        if (allDone && (this.status != TaskStatus.NEW)) {
+            this.status = TaskStatus.DONE;
         }
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
+        if (inProgress && !allDone) {
+            this.status = TaskStatus.IN_PROGRESS;
+        }
+        return status;
     }
 }

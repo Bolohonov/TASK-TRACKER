@@ -2,9 +2,6 @@ package service;
 
 import repository.TaskManager;
 
-//Поздно рассмотрел слово "бэкэнд", поэтому наворотил тут меню (да и вообще много лишнего!).
-// Если нужно сразу переделать, то готов поправить, удалив лишнее!
-
 public class CommandManager {
 
     TaskManager manager = new TaskManager();

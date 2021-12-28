@@ -1,6 +1,5 @@
 package tasks;
 
-import repository.TaskIdentifier;
 import repository.TaskStatus;
 
 import java.util.Objects;
@@ -12,10 +11,10 @@ public class SingleTask {
     private int id;
     private TaskStatus status;
 
-    public SingleTask(String name, String description) {
+    public SingleTask(String name, String description, int id) {
         this.name = name;
         this.description = description;
-        this.id = calcAndCheckId();
+        this.id = id;
         this.status = TaskStatus.NEW;
     }
 
@@ -64,11 +63,6 @@ public class SingleTask {
 
     public int getId() {
         return id;
-    }
-
-    public int calcAndCheckId() {
-        TaskIdentifier identifier = new TaskIdentifier();
-        return identifier.getId();
     }
 
     public TaskStatus getStatus() {
