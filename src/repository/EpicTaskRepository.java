@@ -13,7 +13,7 @@ public class EpicTaskRepository {
     static void createTask() {
         EpicTask epicTask;
         String[] userTask = Scan.saveLinesFromUser();
-        epicTask = new EpicTask(userTask[0], userTask[1], TaskManager.getId());
+        epicTask = new EpicTask(userTask[0], userTask[1], InMemoryTasksManager.getId());
         if (epicTask != null) {
             epicTasks.add(epicTask);
         }

@@ -1,10 +1,10 @@
 package service;
 
-import repository.TaskManager;
+import repository.InMemoryTasksManager;
 
 public class CommandManager {
 
-    TaskManager manager = new TaskManager();
+    InMemoryTasksManager manager = new InMemoryTasksManager();
 
 
     public void getCommandPanel() {

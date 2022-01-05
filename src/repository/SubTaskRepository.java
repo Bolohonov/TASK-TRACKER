@@ -12,7 +12,7 @@ public class SubTaskRepository {
     static void createSubTask(EpicTask epicTask) {
         SubTask subTask;
         String[] userTask = Scan.saveLinesFromUser();
-        subTask = new SubTask(epicTask, userTask[0], userTask[1], TaskManager.getId());
+        subTask = new SubTask(epicTask, userTask[0], userTask[1], InMemoryTasksManager.getId());
         try {
             epicTask.setSubTaskToList(subTask);
         } catch (NullPointerException exp) {

@@ -12,7 +12,7 @@ public class SingleTaskRepository {
     static void createTask() {
         SingleTask singleTask;
         String[] userTask = Scan.saveLinesFromUser();
-        singleTask = new SingleTask(userTask[0], userTask[1], TaskManager.getId());
+        singleTask = new SingleTask(userTask[0], userTask[1], InMemoryTasksManager.getId());
         if (singleTask != null) {
             singleTasks.add(singleTask);
         }
