@@ -14,51 +14,10 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
     private static final EpicTaskRepository epicTaskRepository = new EpicTaskRepository();
     private static final SubTaskRepository subTaskRepository = new SubTaskRepository();
 
-    static int id;
-    T obj;
+    private static int id;
+    private T obj;
 
-    public InMemoryTasksManager() {
-    }
-
-    @Override
-    public void saveFromCommand() {
-        int command = Scan.selectType();
-        if (command == 1) {
-            singleTaskRepository.createTask();
-        } else if (command == 2) {
-            epicTaskRepository.createTask();
-        } else if (command == 3) {
-            subTaskRepository.createSubTaskFromUserSelect();
-        }
-    }
-
-    @Override
-    public void saveSubTaskFromCommand() {
-        subTaskRepository.createSubTaskFromUserSelect();
-    }
-
-    @Override
-    public T returnObject(int id) {
-        for (SingleTask singleTask : singleTaskRepository.getTasks()) {
-            if (singleTask.getId() == id) {
-                obj = (T) singleTask;
-            }
-        }
-        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-            if (epicTask.getId() == id) {
-                obj = (T) epicTask;
-            }
-        }
-        try {
-            for (SubTask subtask : epicTaskRepository.getSubTasks()) {
-                if (subtask.getId() == id) {
-                    obj = (T) subtask;
-                }
-            }
-        } catch (NullPointerException exp) {
-        }
-        return obj;
-    }
+    private final LinkedList<SingleTask> history = new LinkedList<>();
 
     private static boolean checkIdNumber(int id) {
         boolean isIDAlreadyExist = false;
@@ -92,6 +51,51 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
         }
     }
 
+    @Override
+    public void saveFromCommand() {
+        int command = Scan.selectType();
+        if (command == 1) {
+            singleTaskRepository.createTask();
+        } else if (command == 2) {
+            epicTaskRepository.createTask();
+        } else if (command == 3) {
+            subTaskRepository.createSubTaskFromUserSelect();
+        }
+    }
+
+    @Override
+    public void saveSubTaskFromCommand() {
+        subTaskRepository.createSubTaskFromUserSelect();
+    }
+
+    @Override
+    public T returnObject(int id) {
+        for (SingleTask singleTask : singleTaskRepository.getTasks()) {
+            if (singleTask.getId() == id) {
+                obj = (T) singleTask;
+                history();
+                history.add(obj);
+            }
+        }
+        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
+            if (epicTask.getId() == id) {
+                obj = (T) epicTask;
+                history();
+                history.add(obj);
+            }
+        }
+        try {
+            for (SubTask subtask : epicTaskRepository.getSubTasks()) {
+                if (subtask.getId() == id) {
+                    obj = (T) subtask;
+                    history();
+                    history.add(obj);
+                }
+            }
+        } catch (NullPointerException exp) {
+        }
+        return obj;
+    }
 
     @Override
     public void updateTask(T task) {
@@ -153,6 +157,15 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
     }
 
     @Override
+    public void printHistory() {
+        if (history == null || history.isEmpty()) {
+            System.out.println("Список пуст!");
+        } else {
+            history.forEach(System.out::println);
+        }
+    }
+
+    @Override
     public void removeAllTasks() {
         try {
             singleTaskRepository.removeAllTasks();
@@ -176,6 +189,13 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
             subTaskRepository.removeSubTaskById();
         } catch (NullPointerException exp) {
             System.out.println("Неверный ввод!");
+        }
+    }
+
+    @Override
+    public void history() {
+        if (history != null && !history.isEmpty() && history.size() > 9) {
+            history.removeFirst();
         }
     }
 }

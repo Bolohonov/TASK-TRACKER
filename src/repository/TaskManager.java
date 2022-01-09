@@ -20,10 +20,14 @@ public interface TaskManager<T extends SingleTask> {
 
     void printSubTasksFromUserSelect();
 
+    void printHistory();
+
     void removeAllTasks();
 
     void removeEpicTask();
 
     void removeSubTaskById();
+
+    void history();
 
 }

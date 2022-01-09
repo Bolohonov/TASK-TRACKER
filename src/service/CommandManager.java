@@ -1,11 +1,8 @@
 package service;
 
-import repository.InMemoryTasksManager;
-
 public class CommandManager {
 
-    InMemoryTasksManager manager = new InMemoryTasksManager();
-
+    Managers manager = new Managers();
 
     public void getCommandPanel() {
         int command = -1;
@@ -16,34 +13,39 @@ public class CommandManager {
 
             switch (command) {
                 case 1:
-                    manager.saveFromCommand();
+                    manager.getDefault().saveFromCommand();
                     break;
                 case 2:
-                    manager.saveSubTaskFromCommand();
+                    manager.getDefault().saveSubTaskFromCommand();
                     break;
                 case 3:
-                    manager.printTasks();
+                    manager.getDefault().printTasks();
                     break;
                 case 4:
-                    manager.printEpics();
+                    manager.getDefault().printEpics();
                     break;
                 case 5:
-                    manager.printSubTasksFromUserSelect();
+                    manager.getDefault().printSubTasksFromUserSelect();
                     break;
                 case 6:
-                    manager.printTask(manager.returnObject(Scan.selectId()));
+                    manager.getDefault().printTask(manager.getDefault()
+                            .returnObject(Scan.selectId()));
                     break;
                 case 7:
-                    manager.updateTask(manager.returnObject(Scan.selectId()));
+                    manager.getDefault().updateTask(manager.getDefault()
+                            .returnObject(Scan.selectId()));
                     break;
                 case 8:
-                    manager.removeAllTasks();
+                    manager.getDefault().removeAllTasks();
                     break;
                 case 9:
-                    manager.removeEpicTask();
+                    manager.getDefault().removeEpicTask();
                     break;
                 case 10:
-                    manager.removeSubTaskById();
+                    manager.getDefault().removeSubTaskById();
+                    break;
+                case 11:
+                    manager.getDefault().printHistory();
                     break;
                 case 0:
                     Print.printExit();
