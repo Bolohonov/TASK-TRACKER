@@ -177,8 +177,8 @@ public class InMemoryTasksManager implements TaskManager {
         }
         try {
             for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-                for (SubTask subtask : epicTask.getSubTasksList()) {
-                    if (task.equals(subtask)) {
+                for (int i = 0; i < epicTask.getSubTasksList().size(); i++) {
+                    if (task.equals(epicTask.getSubTasksList().get(i))) {
                         epicTask.removeSubTaskFromList((SubTask) task);
                     }
                 }
