@@ -1,12 +1,13 @@
 package service;
 
 import repository.InMemoryTasksManager;
+import repository.TaskManager;
 
 public class Managers {
 
-    private final InMemoryTasksManager manager = new InMemoryTasksManager();
+    private final TaskManager manager = new InMemoryTasksManager();
 
-    public InMemoryTasksManager getDefault() {
+    public TaskManager getDefault() {
         return manager;
     }
 }

@@ -1,43 +1,40 @@
 package repository;
 
-import service.Print;
-import service.Scan;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.SingleTask;
+import tasks.Task;
 
 import java.util.LinkedList;
 
-public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T> {
+public class InMemoryTasksManager implements TaskManager {
 
-    private static final SingleTaskRepository singleTaskRepository = new SingleTaskRepository();
-    private static final EpicTaskRepository epicTaskRepository = new EpicTaskRepository();
-    private static final SubTaskRepository subTaskRepository = new SubTaskRepository();
+    private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
+    private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
 
     private static int id;
-    private T obj;
+    private Task obj;
 
-    private final LinkedList<SingleTask> history = new LinkedList<>();
+    private final LinkedList<Task> history = new LinkedList<>();
 
     private static boolean checkIdNumber(int id) {
         boolean isIDAlreadyExist = false;
-        for (SingleTask singleTask : SingleTaskRepository.getTasks()) {
+        for (SingleTask singleTask : singleTaskRepository.getTasks()) {
             if (singleTask.getId() == id) {
                 isIDAlreadyExist = true;
             }
         }
-        for (EpicTask epicTask : EpicTaskRepository.getTasks()) {
+        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
             if (epicTask.getId() == id) {
                 isIDAlreadyExist = true;
             }
         }
-        try {
-            for (SubTask subtask : EpicTaskRepository.getSubTasks()) {
+        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
+            for (SubTask subtask : epicTask.getSubTasksList()) {
                 if (subtask.getId() == id) {
                     isIDAlreadyExist = true;
                 }
             }
-        } catch (NullPointerException exp) {
         }
         return isIDAlreadyExist;
     }
@@ -52,71 +49,68 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
     }
 
     @Override
-    public void saveFromCommand() {
-        int command = Scan.selectType();
-        if (command == 1) {
-            singleTaskRepository.createTask();
-        } else if (command == 2) {
-            epicTaskRepository.createTask();
-        } else if (command == 3) {
-            subTaskRepository.createSubTaskFromUserSelect();
+    public void createTask(String[] userTask) {
+        SingleTask singleTask;
+        singleTask = new SingleTask(userTask[0], userTask[1], getId());
+        if (singleTask != null) {
+            singleTaskRepository.addTask(singleTask);
         }
     }
 
     @Override
-    public void saveSubTaskFromCommand() {
-        subTaskRepository.createSubTaskFromUserSelect();
+    public void createEpicTask(String[] userTask) {
+        EpicTask epicTask;
+        epicTask = new EpicTask(userTask[0], userTask[1], getId());
+        if (epicTask != null) {
+            epicTaskRepository.addTask(epicTask);
+        }
     }
 
     @Override
-    public T returnObject(int id) {
+    public void createSubTask(Task epicTask, String[] userTask) {
+        SubTask subTask;
+        if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
+            subTask = new SubTask((EpicTask)epicTask, userTask[0], userTask[1], getId());
+            ((EpicTask) epicTask).setSubTaskToList(subTask);
+        } else {
+            System.out.println("Эпик не найден!");
+        }
+    }
+
+    @Override
+    public Task getTaskById(int id) {
+        obj = null;
         for (SingleTask singleTask : singleTaskRepository.getTasks()) {
             if (singleTask.getId() == id) {
-                obj = (T) singleTask;
+                obj = singleTask;
                 history();
                 history.add(obj);
             }
         }
         for (EpicTask epicTask : epicTaskRepository.getTasks()) {
             if (epicTask.getId() == id) {
-                obj = (T) epicTask;
+                obj = epicTask;
                 history();
                 history.add(obj);
             }
         }
-        try {
-            for (SubTask subtask : epicTaskRepository.getSubTasks()) {
+        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
+            for (SubTask subtask : epicTask.getSubTasksList()) {
                 if (subtask.getId() == id) {
-                    obj = (T) subtask;
+                    obj = subtask;
                     history();
                     history.add(obj);
                 }
             }
-        } catch (NullPointerException exp) {
         }
         return obj;
     }
 
     @Override
-    public void updateTask(T task) {
-        try {
-            if (task.getClass().equals(SingleTask.class)) {
-                TaskUpdater.updateTask(task);
-            } else if (task.getClass().equals(EpicTask.class)) {
-                TaskUpdater.updateEpicTask((EpicTask) task);
-            } else if (task.getClass().equals(SubTask.class)) {
-                TaskUpdater.updateSubTask((SubTask) task);
-            }
-        } catch (NullPointerException exp) {
-            Print.printWrongValue();
-        }
-    }
-
-    @Override
-    public void printTask(T task) {
-        try {
+    public void printTask(Task task) {
+        if (task != null) {
             System.out.println(task);
-        } catch (NullPointerException exp) {
+        } else {
             System.out.println("Значение не найдено!");
         }
     }
@@ -132,7 +126,7 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
     }
 
     @Override
-    public void printTasks() {
+    public void printSingleTasks() {
         LinkedList<SingleTask> list = singleTaskRepository.getTasks();
         if (list.isEmpty()) {
             System.out.println("Список пуст!");
@@ -142,17 +136,14 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
     }
 
     @Override
-    public void printSubTasksFromUserSelect() {
-        LinkedList<SubTask> list = null;
-        try {
-            list = subTaskRepository.getSubTasksListFromUserSelect();
-        } catch (NullPointerException exp) {
-            System.out.println("Список пуст!");
-        }
-        try {
-            list.forEach(System.out::println);
-        } catch (NullPointerException exp) {
-            System.out.println("Список пуст!");
+    public void printSubTasksByEpic(Task epictask) {
+        if (epictask != null && epictask.getClass().equals(EpicTask.class)) {
+            EpicTask epic = (EpicTask)epictask;
+            for (SubTask sub : epic.getSubTasksList()) {
+                System.out.println(sub);
+            }
+        } else {
+            System.out.println("Эпик не найден!");
         }
     }
 
@@ -175,20 +166,24 @@ public class InMemoryTasksManager<T extends SingleTask> implements TaskManager<T
     }
 
     @Override
-    public void removeEpicTask() {
+    public void removeTask(Task task) {
         try {
-            epicTaskRepository.removeTask();
-        } catch (NullPointerException exp) {
-            System.out.println("Неверный ввод!");
+            singleTaskRepository.removeTask((SingleTask) task);
+        } catch (ClassCastException exp) {
         }
-    }
-
-    @Override
-    public void removeSubTaskById() {
         try {
-            subTaskRepository.removeSubTaskById();
-        } catch (NullPointerException exp) {
-            System.out.println("Неверный ввод!");
+            epicTaskRepository.removeTask((EpicTask) task);
+        } catch (ClassCastException exp) {
+        }
+        try {
+            for (EpicTask epicTask : epicTaskRepository.getTasks()) {
+                for (SubTask subtask : epicTask.getSubTasksList()) {
+                    if (task.equals(subtask)) {
+                        epicTask.removeSubTaskFromList((SubTask) task);
+                    }
+                }
+            }
+        } catch (ClassCastException exp) {
         }
     }
 

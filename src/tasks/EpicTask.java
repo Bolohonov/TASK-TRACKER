@@ -5,18 +5,13 @@ import repository.TaskStatus;
 import java.util.LinkedList;
 import java.util.Objects;
 
-public class EpicTask extends SingleTask {
+public class EpicTask extends Task {
 
-    private String name;
-    private String description;
-    private int id;
     private TaskStatus status;
     private LinkedList<SubTask> subTasksList;
 
     public EpicTask(String name, String description, int id) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
+        super(name, description, id);
         this.status = getStatus();
         subTasksList = new LinkedList<>();
     }
@@ -25,6 +20,7 @@ public class EpicTask extends SingleTask {
         try {
             return subTasksList;
         } catch (NullPointerException exp) {
+            System.out.println("Список пока пуст!");
             return subTasksList = new LinkedList<>();
         }
     }
@@ -32,6 +28,7 @@ public class EpicTask extends SingleTask {
     public LinkedList<SubTask> setSubTaskToList(SubTask subTask) {
         if (subTask != null) {
             subTasksList.add(subTask);
+            getStatus();
         }
         return subTasksList;
     }
@@ -39,20 +36,17 @@ public class EpicTask extends SingleTask {
     public LinkedList<SubTask> removeSubTaskFromList(SubTask subTask) {
         if (subTask != null) {
             subTasksList.remove(subTask);
+            getStatus();
         }
         return subTasksList;
-    }
-
-    public void removeAllSubTasksFromList() {
-        subTasksList.clear();
     }
 
     @Override
     public String toString() {
         return "Эпик{" +
-                "Имя='" + name + '\'' +
-                ", Описание='" + description + '\'' +
-                ", ID=" + id +
+                "Имя='" + super.getName() + '\'' +
+                ", Описание='" + super.getDescription() + '\'' +
+                ", ID=" + super.getId() +
                 ", Статус=" + status +
                 '}';
     }
@@ -62,35 +56,20 @@ public class EpicTask extends SingleTask {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EpicTask task = (EpicTask) o;
-        return id == task.id &&
-                Objects.equals(name, task.name) &&
-                Objects.equals(description, task.description) &&
+        return  super.getId() == task.getId() &&
+                Objects.equals(super.getName(), task.getName()) &&
+                Objects.equals(super.getDescription(), task.getDescription()) &&
                 Objects.equals(status, task.status);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, description, id, status);
-        result = 37 * result + id;
+        int result = Objects.hash(super.getName(), super.getDescription(), super.getId(), status);
+        result = 37 * result + super.getId();
         return result;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
+    @Override
     public TaskStatus getStatus() {
         boolean allDone = true;
         boolean inProgress = false;
@@ -115,5 +94,10 @@ public class EpicTask extends SingleTask {
             this.status = TaskStatus.IN_PROGRESS;
         }
         return status;
+    }
+
+    @Override
+    public void setStatus(TaskStatus status) {
+        System.out.println("Статус не подлежит изменению");
     }
 }

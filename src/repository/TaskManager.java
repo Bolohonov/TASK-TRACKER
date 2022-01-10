@@ -1,32 +1,30 @@
 package repository;
 
-import tasks.SingleTask;
+import tasks.Task;
 
-public interface TaskManager<T extends SingleTask> {
+public interface TaskManager {
 
-    void saveFromCommand();
+    void createTask(String[] userTask);
 
-    void saveSubTaskFromCommand();
+    void createEpicTask(String[] userTask);
 
-    T returnObject(int id);
+    void createSubTask(Task task, String[] userTask);
 
-    void updateTask(T task);
+    Task getTaskById(int id);
 
-    void printTask(T task);
+    void printTask(Task task);
 
     void printEpics();
 
-    void printTasks();
+    void printSingleTasks();
 
-    void printSubTasksFromUserSelect();
+    void printSubTasksByEpic(Task task);
 
     void printHistory();
 
     void removeAllTasks();
 
-    void removeEpicTask();
-
-    void removeSubTaskById();
+    void removeTask(Task task);
 
     void history();
 

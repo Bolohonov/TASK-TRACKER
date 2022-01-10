@@ -4,23 +4,12 @@ import repository.TaskStatus;
 
 import java.util.Objects;
 
-public class SubTask extends SingleTask {
+public class SubTask extends Task {
     private EpicTask epicTask;
-    private String name;
-    private String description;
-    private int id;
-    private TaskStatus status;
 
     public SubTask(EpicTask epicTask, String name, String description, int id) {
+        super(name, description, id);
         setEpicTask(epicTask);
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.status = TaskStatus.NEW;
-    }
-
-    public EpicTask getEpicTask() {
-        return epicTask;
     }
 
     public void setEpicTask(EpicTask epicTask) {
@@ -31,10 +20,10 @@ public class SubTask extends SingleTask {
     public String toString() {
         return "Подзадача{" +
                 "Имя эпика=" + epicTask.getName() +
-                ", Имя подзадачи='" + name + '\'' +
-                ", Описание='" + description + '\'' +
-                ", ID=" + id +
-                ", Статус=" + status +
+                ", Имя подзадачи='" + super.getName() + '\'' +
+                ", Описание='" + super.getDescription() + '\'' +
+                ", ID=" + super.getId() +
+                ", Статус=" + super.getStatus() +
                 '}';
     }
 
@@ -43,41 +32,24 @@ public class SubTask extends SingleTask {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubTask subtask = (SubTask) o;
-        return id == subtask.id &&
-                Objects.equals(name, subtask.name) &&
-                Objects.equals(description, subtask.description) &&
-                Objects.equals(status, subtask.status) &&
+        return super.getId() == subtask.getId() &&
+                Objects.equals(super.getName(), subtask.getName()) &&
+                Objects.equals(super.getDescription(), subtask.getDescription()) &&
+                Objects.equals(super.getStatus(), subtask.getStatus()) &&
                 (epicTask.equals(subtask.epicTask));
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, description, id, status);
-        result = 41 * result + epicTask.hashCode() + id;
+        int result = Objects.hash(super.getName(), super.getDescription(),
+                super.getId(), super.getStatus());
+        result = 41 * result + epicTask.hashCode() + super.getId();
         return result;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
+    @Override
     public void setStatus(TaskStatus status) {
-        this.status = status;
+        super.setStatus(status);
+        epicTask.getStatus();
     }
 }

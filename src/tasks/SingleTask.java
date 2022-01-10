@@ -1,33 +1,21 @@
 package tasks;
 
-import repository.TaskStatus;
-
 import java.util.Objects;
 
-public class SingleTask {
-
-    private String name;
-    private String description;
-    private int id;
-    private TaskStatus status;
+public class SingleTask extends Task{
 
     public SingleTask(String name, String description, int id) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.status = TaskStatus.NEW;
-    }
-
-    public SingleTask() {
+        super(name, description, id);
+        super.getStatus();
     }
 
     @Override
     public String toString() {
         return "Задача{" +
-                "Имя='" + name + '\'' +
-                ", Описание='" + description + '\'' +
-                ", ID=" + id +
-                ", Статус=" + status +
+                "Имя='" + super.getName() + '\'' +
+                ", Описание='" + super.getDescription() + '\'' +
+                ", ID=" + super.getId() +
+                ", Статус=" + super.getStatus() +
                 '}';
     }
 
@@ -36,40 +24,17 @@ public class SingleTask {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SingleTask task = (SingleTask) o;
-        return id == task.id &&
-                Objects.equals(name, task.name) &&
-                Objects.equals(description, task.description) &&
-                Objects.equals(status, task.status);
+        return  super.getId() == task.getId() &&
+                Objects.equals(super.getName(), task.getName()) &&
+                Objects.equals(super.getDescription(), task.getDescription()) &&
+                Objects.equals(super.getStatus(), task.getStatus());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, description, id, status);
-        result = 31 * result + id;
+        int result = Objects.hash(super.getName(), super.getDescription(),
+                super.getId(), super.getStatus());
+        result = 31 * result + super.getId();
         return result;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
     }
 }
