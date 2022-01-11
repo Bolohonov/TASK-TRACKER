@@ -95,7 +95,7 @@ public class CommandManager {
                     manager.getDefault().getTaskById(id).setStatus(Scan.selectStatus());
                     break;
                 default:
-                    Print.printWrongValue();
+                    Print.printNoCommand();
                     break;
             }
         }
