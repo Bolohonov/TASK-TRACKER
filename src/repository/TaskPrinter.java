@@ -1,14 +1,15 @@
-package service;
+package repository;
 
 import tasks.Task;
 
 import java.util.LinkedList;
 
-public class PrintTasks<T extends Task> {
+public class TaskPrinter<T extends Task> implements Printable<T> {
 
     LinkedList<T> list = new LinkedList<>();
 
-    void printList(LinkedList<T> tasksList) {
+    @Override
+    public void printList(LinkedList<T> tasksList) {
         list = tasksList;
         if (!list.isEmpty() || list != null) {
             for (T task : list) {
@@ -19,7 +20,8 @@ public class PrintTasks<T extends Task> {
         }
     }
 
-    void printTask(T task) {
+    @Override
+    public void printTask(T task) {
         System.out.println(task);
     }
 }

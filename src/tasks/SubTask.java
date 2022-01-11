@@ -16,6 +16,10 @@ public class SubTask extends Task {
         this.epicTask = epicTask;
     }
 
+    public EpicTask getEpicTask() {
+        return epicTask;
+    }
+
     @Override
     public String toString() {
         return "Подзадача{" +

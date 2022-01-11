@@ -3,7 +3,6 @@ package service;
 public class CommandManager {
 
     Managers manager = new Managers();
-    PrintTasks printTasks = new PrintTasks();
 
     public void getCommandPanel() {
         int command = -1;
@@ -18,13 +17,16 @@ public class CommandManager {
                     int subCommand = Scan.selectType();
                     String[] userTask = Scan.saveLinesFromUser();
                     if (subCommand == 1) {
-                        manager.getDefault().createTask(userTask);
+                        manager.getDefault().addTask(manager.getFactory()
+                                .createSingleTask(userTask));
                     } else if (subCommand == 2) {
-                        manager.getDefault().createEpicTask(userTask);
+                        manager.getDefault().addTask(manager.getFactory()
+                                .createEpicTask(userTask));
                     } else if (subCommand == 3) {
                         id = Scan.selectId();
-                        manager.getDefault().createSubTask(manager.getDefault().getTaskById(id),
-                                userTask);
+                        manager.getDefault().addTask(manager.getFactory()
+                                        .createSubTask(manager.getDefault()
+                                                .getTaskById(id), userTask));
                     } else {
                         Print.printNoCommand();
                     }
@@ -32,23 +34,23 @@ public class CommandManager {
                 case 2:
                     id = Scan.selectId();
                     userTask = Scan.saveLinesFromUser();
-                    manager.getDefault().createSubTask(manager.getDefault().getTaskById(id),
-                            userTask);
+                    manager.getDefault().addTask(manager.getFactory()
+                            .createSubTask(manager.getDefault().getTaskById(id), userTask));
                     break;
                 case 3:
-                    printTasks.printList(manager.getDefault().getSingleTasks());
+                    manager.getPrinter().printList(manager.getDefault().getSingleTasks());
                     break;
                 case 4:
-                    printTasks.printList(manager.getDefault().getEpicTasks());
+                    manager.getPrinter().printList(manager.getDefault().getEpicTasks());
                     break;
                 case 5:
                     id = Scan.selectId();
-                    printTasks.printList(manager.getDefault().getSubTasksByEpic(manager.getDefault()
-                            .getTaskById(id)));
+                    manager.getPrinter().printList(manager.getDefault()
+                            .getSubTasksByEpic(manager.getDefault().getTaskById(id)));
                     break;
                 case 6:
                     id = Scan.selectId();
-                    printTasks.printTask(manager.getDefault().getTaskById(id));
+                    manager.getPrinter().printTask(manager.getDefault().getTaskById(id));
                     break;
                 case 7:
                     id = Scan.selectId();
@@ -62,7 +64,7 @@ public class CommandManager {
                     manager.getDefault().removeTask(manager.getDefault().getTaskById(id));
                     break;
                 case 10:
-                    printTasks.printList(manager.getDefault().getHistory());
+                    manager.getPrinter().printList(manager.getDefault().getHistory());
                     break;
                 case 0:
                     Print.printExit();
@@ -84,15 +86,33 @@ public class CommandManager {
                     break;
                 case 1:
                     Print.printName();
-                    manager.getDefault().getTaskById(id).setName(Scan.selectString());
+                    manager.getUpdate().updateName(manager.getDefault().getTaskById(id),
+                            Scan.selectString());
+                    if (manager.getDefault().updateTask(manager.getDefault().getTaskById(id))) {
+                        Print.printTaskUpdated();
+                    } else {
+                        Print.printTaskNotUpdated();
+                    }
                     break;
                 case 2:
                     Print.printDescription();
-                    manager.getDefault().getTaskById(id).setDescription(Scan.selectString());
+                    manager.getUpdate().updateDescription(manager.getDefault().getTaskById(id),
+                            Scan.selectString());
+                    if (manager.getDefault().updateTask(manager.getDefault().getTaskById(id))) {
+                        Print.printTaskUpdated();
+                    } else {
+                        Print.printTaskNotUpdated();
+                    }
                     break;
                 case 3:
                     Print.printStatusList();
-                    manager.getDefault().getTaskById(id).setStatus(Scan.selectStatus());
+                    manager.getUpdate().updateStatus(manager.getDefault().getTaskById(id),
+                            Scan.selectStatus());
+                    if (manager.getDefault().updateTask(manager.getDefault().getTaskById(id))) {
+                        Print.printTaskUpdated();
+                    } else {
+                        Print.printTaskNotUpdated();
+                    }
                     break;
                 default:
                     Print.printNoCommand();

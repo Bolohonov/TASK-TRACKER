@@ -15,7 +15,7 @@ public class InMemoryTasksManager implements TaskManager {
     private static int id;
     private Task obj;
 
-    private final LinkedList<Task> history = new LinkedList<>();
+    private static final LinkedList<Task> history = new LinkedList<>();
 
     private static boolean checkIdNumber(int id) {
         boolean isIDAlreadyExist = false;
@@ -49,31 +49,23 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public void createTask(String[] userTask) {
-        SingleTask singleTask;
-        singleTask = new SingleTask(userTask[0], userTask[1], getId());
-        if (singleTask != null) {
-            singleTaskRepository.addTask(singleTask);
-        }
-    }
-
-    @Override
-    public void createEpicTask(String[] userTask) {
-        EpicTask epicTask;
-        epicTask = new EpicTask(userTask[0], userTask[1], getId());
-        if (epicTask != null) {
-            epicTaskRepository.addTask(epicTask);
-        }
-    }
-
-    @Override
-    public void createSubTask(Task epicTask, String[] userTask) {
-        SubTask subTask;
-        if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
-            subTask = new SubTask((EpicTask)epicTask, userTask[0], userTask[1], getId());
-            ((EpicTask) epicTask).setSubTaskToList(subTask);
+    public void addTask(Task task) {
+        if (task != null) {
+            try {
+                singleTaskRepository.addTask((SingleTask) task);
+            } catch (ClassCastException exp) {
+            }
+            try {
+                epicTaskRepository.addTask((EpicTask) task);
+            } catch (ClassCastException exp) {
+            }
+            try {
+                SubTask subTask = (SubTask) task;
+                subTask.getEpicTask().setSubTaskToList(subTask);
+            } catch (ClassCastException exp) {
+            }
         } else {
-            System.out.println("Эпик не найден!");
+            System.out.println("Задача не создана!");
         }
     }
 
@@ -139,9 +131,49 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
+    public boolean updateTask(Task task) {
+        boolean isUpdate = false;
+        if (task != null) {
+            try {
+                for (SingleTask singleTask : singleTaskRepository.getTasks()) {
+                    if (task.equals(singleTask)) {
+                        isUpdate = true;
+                    }
+                }
+            } catch (ClassCastException exp) {
+            }
+            try {
+                for (EpicTask epicTask : epicTaskRepository.getTasks()) {
+                    if (task.equals(epicTask)) {
+                        isUpdate = true;
+                    }
+                }
+            } catch (ClassCastException exp) {
+            }
+            try {
+                SubTask subTask = (SubTask) task;
+                for (SubTask sub : subTask.getEpicTask().getSubTasksList()) {
+                    if (task.equals(sub)) {
+                        isUpdate = true;
+                    }
+                }
+            } catch (ClassCastException exp) {
+            }
+        } else {
+            System.out.println("Задача не обновлена!");
+        }
+        return isUpdate;
+    }
+
+    @Override
     public void removeAllTasks() {
         try {
             singleTaskRepository.removeAllTasks();
+        } catch (NullPointerException exp) {
+            System.out.println("В списке не было задач");
+        }
+        try {
+            epicTaskRepository.removeAllTasks();
         } catch (NullPointerException exp) {
             System.out.println("В списке не было задач");
         }

@@ -61,6 +61,14 @@ public class Print {
         System.out.println("Введите описание задачи:");
     }
 
+    public static void printTaskUpdated() {
+        System.out.println("Задача обновлена!");
+    }
+
+    public static void printTaskNotUpdated() {
+        System.out.println("Задача не обновлена!");
+    }
+
     public static void printStatusList() {
         for (TaskStatus taskStatus : TaskStatus.values()) {
             System.out.println(taskStatus.getStatus());
