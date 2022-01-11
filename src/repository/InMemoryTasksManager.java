@@ -75,14 +75,14 @@ public class InMemoryTasksManager implements TaskManager {
         for (SingleTask singleTask : singleTaskRepository.getTasks()) {
             if (singleTask.getId() == id) {
                 obj = singleTask;
-                history();
+                checkHistoryList();
                 history.add(obj);
             }
         }
         for (EpicTask epicTask : epicTaskRepository.getTasks()) {
             if (epicTask.getId() == id) {
                 obj = epicTask;
-                history();
+                checkHistoryList();
                 history.add(obj);
             }
         }
@@ -90,7 +90,7 @@ public class InMemoryTasksManager implements TaskManager {
             for (SubTask subtask : epicTask.getSubTasksList()) {
                 if (subtask.getId() == id) {
                     obj = subtask;
-                    history();
+                    checkHistoryList();
                     history.add(obj);
                 }
             }
@@ -201,7 +201,7 @@ public class InMemoryTasksManager implements TaskManager {
         }
     }
 
-    public void history() {
+    public void checkHistoryList() {
         if (history != null && !history.isEmpty() && history.size() > 9) {
             history.removeFirst();
         }
