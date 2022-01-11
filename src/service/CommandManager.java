@@ -25,6 +25,8 @@ public class CommandManager {
                         id = Scan.selectId();
                         manager.getDefault().createSubTask(manager.getDefault().getTaskById(id),
                                 userTask);
+                    } else {
+                        Print.printNoCommand();
                     }
                     break;
                 case 2:

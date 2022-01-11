@@ -29,4 +29,8 @@ public interface TaskManager {
 
     void removeTask(Task task);
 
+    //Обновление задач происходит сочетанием manager.getDefault().getTaskById(id)
+    // и соответствующих set-ров и связано в большей степени с интерфейсом,
+    // что отражено в методе CommandManager.updatePanel()
+
 }
