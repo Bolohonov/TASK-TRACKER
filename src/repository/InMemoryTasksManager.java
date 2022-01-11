@@ -124,7 +124,7 @@ public class InMemoryTasksManager implements TaskManager {
     public LinkedList<Task> getHistory() {
         if (history == null || history.isEmpty()) {
             System.out.println("Истории пока нет");
-            return null;
+            return history;
         } else {
             return history;
         }
