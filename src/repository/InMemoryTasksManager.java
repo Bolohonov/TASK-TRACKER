@@ -107,52 +107,34 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public void printTask(Task task) {
-        if (task != null) {
-            System.out.println(task);
-        } else {
-            System.out.println("Значение не найдено!");
-        }
+    public LinkedList<SingleTask> getSingleTasks() {
+        return singleTaskRepository.getTasks();
     }
 
     @Override
-    public void printEpics() {
-        LinkedList<EpicTask> list = epicTaskRepository.getTasks();
-        if (list.isEmpty()) {
-            System.out.println("Список пуст!");
-        } else {
-            list.forEach(System.out::println);
-        }
+    public LinkedList<EpicTask> getEpicTasks() {
+        return epicTaskRepository.getTasks();
     }
 
     @Override
-    public void printSingleTasks() {
-        LinkedList<SingleTask> list = singleTaskRepository.getTasks();
-        if (list.isEmpty()) {
-            System.out.println("Список пуст!");
-        } else {
-            list.forEach(System.out::println);
-        }
-    }
-
-    @Override
-    public void printSubTasksByEpic(Task epictask) {
+    public LinkedList<SubTask> getSubTasksByEpic(Task epictask) {
+        LinkedList<SubTask> subTasks = new LinkedList<>();
         if (epictask != null && epictask.getClass().equals(EpicTask.class)) {
             EpicTask epic = (EpicTask)epictask;
-            for (SubTask sub : epic.getSubTasksList()) {
-                System.out.println(sub);
-            }
+            subTasks = epic.getSubTasksList();
         } else {
             System.out.println("Эпик не найден!");
         }
+        return subTasks;
     }
 
     @Override
-    public void printHistory() {
+    public LinkedList<Task> getHistory() {
         if (history == null || history.isEmpty()) {
-            System.out.println("Список пуст!");
+            System.out.println("Истории пока нет");
+            return null;
         } else {
-            history.forEach(System.out::println);
+            return history;
         }
     }
 
@@ -187,7 +169,6 @@ public class InMemoryTasksManager implements TaskManager {
         }
     }
 
-    @Override
     public void history() {
         if (history != null && !history.isEmpty() && history.size() > 9) {
             history.removeFirst();

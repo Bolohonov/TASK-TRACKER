@@ -1,6 +1,11 @@
 package repository;
 
+import tasks.EpicTask;
+import tasks.SingleTask;
+import tasks.SubTask;
 import tasks.Task;
+
+import java.util.LinkedList;
 
 public interface TaskManager {
 
@@ -12,20 +17,16 @@ public interface TaskManager {
 
     Task getTaskById(int id);
 
-    void printTask(Task task);
+    LinkedList<SingleTask> getSingleTasks();
 
-    void printEpics();
+    LinkedList<EpicTask> getEpicTasks();
 
-    void printSingleTasks();
+    LinkedList<SubTask> getSubTasksByEpic(Task task);
 
-    void printSubTasksByEpic(Task task);
-
-    void printHistory();
+    LinkedList<Task> getHistory();
 
     void removeAllTasks();
 
     void removeTask(Task task);
-
-    void history();
 
 }

@@ -3,6 +3,7 @@ package service;
 public class CommandManager {
 
     Managers manager = new Managers();
+    PrintTasks printTasks = new PrintTasks();
 
     public void getCommandPanel() {
         int command = -1;
@@ -33,19 +34,19 @@ public class CommandManager {
                             userTask);
                     break;
                 case 3:
-                    manager.getDefault().printSingleTasks();
+                    printTasks.printList(manager.getDefault().getSingleTasks());
                     break;
                 case 4:
-                    manager.getDefault().printEpics();
+                    printTasks.printList(manager.getDefault().getEpicTasks());
                     break;
                 case 5:
                     id = Scan.selectId();
-                    manager.getDefault().printSubTasksByEpic(manager.getDefault()
-                            .getTaskById(id));
+                    printTasks.printList(manager.getDefault().getSubTasksByEpic(manager.getDefault()
+                            .getTaskById(id)));
                     break;
                 case 6:
                     id = Scan.selectId();
-                    manager.getDefault().printTask(manager.getDefault().getTaskById(id));
+                    printTasks.printTask(manager.getDefault().getTaskById(id));
                     break;
                 case 7:
                     id = Scan.selectId();
@@ -59,7 +60,7 @@ public class CommandManager {
                     manager.getDefault().removeTask(manager.getDefault().getTaskById(id));
                     break;
                 case 10:
-                    manager.getDefault().printHistory();
+                    printTasks.printList(manager.getDefault().getHistory());
                     break;
                 case 0:
                     Print.printExit();
