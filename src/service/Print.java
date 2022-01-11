@@ -62,7 +62,7 @@ public class Print {
     }
 
     public static void printTaskUpdated() {
-        System.out.println("Задача обновлена!");
+        System.out.println("Новая задача сохранена!");
     }
 
     public static void printTaskNotUpdated() {
