@@ -25,8 +25,8 @@ public class CommandManager {
                     } else if (subCommand == 3) {
                         id = Scan.selectId();
                         manager.getDefault().addTask(manager.getFactory()
-                                        .createSubTask(manager.getDefault()
-                                                .getTaskById(id), userTask));
+                                .createSubTask(manager.getDefault()
+                                        .getTaskById(id), userTask));
                     } else {
                         Print.printNoCommand();
                     }

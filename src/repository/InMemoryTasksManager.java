@@ -112,7 +112,7 @@ public class InMemoryTasksManager implements TaskManager {
     public LinkedList<SubTask> getSubTasksByEpic(Task epictask) {
         LinkedList<SubTask> subTasks = new LinkedList<>();
         if (epictask != null && epictask.getClass().equals(EpicTask.class)) {
-            EpicTask epic = (EpicTask)epictask;
+            EpicTask epic = (EpicTask) epictask;
             subTasks = epic.getSubTasksList();
         } else {
             System.out.println("Эпик не найден!");

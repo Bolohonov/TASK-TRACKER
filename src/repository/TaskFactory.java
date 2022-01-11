@@ -5,7 +5,7 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
-public class TaskFactory implements Saveable{
+public class TaskFactory implements Saveable {
 
     @Override
     public SingleTask createSingleTask(String[] userTask) {
@@ -20,7 +20,7 @@ public class TaskFactory implements Saveable{
     @Override
     public SubTask createSubTask(Task epicTask, String[] userTask) {
         if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
-            return new SubTask((EpicTask)epicTask, userTask[0], userTask[1],
+            return new SubTask((EpicTask) epicTask, userTask[0], userTask[1],
                     InMemoryTasksManager.getId());
         } else {
             System.out.println("Эпик не найден!");
