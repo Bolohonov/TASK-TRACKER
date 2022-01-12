@@ -3,13 +3,14 @@ package repository;
 import tasks.Task;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class TaskPrinter<T extends Task> implements Printable<T> {
 
-    LinkedList<T> list = new LinkedList<>();
+    List<T> list = new LinkedList<>();
 
     @Override
-    public void printList(LinkedList<T> tasksList) {
+    public void printList(List<T> tasksList) {
         list = tasksList;
         if (!list.isEmpty() || list != null) {
             for (T task : list) {
@@ -21,7 +22,7 @@ public class TaskPrinter<T extends Task> implements Printable<T> {
     }
 
     @Override
-    public void printTask(T task) {
+    public void printTask(Task task) {
         System.out.println(task);
     }
 }

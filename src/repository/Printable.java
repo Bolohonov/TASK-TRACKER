@@ -2,11 +2,11 @@ package repository;
 
 import tasks.Task;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public interface Printable<T extends Task> {
 
-    void printList(LinkedList<T> tasksList);
+    void printList(List<T> tasksList);
 
-    void printTask(T task);
+    void printTask(Task task);
 }

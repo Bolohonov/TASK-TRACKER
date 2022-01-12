@@ -5,7 +5,7 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -13,13 +13,13 @@ public interface TaskManager {
 
     Task getTaskById(int id);
 
-    LinkedList<SingleTask> getSingleTasks();
+    List<SingleTask> getSingleTasks();
 
-    LinkedList<EpicTask> getEpicTasks();
+    List<EpicTask> getEpicTasks();
 
-    LinkedList<SubTask> getSubTasksByEpic(Task task);
+    List<SubTask> getSubTasksByEpic(Task task);
 
-    LinkedList<Task> getHistory();
+    List<Task> getHistory();
 
     boolean updateTask(Task newTask);
 
