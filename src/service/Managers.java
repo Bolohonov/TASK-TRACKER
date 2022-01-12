@@ -5,15 +5,15 @@ import repository.*;
 public class Managers {
 
     private final TaskManager manager = new InMemoryTasksManager();
-    private final Saveable factory = new TaskFactory();
+    private final TaskCreator factory = new TaskFactory();
     private final Printable printer = new TaskPrinter();
-    private final Updateable updater = new TaskUpdater();
+    private final TaskUpdater updater = new TaskUpdaterImpl();
 
     public TaskManager getDefault() {
         return manager;
     }
 
-    public Saveable getFactory() {
+    public TaskCreator getFactory() {
         return factory;
     }
 
@@ -21,7 +21,7 @@ public class Managers {
         return printer;
     }
 
-    public Updateable getUpdate() {
+    public TaskUpdater getUpdate() {
         return updater;
     }
 }

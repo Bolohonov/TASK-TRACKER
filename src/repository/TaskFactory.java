@@ -5,7 +5,7 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
-public class TaskFactory implements Saveable {
+public class TaskFactory implements TaskCreator {
 
     @Override
     public SingleTask createSingleTask(String[] userTask) {

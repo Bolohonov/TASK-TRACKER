@@ -5,7 +5,7 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
-public interface Saveable {
+public interface TaskCreator {
 
     SingleTask createSingleTask(String[] userTask);
 
