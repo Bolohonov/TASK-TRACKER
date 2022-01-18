@@ -7,7 +7,7 @@ public class Managers {
     private final TaskManager manager = new InMemoryTasksManager();
     private final TaskCreator factory = new TaskFactory();
     private final Printable printer = new TaskPrinter();
-    private final TaskUpdater updater = new TaskUpdaterImpl();
+    private final TaskUpdater updater = new InMemoryTaskUpdater();
 
     public TaskManager getDefault() {
         return manager;

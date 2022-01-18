@@ -2,7 +2,7 @@ package repository;
 
 import tasks.Task;
 
-public class TaskUpdaterImpl implements TaskUpdater {
+public class InMemoryTaskUpdater implements TaskUpdater {
 
     @Override
     public Task updateName(Task task, String name) {
