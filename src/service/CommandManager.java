@@ -17,14 +17,14 @@ public class CommandManager {
                     int subCommand = Scan.selectType();
                     String[] userTask = Scan.saveLinesFromUser();
                     if (subCommand == 1) {
-                        manager.getDefault().addTask(manager.getFactory()
+                        manager.getDefault().putTask(manager.getFactory()
                                 .createSingleTask(userTask));
                     } else if (subCommand == 2) {
-                        manager.getDefault().addTask(manager.getFactory()
+                        manager.getDefault().putTask(manager.getFactory()
                                 .createEpicTask(userTask));
                     } else if (subCommand == 3) {
                         id = Scan.selectId();
-                        manager.getDefault().addTask(manager.getFactory()
+                        manager.getDefault().putTask(manager.getFactory()
                                 .createSubTask(manager.getDefault()
                                         .getTaskById(id), userTask));
                     } else {
@@ -34,18 +34,18 @@ public class CommandManager {
                 case 2:
                     id = Scan.selectId();
                     userTask = Scan.saveLinesFromUser();
-                    manager.getDefault().addTask(manager.getFactory()
+                    manager.getDefault().putTask(manager.getFactory()
                             .createSubTask(manager.getDefault().getTaskById(id), userTask));
                     break;
                 case 3:
-                    manager.getPrinter().printList(manager.getDefault().getSingleTasks());
+                    manager.getPrinter().printMap(manager.getDefault().getSingleTasks());
                     break;
                 case 4:
-                    manager.getPrinter().printList(manager.getDefault().getEpicTasks());
+                    manager.getPrinter().printMap(manager.getDefault().getEpicTasks());
                     break;
                 case 5:
                     id = Scan.selectId();
-                    manager.getPrinter().printList(manager.getDefault()
+                    manager.getPrinter().printMap(manager.getDefault()
                             .getSubTasksByEpic(manager.getDefault().getTaskById(id)));
                     break;
                 case 6:

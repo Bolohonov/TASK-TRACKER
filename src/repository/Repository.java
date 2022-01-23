@@ -2,18 +2,19 @@ package repository;
 
 import tasks.Task;
 
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Repository<T extends Task> {
 
-    private final LinkedList<T> tasks = new LinkedList<>();
+    private final Map<Integer, T> tasks = new LinkedHashMap<>();
 
-    public LinkedList<T> getTasks() {
+    public Map<Integer, T> getTasksMap() {
         return tasks;
     }
 
-    public void addTask(T task) {
-        tasks.add(task);
+    public void putTaskToMap(T task) {
+        tasks.put(task.getId(), task);
     }
 
     public void removeAllTasks() {

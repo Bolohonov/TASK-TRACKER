@@ -2,43 +2,42 @@ package tasks;
 
 import repository.TaskStatus;
 
-import java.util.LinkedList;
-import java.util.Objects;
+import java.util.*;
 
 public class EpicTask extends Task {
 
     private TaskStatus status;
-    private LinkedList<SubTask> subTasksList;
+    private Map<Integer, SubTask> subTasksMap;
 
     public EpicTask(String name, String description, int id) {
         super(name, description, id);
         this.status = getStatus();
-        subTasksList = new LinkedList<>();
+        subTasksMap = new LinkedHashMap<>();
     }
 
-    public LinkedList<SubTask> getSubTasksList() {
+    public Map<Integer,SubTask> getSubTasksMap() {
         try {
-            return subTasksList;
+            return subTasksMap;
         } catch (NullPointerException exp) {
-            System.out.println("Список пока пуст!");
-            return subTasksList = new LinkedList<>();
+            System.out.println("Подзадач пока нет!");
+            return subTasksMap = new LinkedHashMap<>();
         }
     }
 
-    public LinkedList<SubTask> setSubTaskToList(SubTask subTask) {
+    public Map<Integer, SubTask> setSubTaskToList(SubTask subTask) {
         if (subTask != null) {
-            subTasksList.add(subTask);
+            subTasksMap.put(subTask.getId(), subTask);
             getStatus();
         }
-        return subTasksList;
+        return subTasksMap;
     }
 
-    public LinkedList<SubTask> removeSubTaskFromList(SubTask subTask) {
+    public Map<Integer, SubTask> removeSubTaskFromMap(SubTask subTask) {
         if (subTask != null) {
-            subTasksList.remove(subTask);
+            subTasksMap.remove(subTask);
             getStatus();
         }
-        return subTasksList;
+        return subTasksMap;
     }
 
     @Override
@@ -73,10 +72,10 @@ public class EpicTask extends Task {
     public TaskStatus getStatus() {
         boolean allDone = true;
         boolean inProgress = false;
-        if (subTasksList == null || subTasksList.isEmpty()) {
+        if (subTasksMap == null || subTasksMap.isEmpty()) {
             this.status = TaskStatus.NEW;
         } else {
-            for (SubTask st : subTasksList) {
+            for (SubTask st : subTasksMap.values()) {
                 if (st.getStatus().equals(TaskStatus.NEW)
                         || st.getStatus().equals(TaskStatus.IN_PROGRESS)) {
                     allDone = false;

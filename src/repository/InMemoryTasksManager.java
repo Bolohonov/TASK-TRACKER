@@ -5,7 +5,9 @@ import tasks.SubTask;
 import tasks.SingleTask;
 import tasks.Task;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class InMemoryTasksManager implements TaskManager {
 
@@ -19,22 +21,14 @@ public class InMemoryTasksManager implements TaskManager {
 
     private static boolean checkIdNumber(int id) {
         boolean isIDAlreadyExist = false;
-        for (SingleTask singleTask : singleTaskRepository.getTasks()) {
-            if (singleTask.getId() == id) {
-                isIDAlreadyExist = true;
-            }
+        if (singleTaskRepository.getTasksMap().containsKey(id)) {
+            isIDAlreadyExist = true;
         }
-        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-            if (epicTask.getId() == id) {
-                isIDAlreadyExist = true;
-            }
+        if (epicTaskRepository.getTasksMap().containsKey(id)) {
+            isIDAlreadyExist = true;
         }
-        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-            for (SubTask subtask : epicTask.getSubTasksList()) {
-                if (subtask.getId() == id) {
-                    isIDAlreadyExist = true;
-                }
-            }
+        if (getSubTaskOrNullById(id) != null) {
+            isIDAlreadyExist = true;
         }
         return isIDAlreadyExist;
     }
@@ -48,15 +42,25 @@ public class InMemoryTasksManager implements TaskManager {
         }
     }
 
+    private static Task getSubTaskOrNullById(int id) {
+        SubTask subTask = null;
+        for (EpicTask epicTask : epicTaskRepository.getTasksMap().values()) {
+            if (epicTask.getSubTasksMap().containsKey(id)) {
+                subTask = epicTask.getSubTasksMap().get(id);
+            }
+        }
+        return subTask;
+    }
+
     @Override
-    public void addTask(Task task) {
+    public void putTask(Task task) {
         if (task != null) {
             try {
-                singleTaskRepository.addTask((SingleTask) task);
+                singleTaskRepository.putTaskToMap((SingleTask) task);
             } catch (ClassCastException exp) {
             }
             try {
-                epicTaskRepository.addTask((EpicTask) task);
+                epicTaskRepository.putTaskToMap((EpicTask) task);
             } catch (ClassCastException exp) {
             }
             try {
@@ -72,52 +76,43 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         obj = null;
-        for (SingleTask singleTask : singleTaskRepository.getTasks()) {
-            if (singleTask.getId() == id) {
-                obj = singleTask;
-                checkHistoryList();
-                history.add(obj);
-            }
+        if (singleTaskRepository.getTasksMap().containsKey(id)) {
+            obj = singleTaskRepository.getTasksMap().get(id);
+            checkHistoryList();
+            history.add(obj);
         }
-        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-            if (epicTask.getId() == id) {
-                obj = epicTask;
-                checkHistoryList();
-                history.add(obj);
-            }
+        if (epicTaskRepository.getTasksMap().containsKey(id)) {
+            obj = singleTaskRepository.getTasksMap().get(id);
+            checkHistoryList();
+            history.add(obj);
         }
-        for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-            for (SubTask subtask : epicTask.getSubTasksList()) {
-                if (subtask.getId() == id) {
-                    obj = subtask;
-                    checkHistoryList();
-                    history.add(obj);
-                }
-            }
+        if (getSubTaskOrNullById(id) != null) {
+            obj = getSubTaskOrNullById(id);
+            checkHistoryList();
+            history.add(obj);
         }
         return obj;
     }
 
     @Override
-    public LinkedList<SingleTask> getSingleTasks() {
-        return singleTaskRepository.getTasks();
+    public Map<Integer, SingleTask> getSingleTasks() {
+        return singleTaskRepository.getTasksMap();
     }
 
     @Override
-    public LinkedList<EpicTask> getEpicTasks() {
-        return epicTaskRepository.getTasks();
+    public Map<Integer, EpicTask> getEpicTasks() {
+        return epicTaskRepository.getTasksMap();
     }
 
     @Override
-    public LinkedList<SubTask> getSubTasksByEpic(Task epictask) {
-        LinkedList<SubTask> subTasks = new LinkedList<>();
-        if (epictask != null && epictask.getClass().equals(EpicTask.class)) {
-            EpicTask epic = (EpicTask) epictask;
-            subTasks = epic.getSubTasksList();
+    public Map<Integer, SubTask> getSubTasksByEpic(Task epicTask) {
+        if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
+            EpicTask epic = (EpicTask) epicTask;
+            return epic.getSubTasksMap();
         } else {
             System.out.println("Эпик не найден!");
+            return new LinkedHashMap<>();
         }
-        return subTasks;
     }
 
     @Override
@@ -135,27 +130,22 @@ public class InMemoryTasksManager implements TaskManager {
         boolean isUpdate = false;
         if (task != null) {
             try {
-                for (SingleTask singleTask : singleTaskRepository.getTasks()) {
-                    if (task.equals(singleTask)) {
-                        isUpdate = true;
-                    }
+                if (singleTaskRepository.getTasksMap().containsKey(task.getId())
+                        && singleTaskRepository.getTasksMap().get(task.getId()).equals(task)) {
+                    isUpdate = true;
                 }
             } catch (ClassCastException exp) {
             }
             try {
-                for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-                    if (task.equals(epicTask)) {
-                        isUpdate = true;
-                    }
+                if (epicTaskRepository.getTasksMap().containsKey(task.getId())
+                        && epicTaskRepository.getTasksMap().get(task.getId()).equals(task)) {
+                    isUpdate = true;
                 }
             } catch (ClassCastException exp) {
             }
             try {
-                SubTask subTask = (SubTask) task;
-                for (SubTask sub : subTask.getEpicTask().getSubTasksList()) {
-                    if (task.equals(sub)) {
-                        isUpdate = true;
-                    }
+                if (getSubTaskOrNullById(task.getId()).equals(task)) {
+                    isUpdate = true;
                 }
             } catch (ClassCastException exp) {
             }
@@ -190,12 +180,9 @@ public class InMemoryTasksManager implements TaskManager {
         } catch (ClassCastException exp) {
         }
         try {
-            for (EpicTask epicTask : epicTaskRepository.getTasks()) {
-                for (int i = 0; i < epicTask.getSubTasksList().size(); i++) {
-                    if (task.equals(epicTask.getSubTasksList().get(i))) {
-                        epicTask.removeSubTaskFromList((SubTask) task);
-                    }
-                }
+            if (getSubTaskOrNullById(task.getId()) != null) {
+                SubTask subtask = (SubTask) getSubTaskOrNullById(task.getId());
+                subtask.getEpicTask().removeSubTaskFromMap(subtask);
             }
         } catch (ClassCastException exp) {
         }
