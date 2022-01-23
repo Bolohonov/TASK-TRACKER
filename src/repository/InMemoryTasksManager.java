@@ -82,7 +82,7 @@ public class InMemoryTasksManager implements TaskManager {
             history.add(obj);
         }
         if (epicTaskRepository.getTasksMap().containsKey(id)) {
-            obj = singleTaskRepository.getTasksMap().get(id);
+            obj = epicTaskRepository.getTasksMap().get(id);
             checkHistoryList();
             history.add(obj);
         }
