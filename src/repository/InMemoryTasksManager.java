@@ -172,20 +172,22 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public void removeTask(Task task) {
-        try {
-            singleTaskRepository.removeTask((SingleTask) task);
-        } catch (ClassCastException exp) {
-        }
-        try {
-            epicTaskRepository.removeTask((EpicTask) task);
-        } catch (ClassCastException exp) {
-        }
-        try {
-            SubTask subTask = (SubTask) task;
-            if (getSubTaskOrNullById(subTask.getId()) != null) {
-                subTask.getEpicTask().removeSubTaskFromMap(subTask);
+        if (task != null) {
+            try {
+                singleTaskRepository.removeTask((SingleTask) task);
+            } catch (ClassCastException exp) {
             }
-        } catch (ClassCastException exp) {
+            try {
+                epicTaskRepository.removeTask((EpicTask) task);
+            } catch (ClassCastException exp) {
+            }
+            try {
+                SubTask subTask = (SubTask) task;
+                if (getSubTaskOrNullById(subTask.getId()) != null) {
+                    subTask.getEpicTask().removeSubTaskFromMap(subTask);
+                }
+            } catch (ClassCastException exp) {
+            }
         }
     }
 
