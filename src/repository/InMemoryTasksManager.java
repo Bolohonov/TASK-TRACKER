@@ -65,7 +65,7 @@ public class InMemoryTasksManager implements TaskManager {
             }
             try {
                 SubTask subTask = (SubTask) task;
-                subTask.getEpicTask().setSubTaskToList(subTask);
+                subTask.getEpicTask().setSubTaskToMap(subTask);
             } catch (ClassCastException exp) {
             }
         } else {
@@ -181,8 +181,8 @@ public class InMemoryTasksManager implements TaskManager {
         }
         try {
             if (getSubTaskOrNullById(task.getId()) != null) {
-                SubTask subtask = (SubTask) getSubTaskOrNullById(task.getId());
-                subtask.getEpicTask().removeSubTaskFromMap(subtask);
+                SubTask subtask = (SubTask) task;
+                subtask.getEpicTask().removeSubTaskFromMap((SubTask) task);
             }
         } catch (ClassCastException exp) {
         }

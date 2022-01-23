@@ -20,11 +20,11 @@ public class EpicTask extends Task {
             return subTasksMap;
         } catch (NullPointerException exp) {
             System.out.println("Подзадач пока нет!");
-            return subTasksMap = new LinkedHashMap<>();
+            return new LinkedHashMap<>();
         }
     }
 
-    public Map<Integer, SubTask> setSubTaskToList(SubTask subTask) {
+    public Map<Integer, SubTask> setSubTaskToMap(SubTask subTask) {
         if (subTask != null) {
             subTasksMap.put(subTask.getId(), subTask);
             getStatus();
