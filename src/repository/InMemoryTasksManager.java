@@ -183,8 +183,7 @@ public class InMemoryTasksManager implements TaskManager {
         try {
             SubTask subTask = (SubTask) task;
             if (getSubTaskOrNullById(subTask.getId()) != null) {
-                SubTask subtask = (SubTask) task;
-                subtask.getEpicTask().removeSubTaskFromMap((SubTask) task);
+                subTask.getEpicTask().removeSubTaskFromMap(subTask);
             }
         } catch (ClassCastException exp) {
         }
