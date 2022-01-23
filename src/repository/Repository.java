@@ -22,6 +22,6 @@ public class Repository<T extends Task> {
     }
 
     public void removeTask(T task) {
-        tasks.remove(task);
+        tasks.remove(task.getId());
     }
 }

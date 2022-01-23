@@ -34,7 +34,7 @@ public class EpicTask extends Task {
 
     public Map<Integer, SubTask> removeSubTaskFromMap(SubTask subTask) {
         if (subTask != null) {
-            subTasksMap.remove(subTask);
+            subTasksMap.remove(subTask.getId());
             getStatus();
         }
         return subTasksMap;

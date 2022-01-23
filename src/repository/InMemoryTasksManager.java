@@ -144,7 +144,8 @@ public class InMemoryTasksManager implements TaskManager {
             } catch (ClassCastException exp) {
             }
             try {
-                if (getSubTaskOrNullById(task.getId()).equals(task)) {
+                SubTask subTask = (SubTask) task;
+                if (getSubTaskOrNullById(subTask.getId()).equals(task)) {
                     isUpdate = true;
                 }
             } catch (ClassCastException exp) {
@@ -180,7 +181,8 @@ public class InMemoryTasksManager implements TaskManager {
         } catch (ClassCastException exp) {
         }
         try {
-            if (getSubTaskOrNullById(task.getId()) != null) {
+            SubTask subTask = (SubTask) task;
+            if (getSubTaskOrNullById(subTask.getId()) != null) {
                 SubTask subtask = (SubTask) task;
                 subtask.getEpicTask().removeSubTaskFromMap((SubTask) task);
             }
