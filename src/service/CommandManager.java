@@ -61,7 +61,7 @@ public class CommandManager {
                     break;
                 case 9:
                     id = Scan.selectId();
-                    manager.getDefault().removeTask(manager.getDefault().getTaskById(id));
+                    manager.getDefault().removeTaskById(id);
                     break;
                 case 10:
                     manager.getPrinter().printList(manager.getDefault().getHistory());
