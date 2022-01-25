@@ -8,10 +8,14 @@ public class Node {
 
     private int index;
     private Task task;
+    private Node prevNode;
+    private Node nextNode;
 
-    Node(int index, Task task) {
+    public Node(int index, Task task, Node prevNode, Node nextNode) {
         this.index = index;
         this.task = task;
+        this.prevNode = prevNode;
+        this.nextNode = nextNode;
     }
 
     Task getTask() {
@@ -51,5 +55,17 @@ public class Node {
         int result = Objects.hash(index, task);
         result = 43 * result;
         return result;
+    }
+
+    public Node getPrevNode() {
+        return prevNode;
+    }
+
+    public void setPrevNode(Node prevNode) {
+        this.prevNode = prevNode;
+    }
+
+    public Node getNextNode() {
+        return nextNode;
     }
 }

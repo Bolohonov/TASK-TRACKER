@@ -8,6 +8,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private static final Map<Integer, Node> historyMap = new HashMap();
     private static final LinkedList<Node> historyList = new LinkedList<>();
+
     Node last;
     Node first;
 
@@ -45,17 +46,15 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(historyMap.get(id));
         }
         Node l = last;
-        Node newNode = new Node(index, task);
+        Node newNode = new Node(index, task, l, null);
         last = newNode;
         if (l == null) {
             first = newNode;
             historyMap.put(id, newNode);
             historyList.addFirst(newNode);
-            ++index;
         } else {
             historyMap.put(id, newNode);
             historyList.addLast(newNode);
-            ++index;
         }
     }
 
@@ -81,10 +80,11 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
             System.out.println("--------------");
             historyList.forEach((Node n) -> System.out.println(n.getIndex() + " ----" + n.getTask().getId()));
-            int i = node.getIndex();
-            ListIterator<Node> iter = historyList.listIterator(i);
-            iter.next();
-            iter.remove();
+//            int i = node.getIndex();
+//            ListIterator<Node> iter = historyList.listIterator(i);
+//            iter.next();
+//            iter.remove();
+            Node node =
             historyMap.remove(node.getTask().getId());
             for (Node n : historyMap.values()) {
                 int currInd = n.getIndex();
@@ -130,3 +130,4 @@ public class InMemoryHistoryManager implements HistoryManager {
         historyList.forEach((Node n) -> System.out.println(n.getIndex() + " ----" + n.getTask().getId()));
     }
 }
+
