@@ -24,16 +24,19 @@ public class TaskPrinter<T extends Task> implements Printable<T> {
 
     @Override
     public void printList(List<T> tasksList) {
-        list = tasksList;
-        if (!list.isEmpty() || list != null) {
-            list.forEach(System.out::println);
+        if (tasksList == null || tasksList.isEmpty()) {
+            System.out.println("Список пуст!");
         } else {
-            System.out.println("Список задач пуст!");
+            tasksList.forEach(System.out::println);
         }
     }
 
     @Override
     public void printTask(Task task) {
-        System.out.println(task);
+        if (task == null) {
+            System.out.println("Задача не найдена!");
+        } else {
+            System.out.println(task);
+        }
     }
 }
