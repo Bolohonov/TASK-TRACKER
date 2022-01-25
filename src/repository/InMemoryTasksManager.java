@@ -6,7 +6,6 @@ import tasks.SingleTask;
 import tasks.Task;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class InMemoryTasksManager implements TaskManager {
@@ -76,18 +75,12 @@ public class InMemoryTasksManager implements TaskManager {
         obj = null;
         if (singleTaskRepository.getTasksMap().containsKey(id)) {
             obj = singleTaskRepository.getTasksMap().get(id);
-            checkHistoryList();
-            InMemoryHistoryManager.add(obj);
         }
         if (epicTaskRepository.getTasksMap().containsKey(id)) {
             obj = epicTaskRepository.getTasksMap().get(id);
-            checkHistoryList();
-            history.add(obj);
         }
         if (getSubTaskOrNullById(id) != null) {
             obj = getSubTaskOrNullById(id);
-            checkHistoryList();
-            history.add(obj);
         }
         return obj;
     }
@@ -110,16 +103,6 @@ public class InMemoryTasksManager implements TaskManager {
         } else {
             System.out.println("Эпик не найден!");
             return new LinkedHashMap<>();
-        }
-    }
-
-    @Override
-    public LinkedList<Task> getHistory() {
-        if (history == null || history.isEmpty()) {
-            System.out.println("Истории пока нет");
-            return history;
-        } else {
-            return history;
         }
     }
 
@@ -179,12 +162,6 @@ public class InMemoryTasksManager implements TaskManager {
         if (getSubTaskOrNullById(id) != null) {
             SubTask subTask = (SubTask) getSubTaskOrNullById(id);
             subTask.getEpicTask().removeSubTaskFromMap(subTask);
-        }
-    }
-
-    public void checkHistoryList() {
-        if (history != null && !history.isEmpty() && history.size() > 9) {
-            history.removeFirst();
         }
     }
 }

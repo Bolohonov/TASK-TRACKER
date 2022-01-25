@@ -5,7 +5,6 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.util.LinkedList;
 import java.util.Map;
 
 public interface TaskManager {
@@ -19,8 +18,6 @@ public interface TaskManager {
     Map<Integer, EpicTask> getEpicTasks();
 
     Map<Integer, SubTask> getSubTasksByEpic(Task task);
-
-    LinkedList<Task> getHistory();
 
     boolean updateTask(Task newTask);
 

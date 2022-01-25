@@ -25,7 +25,12 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        return history;
+        if (history == null || history.isEmpty()) {
+            System.out.println("Истории пока нет");
+            return history;
+        } else {
+            return history;
+        }
     }
 
     public void clearHistory() {
