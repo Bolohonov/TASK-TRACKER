@@ -17,8 +17,6 @@ public class InMemoryTasksManager implements TaskManager {
     private static int id;
     private Task obj;
 
-    private static final LinkedList<Task> history = new LinkedList<>();
-
     private static boolean checkIdNumber(int id) {
         boolean isIDAlreadyExist = false;
         if (singleTaskRepository.getTasksMap().containsKey(id)) {
@@ -79,7 +77,7 @@ public class InMemoryTasksManager implements TaskManager {
         if (singleTaskRepository.getTasksMap().containsKey(id)) {
             obj = singleTaskRepository.getTasksMap().get(id);
             checkHistoryList();
-            history.add(obj);
+            InMemoryHistoryManager.add(obj);
         }
         if (epicTaskRepository.getTasksMap().containsKey(id)) {
             obj = epicTaskRepository.getTasksMap().get(id);
