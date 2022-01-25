@@ -45,7 +45,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(historyMap.get(id));
         }
         Node l = last;
-        Node newNode = new Node(index, l, task, null);
+        Node newNode = new Node(index, task);
         last = newNode;
         if (l == null) {
             first = newNode;
@@ -54,7 +54,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             ++index;
         } else {
             historyMap.put(id, newNode);
-            l.setNext(newNode);
             historyList.addLast(newNode);
             ++index;
         }
@@ -78,36 +77,44 @@ public class InMemoryHistoryManager implements HistoryManager {
     private void removeNode(Node node) {
         if (!node.equals(first) && !node.equals(last)) {
             int i = node.getIndex();
-            Node prevNode = node.getPrev();
-            Node nextNode = node.getNext();
-            prevNode.setNext(nextNode);
-            prevNode.setIndex(node.getIndex()-1);
-            nextNode.setPrev(prevNode);
+            ListIterator<Node> iter = historyList.listIterator(i-1);
+            iter.next();
+            iter.remove();
+            historyMap.remove(node.getTask().getId());
             for (Node n : historyMap.values()) {
                 int currInd = n.getIndex();
-                if (currInd >= i) {
-                    n.setIndex(currInd - 1);
+                if (currInd > i) {
+                    n.setIndexMinus();
                 }
             }
-            ListIterator<> listIterator(i) = new ListIterator<>();
-            historyList.listIterator(i);
-
-            historyMap.remove(node.getTaskId());
-            historyList.remove(i);
-        } else  if (node.equals(first) && node.getNext() != null) {
-            Node nextNode = node.getNext();
-            nextNode.setPrev(null);
-            first = nextNode;
-            historyMap.remove(node.getTaskId());
-        } else if (node.equals(last) && node.getPrev() != null) {
-            Node prevNode = node.getPrev();
-            prevNode.setPrev(null);
-            last = prevNode;
-            historyMap.remove(node.getTaskId());
+        } else  if (node.equals(first) && historyList.stream().iterator().hasNext()) {
+            int i = node.getIndex();
+            ListIterator<Node> iter = historyList.listIterator(i);
+            first = iter.next();
+            historyList.removeFirst();
+            historyMap.remove(node.getTask().getId());
+            for (Node n : historyMap.values()) {
+                int currInd = n.getIndex();
+                if (currInd > i) {
+                    n.setIndexMinus();
+                }
+            }
+        } else if (node.equals(last) && historyList.listIterator(node.getIndex()).hasPrevious()) {
+            int i = node.getIndex();
+            ListIterator<Node> iter = historyList.listIterator(i);
+            last = iter.previous();
+            historyList.removeLast();
+            historyMap.remove(node.getTask().getId());
+            for (Node n : historyMap.values()) {
+                int currInd = n.getIndex();
+                if (currInd > i) {
+                    n.setIndexMinus();
+                }
+            }
         } else {
             last = null;
             first = null;
-            historyMap.remove(node.getTaskId());
+            historyMap.remove(node.getTask().getId());
         }
     }
 }
