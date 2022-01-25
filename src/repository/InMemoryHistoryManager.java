@@ -10,12 +10,11 @@ public class InMemoryHistoryManager implements HistoryManager {
     private static final LinkedList<Node> historyList = new LinkedList<>();
     Node last;
     Node first;
-    private int index = 0;
 
     @Override
     public void add(Task task) {
         if (task != null) {
-            linkLast(task, index);
+            linkLast(task);
         }
     }
 
@@ -39,7 +38,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     }
 
-    private void linkLast(Task task, int index) {
+    private void linkLast(Task task) {
+        int index = historyMap.size();
         int id = task.getId();
         if (historyMap.containsKey(id)) {
             removeNode(historyMap.get(id));
@@ -66,7 +66,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             System.out.println("Истории пока нет");
             return null;
         } else {
-            for (int i = 0; i < nodes.size() - 1; i++) {
+            for (int i = 0; i < historyMap.size(); i++) {
                 historyArrayList.add(i, nodes.getFirst().getTask());
                 nodes.removeFirst();
             }
@@ -76,8 +76,13 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private void removeNode(Node node) {
         if (!node.equals(first) && !node.equals(last)) {
+            for (Node n : historyMap.values()) {
+                System.out.println(n.getTask().getId() + " ----" + n.getIndex());
+            }
+            System.out.println("--------------");
+            historyList.forEach((Node n) -> System.out.println(n.getIndex() + " ----" + n.getTask().getId()));
             int i = node.getIndex();
-            ListIterator<Node> iter = historyList.listIterator(i-1);
+            ListIterator<Node> iter = historyList.listIterator(i);
             iter.next();
             iter.remove();
             historyMap.remove(node.getTask().getId());
@@ -114,7 +119,14 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             last = null;
             first = null;
+            historyList.removeFirst();
             historyMap.remove(node.getTask().getId());
         }
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+        for (Node n : historyMap.values()) {
+            System.out.println(n.getTask().getId() + " ----" + n.getIndex());
+        }
+        System.out.println("--------------");
+        historyList.forEach((Node n) -> System.out.println(n.getIndex() + " ----" + n.getTask().getId()));
     }
 }
