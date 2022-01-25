@@ -33,6 +33,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
+    @Override
     public void clearHistory() {
         history.clear();
         historyMap.clear();
