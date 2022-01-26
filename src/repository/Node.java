@@ -6,13 +6,11 @@ import java.util.Objects;
 
 public class Node {
 
-    private int index;
     private Task task;
     private Node prevNode;
     private Node nextNode;
 
-    public Node(int index, Task task, Node prevNode, Node nextNode) {
-        this.index = index;
+    public Node(Task task, Node prevNode, Node nextNode) {
         this.task = task;
         this.prevNode = prevNode;
         this.nextNode = nextNode;
@@ -26,33 +24,17 @@ public class Node {
         this.task = task;
     }
 
-    int getIndex() {
-        return index;
-    }
-
-    void setIndex(int i) {
-        this.index = i;
-    }
-
-    void setIndexMinus() {
-        this.index--;
-    }
-
-    void setIndexPlus() {
-        this.index++;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        return task.equals(node.getTask()) && index == node.getIndex();
+        return task.equals(node.getTask());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(index, task);
+        int result = Objects.hash(task, prevNode, nextNode);
         result = 43 * result;
         return result;
     }
@@ -67,5 +49,9 @@ public class Node {
 
     public Node getNextNode() {
         return nextNode;
+    }
+
+    public void setNextNode(Node nextNode) {
+        this.nextNode = nextNode;
     }
 }
