@@ -29,7 +29,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             try {
                 EpicTask epic = (EpicTask) historyMap.get(id).getTask();
                 Map<Integer, SubTask> subTaskMap = epic.getSubTasksMap();
-                for (Integer subTaskId :subTaskMap.keySet()) {
+                for (Integer subTaskId : subTaskMap.keySet()) {
                     if (historyMap.containsKey(subTaskId)) {
                         removeNode(historyMap.get(subTaskId));
                     }
@@ -85,27 +85,18 @@ public class InMemoryHistoryManager implements HistoryManager {
                 historyArrayList.add(i, node.getTask());
                 node = node.getNextNode();
             }
-//            while (node != last ) {
-//                historyArrayList.add(iter, node.getTask());
-//                node = node.getNextNode();
-//                iter++;
-//            }
-//            if (node == last) {
-//                historyArrayList.add(iter, last.getTask());
-//            }
         }
         return historyArrayList;
     }
 
     private void removeNode(Node node) {
         if (!node.equals(first) && !node.equals(last)) {
-            //print();
             Node prevNode = node.getPrevNode();
             Node nextNode = node.getNextNode();
             prevNode.setNextNode(nextNode);
             nextNode.setPrevNode(prevNode);
             historyMap.remove(node.getTask().getId());
-        } else  if (node.equals(first) && historyList.stream().iterator().hasNext()) {
+        } else if (node.equals(first) && historyList.stream().iterator().hasNext()) {
             Node nextNode = node.getNextNode();
             nextNode.setPrevNode(null);
             first = nextNode;
@@ -122,24 +113,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         unlink(node);
         size--;
-        //print();
     }
 
     private void unlink(Node node) {
         node.setNextNode(null);
         node.setPrevNode(null);
         node.setTask(null);
-    }
-
-    private void print() {
-        for (Node n : historyMap.values()) {
-                System.out.println(n.getTask().getId() + " ----" + n.getTask());
-            }
-            System.out.println("--------------");
-        for (int i = 0 ; i < size ; i++) {
-            System.out.println(i + " ----" +historyList.get(i).getTask());
-        }
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 }
 
