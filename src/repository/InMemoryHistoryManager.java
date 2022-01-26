@@ -25,18 +25,19 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        if (historyMap.containsKey(id) && !historyMap.get(id).getTask()
-                .equals(EpicTask.class)) {
-            removeNode(historyMap.get(id));
-        } else if (historyMap.get(id).getTask().equals(EpicTask.class)) {
-            EpicTask epic = (EpicTask) historyMap.get(id).getTask();
-            Map<Integer, SubTask> subTaskMap = epic.getSubTasksMap();
-            for (Integer subTaskId :subTaskMap.keySet()) {
-                if (historyMap.containsKey(subTaskId)) {
-                    removeNode(historyMap.get(subTaskId));
+        if (historyMap.containsKey(id)) {
+            try {
+                EpicTask epic = (EpicTask) historyMap.get(id).getTask();
+                Map<Integer, SubTask> subTaskMap = epic.getSubTasksMap();
+                for (Integer subTaskId :subTaskMap.keySet()) {
+                    if (historyMap.containsKey(subTaskId)) {
+                        removeNode(historyMap.get(subTaskId));
+                    }
                 }
+            } catch (ClassCastException exp) {
             }
-            } else {
+            removeNode(historyMap.get(id));
+        } else {
             System.out.println("В истории отсутствует задача с таким ID!");
         }
     }
