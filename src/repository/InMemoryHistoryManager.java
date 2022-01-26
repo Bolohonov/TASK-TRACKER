@@ -79,7 +79,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             System.out.println("Истории пока нет");
             return null;
         } else {
-            //int iter = 0;
             Node node = first;
             for (int i = 0; i < size; i++) {
                 historyArrayList.add(i, node.getTask());
