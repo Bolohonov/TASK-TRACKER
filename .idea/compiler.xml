@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
-      <module name="java-sprint2-hw" target="" />
+      <module name="task-tracker-bolohonov" target="" />
     </bytecodeTargetLevel>
   </component>
 </project>
