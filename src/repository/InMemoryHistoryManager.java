@@ -1,5 +1,7 @@
 package repository;
 
+import tasks.EpicTask;
+import tasks.SubTask;
 import tasks.Task;
 
 import java.util.*;
@@ -23,9 +25,18 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        if (historyMap.containsKey(id)) {
+        if (historyMap.containsKey(id) && !historyMap.get(id).getTask()
+                .equals(EpicTask.class)) {
             removeNode(historyMap.get(id));
-        } else {
+        } else if (historyMap.get(id).getTask().equals(EpicTask.class)) {
+            EpicTask epic = (EpicTask) historyMap.get(id).getTask();
+            Map<Integer, SubTask> subTaskMap = epic.getSubTasksMap();
+            for (Integer subTaskId :subTaskMap.keySet()) {
+                if (historyMap.containsKey(subTaskId)) {
+                    removeNode(historyMap.get(subTaskId));
+                }
+            }
+            } else {
             System.out.println("В истории отсутствует задача с таким ID!");
         }
     }
@@ -38,7 +49,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void clearHistory() {
         historyMap.clear();
-
+        historyList.clear();
     }
 
     private void linkLast(Task task) {
@@ -62,27 +73,32 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private ArrayList<Task> getTasks() {
         ArrayList<Task> historyArrayList = new ArrayList<>();
-        LinkedList<Node> nodes = new LinkedList<>(historyList);
+        historyArrayList.clear();
         if (historyList == null || historyList.isEmpty()) {
             System.out.println("Истории пока нет");
             return null;
         } else {
-            int iter = 0;
-            for (Node n : historyList) {
-                if (n.getNextNode() != null) {
-                    historyArrayList.add(iter, n.getTask());
-                } else {
-                    historyArrayList.add(iter, n.getTask());
-                    break;
-                }
+            //int iter = 0;
+            Node node = first;
+            for (int i = 0; i < size; i++) {
+                historyArrayList.add(i, node.getTask());
+                node = node.getNextNode();
             }
+//            while (node != last ) {
+//                historyArrayList.add(iter, node.getTask());
+//                node = node.getNextNode();
+//                iter++;
+//            }
+//            if (node == last) {
+//                historyArrayList.add(iter, last.getTask());
+//            }
         }
         return historyArrayList;
     }
 
     private void removeNode(Node node) {
         if (!node.equals(first) && !node.equals(last)) {
-            print();
+            //print();
             Node prevNode = node.getPrevNode();
             Node nextNode = node.getNextNode();
             prevNode.setNextNode(nextNode);
@@ -91,10 +107,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else  if (node.equals(first) && historyList.stream().iterator().hasNext()) {
             Node nextNode = node.getNextNode();
             nextNode.setPrevNode(null);
+            first = nextNode;
             historyMap.remove(node.getTask().getId());
         } else if (node.equals(last) && historyList.listIterator(size).hasPrevious()) {
             Node prevNode = node.getPrevNode();
             prevNode.setNextNode(null);
+            last = prevNode;
             historyMap.remove(node.getTask().getId());
         } else {
             last = null;
@@ -103,7 +121,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         unlink(node);
         size--;
-        print();
+        //print();
     }
 
     private void unlink(Node node) {
