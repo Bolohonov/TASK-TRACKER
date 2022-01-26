@@ -88,23 +88,20 @@ public class InMemoryHistoryManager implements HistoryManager {
             prevNode.setNextNode(nextNode);
             nextNode.setPrevNode(prevNode);
             historyMap.remove(node.getTask().getId());
-            unlink(node);
         } else  if (node.equals(first) && historyList.stream().iterator().hasNext()) {
             Node nextNode = node.getNextNode();
             nextNode.setPrevNode(null);
             historyMap.remove(node.getTask().getId());
-            unlink(node);
         } else if (node.equals(last) && historyList.listIterator(size).hasPrevious()) {
             Node prevNode = node.getPrevNode();
             prevNode.setNextNode(null);
             historyMap.remove(node.getTask().getId());
-            unlink(node);
         } else {
             last = null;
             first = null;
             historyMap.remove(node.getTask().getId());
-            unlink(node);
         }
+        unlink(node);
         size--;
         print();
     }
