@@ -1,7 +1,7 @@
 # java-sprint4-hw
 ## Трекер задач
 
-Second sprint homework
+Fourth sprint homework
 
 Функции программы:
 1 - Добавить новую задачу, эпик или подзадачу,
