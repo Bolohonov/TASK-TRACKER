@@ -6,12 +6,11 @@ import java.util.*;
 
 public class EpicTask extends Task {
 
-    private TaskStatus status;
     private Map<Integer, SubTask> subTasksMap;
 
     public EpicTask(String name, String description, int id) {
         super(name, description, id);
-        this.status = getStatus();
+        getStatus();
         subTasksMap = new LinkedHashMap<>();
     }
 
@@ -27,7 +26,6 @@ public class EpicTask extends Task {
     public Map<Integer, SubTask> addSubTask(SubTask subTask) {
         if (subTask != null) {
             subTasksMap.put(subTask.getId(), subTask);
-            getStatus();
         }
         return subTasksMap;
     }
@@ -35,7 +33,6 @@ public class EpicTask extends Task {
     public Map<Integer, SubTask> removeSubTask(SubTask subTask) {
         if (subTask != null) {
             subTasksMap.remove(subTask.getId());
-            getStatus();
         }
         return subTasksMap;
     }
@@ -46,7 +43,7 @@ public class EpicTask extends Task {
                 "Имя='" + super.getName() + '\'' +
                 ", Описание='" + super.getDescription() + '\'' +
                 ", ID=" + super.getId() +
-                ", Статус=" + status +
+                ", Статус=" + getStatus() +
                 '}';
     }
 
@@ -58,12 +55,12 @@ public class EpicTask extends Task {
         return  super.getId() == task.getId() &&
                 Objects.equals(super.getName(), task.getName()) &&
                 Objects.equals(super.getDescription(), task.getDescription()) &&
-                Objects.equals(status, task.status);
+                Objects.equals(getStatus(), task.getStatus());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(super.getName(), super.getDescription(), super.getId(), status);
+        int result = Objects.hash(super.getName(), super.getDescription(), super.getId(), getStatus());
         result = 37 * result + super.getId();
         return result;
     }
@@ -72,8 +69,9 @@ public class EpicTask extends Task {
     public TaskStatus getStatus() {
         boolean allDone = true;
         boolean inProgress = false;
+        TaskStatus status = TaskStatus.NEW;
         if (subTasksMap == null || subTasksMap.isEmpty()) {
-            this.status = TaskStatus.NEW;
+            status = TaskStatus.NEW;
         } else {
             for (SubTask st : subTasksMap.values()) {
                 if (st.getStatus().equals(TaskStatus.NEW)
@@ -86,11 +84,11 @@ public class EpicTask extends Task {
                 }
             }
         }
-        if (allDone && (this.status != TaskStatus.NEW)) {
-            this.status = TaskStatus.DONE;
+        if (allDone && (status != TaskStatus.NEW)) {
+            status = TaskStatus.DONE;
         }
         if (inProgress && !allDone) {
-            this.status = TaskStatus.IN_PROGRESS;
+            status = TaskStatus.IN_PROGRESS;
         }
         return status;
     }
