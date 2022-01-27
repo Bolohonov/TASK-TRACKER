@@ -62,22 +62,23 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         private static void linkLast(Task task) {
-            int id = task.getId();
-            if (historyMap.containsKey(id)) {
-                removeNode(historyMap.get(id));
-            }
             Node l = last;
             Node newNode = new Node(task, l, null);
             last = newNode;
             if (l == null) {
                 first = newNode;
-                historyMap.put(id, newNode);
-                historyList.addFirst(newNode);
             } else {
                 l.setNextNode(newNode);
-                historyMap.put(id, newNode);
-                historyList.addLast(newNode);
             }
+            LinkedUniqueList.addTask(task, newNode);
+        }
+
+        private static void addTask(Task task, Node node) {
+            int id = task.getId();
+            if (historyMap.containsKey(id)) {
+                removeNode(historyMap.get(id));
+            }
+            historyMap.put(id, node);
         }
 
         private static ArrayList<Task> getTasks() {

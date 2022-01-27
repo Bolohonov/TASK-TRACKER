@@ -6,7 +6,6 @@ public class SingleTask extends Task{
 
     public SingleTask(String name, String description, int id) {
         super(name, description, id);
-        super.getStatus();
     }
 
     @Override

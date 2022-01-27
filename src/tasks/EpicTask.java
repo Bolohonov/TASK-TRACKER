@@ -15,7 +15,7 @@ public class EpicTask extends Task {
         subTasksMap = new LinkedHashMap<>();
     }
 
-    public Map<Integer,SubTask> getSubTasksMap() {
+    public Map<Integer,SubTask> getSubTasks() {
         try {
             return subTasksMap;
         } catch (NullPointerException exp) {
@@ -24,7 +24,7 @@ public class EpicTask extends Task {
         }
     }
 
-    public Map<Integer, SubTask> setSubTaskToMap(SubTask subTask) {
+    public Map<Integer, SubTask> addSubTask(SubTask subTask) {
         if (subTask != null) {
             subTasksMap.put(subTask.getId(), subTask);
             getStatus();
@@ -32,7 +32,7 @@ public class EpicTask extends Task {
         return subTasksMap;
     }
 
-    public Map<Integer, SubTask> removeSubTaskFromMap(SubTask subTask) {
+    public Map<Integer, SubTask> removeSubTask(SubTask subTask) {
         if (subTask != null) {
             subTasksMap.remove(subTask.getId());
             getStatus();

@@ -11,7 +11,7 @@ public class Managers {
     private final TaskUpdater updater = new InMemoryTaskUpdater();
     private final HistoryManager history = new InMemoryHistoryManager();
 
-    public TaskManager getDefault() {
+    public TaskManager getTaskManager() {
         return manager;
     }
 

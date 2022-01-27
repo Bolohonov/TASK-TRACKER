@@ -42,8 +42,8 @@ public class InMemoryTasksManager implements TaskManager {
     private static Task getSubTaskOrNullById(int id) {
         SubTask subTask = null;
         for (EpicTask epicTask : epicTaskRepository.getTasksMap().values()) {
-            if (epicTask.getSubTasksMap().containsKey(id)) {
-                subTask = epicTask.getSubTasksMap().get(id);
+            if (epicTask.getSubTasks().containsKey(id)) {
+                subTask = epicTask.getSubTasks().get(id);
             }
         }
         return subTask;
@@ -62,7 +62,7 @@ public class InMemoryTasksManager implements TaskManager {
             }
             try {
                 SubTask subTask = (SubTask) task;
-                subTask.getEpicTask().setSubTaskToMap(subTask);
+                subTask.getEpicTask().addSubTask(subTask);
             } catch (ClassCastException exp) {
             }
         } else {
@@ -99,7 +99,7 @@ public class InMemoryTasksManager implements TaskManager {
     public Map<Integer, SubTask> getSubTasksByEpic(Task epicTask) {
         if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
             EpicTask epic = (EpicTask) epicTask;
-            return epic.getSubTasksMap();
+            return epic.getSubTasks();
         } else {
             System.out.println("Эпик не найден!");
             return new LinkedHashMap<>();
@@ -161,7 +161,7 @@ public class InMemoryTasksManager implements TaskManager {
         }
         if (getSubTaskOrNullById(id) != null) {
             SubTask subTask = (SubTask) getSubTaskOrNullById(id);
-            subTask.getEpicTask().removeSubTaskFromMap(subTask);
+            subTask.getEpicTask().removeSubTask(subTask);
         }
     }
 }

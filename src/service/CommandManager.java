@@ -17,15 +17,15 @@ public class CommandManager {
                     int subCommand = Scan.selectType();
                     String[] userTask = Scan.saveLinesFromUser();
                     if (subCommand == 1) {
-                        manager.getDefault().putTask(manager.getFactory()
+                        manager.getTaskManager().putTask(manager.getFactory()
                                 .createSingleTask(userTask));
                     } else if (subCommand == 2) {
-                        manager.getDefault().putTask(manager.getFactory()
+                        manager.getTaskManager().putTask(manager.getFactory()
                                 .createEpicTask(userTask));
                     } else if (subCommand == 3) {
                         id = Scan.selectId();
-                        manager.getDefault().putTask(manager.getFactory()
-                                .createSubTask(manager.getDefault()
+                        manager.getTaskManager().putTask(manager.getFactory()
+                                .createSubTask(manager.getTaskManager()
                                         .getTaskById(id), userTask));
                     } else {
                         Print.printNoCommand();
@@ -34,38 +34,38 @@ public class CommandManager {
                 case 2:
                     id = Scan.selectId();
                     userTask = Scan.saveLinesFromUser();
-                    manager.getDefault().putTask(manager.getFactory()
-                            .createSubTask(manager.getDefault().getTaskById(id), userTask));
+                    manager.getTaskManager().putTask(manager.getFactory()
+                            .createSubTask(manager.getTaskManager().getTaskById(id), userTask));
                     break;
                 case 3:
-                    manager.getPrinter().printMap(manager.getDefault().getSingleTasks());
+                    manager.getPrinter().printMap(manager.getTaskManager().getSingleTasks());
                     break;
                 case 4:
-                    manager.getPrinter().printMap(manager.getDefault().getEpicTasks());
+                    manager.getPrinter().printMap(manager.getTaskManager().getEpicTasks());
                     break;
                 case 5:
                     id = Scan.selectId();
-                    manager.getPrinter().printMap(manager.getDefault()
-                            .getSubTasksByEpic(manager.getDefault().getTaskById(id)));
-                    manager.getHistoryManager().add(manager.getDefault().getTaskById(id));
+                    manager.getPrinter().printMap(manager.getTaskManager()
+                            .getSubTasksByEpic(manager.getTaskManager().getTaskById(id)));
+                    manager.getHistoryManager().add(manager.getTaskManager().getTaskById(id));
                     break;
                 case 6:
                     id = Scan.selectId();
-                    manager.getPrinter().printTask(manager.getDefault().getTaskById(id));
-                    manager.getHistoryManager().add(manager.getDefault().getTaskById(id));
+                    manager.getPrinter().printTask(manager.getTaskManager().getTaskById(id));
+                    manager.getHistoryManager().add(manager.getTaskManager().getTaskById(id));
                     break;
                 case 7:
                     id = Scan.selectId();
                     updatePanel(id);
-                    manager.getHistoryManager().add(manager.getDefault().getTaskById(id));
+                    manager.getHistoryManager().add(manager.getTaskManager().getTaskById(id));
                     break;
                 case 8:
-                    manager.getDefault().removeAllTasks();
+                    manager.getTaskManager().removeAllTasks();
                     manager.getHistoryManager().clearHistory();
                     break;
                 case 9:
                     id = Scan.selectId();
-                    manager.getDefault().removeTaskById(id);
+                    manager.getTaskManager().removeTaskById(id);
                     manager.getHistoryManager().remove(id);
                     break;
                 case 10:
@@ -91,9 +91,9 @@ public class CommandManager {
                     break;
                 case 1:
                     Print.printName();
-                    manager.getUpdate().updateName(manager.getDefault().getTaskById(id),
+                    manager.getUpdate().updateName(manager.getTaskManager().getTaskById(id),
                             Scan.selectString());
-                    if (manager.getDefault().updateTask(manager.getDefault().getTaskById(id))) {
+                    if (manager.getTaskManager().updateTask(manager.getTaskManager().getTaskById(id))) {
                         Print.printTaskUpdated();
                     } else {
                         Print.printTaskNotUpdated();
@@ -101,9 +101,9 @@ public class CommandManager {
                     break;
                 case 2:
                     Print.printDescription();
-                    manager.getUpdate().updateDescription(manager.getDefault().getTaskById(id),
+                    manager.getUpdate().updateDescription(manager.getTaskManager().getTaskById(id),
                             Scan.selectString());
-                    if (manager.getDefault().updateTask(manager.getDefault().getTaskById(id))) {
+                    if (manager.getTaskManager().updateTask(manager.getTaskManager().getTaskById(id))) {
                         Print.printTaskUpdated();
                     } else {
                         Print.printTaskNotUpdated();
@@ -111,9 +111,9 @@ public class CommandManager {
                     break;
                 case 3:
                     Print.printStatusList();
-                    manager.getUpdate().updateStatus(manager.getDefault().getTaskById(id),
+                    manager.getUpdate().updateStatus(manager.getTaskManager().getTaskById(id),
                             Scan.selectStatus());
-                    if (manager.getDefault().updateTask(manager.getDefault().getTaskById(id))) {
+                    if (manager.getTaskManager().updateTask(manager.getTaskManager().getTaskById(id))) {
                         Print.printTaskUpdated();
                     } else {
                         Print.printTaskNotUpdated();
