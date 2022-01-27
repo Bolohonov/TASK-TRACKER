@@ -52,18 +52,15 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public void putTask(Task task) {
         if (task != null) {
-            try {
+            if (task instanceof SingleTask) {
                 singleTaskRepository.putTaskToMap((SingleTask) task);
-            } catch (ClassCastException exp) {
             }
-            try {
+            if (task instanceof EpicTask) {
                 epicTaskRepository.putTaskToMap((EpicTask) task);
-            } catch (ClassCastException exp) {
             }
-            try {
+            if (task instanceof SubTask) {
                 SubTask subTask = (SubTask) task;
                 subTask.getEpicTask().addSubTask(subTask);
-            } catch (ClassCastException exp) {
             }
         } else {
             System.out.println("Задача не создана!");
@@ -97,7 +94,7 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public Map<Integer, SubTask> getSubTasksByEpic(Task epicTask) {
-        if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
+        if (epicTask != null && (epicTask instanceof EpicTask)) {
             EpicTask epic = (EpicTask) epicTask;
             return epic.getSubTasks();
         } else {
