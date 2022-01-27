@@ -1,16 +1,14 @@
-package repository;
+package service;
 
 import tasks.Task;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class TaskPrinter<T extends Task> implements Printable<T> {
 
     Map<Integer, T> map = new LinkedHashMap<>();
-    List<T> list = new LinkedList<>();
 
     @Override
     public void printMap(Map<Integer, T> tasksMap) {
