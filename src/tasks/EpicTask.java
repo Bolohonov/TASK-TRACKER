@@ -84,7 +84,7 @@ public class EpicTask extends Task {
                 }
             }
         }
-        if (allDone && (status != TaskStatus.NEW)) {
+        if (allDone && (!subTasksMap.isEmpty())) {
             status = TaskStatus.DONE;
         }
         if (inProgress && !allDone) {
