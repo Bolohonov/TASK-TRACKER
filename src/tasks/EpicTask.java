@@ -10,8 +10,8 @@ public class EpicTask extends Task {
 
     public EpicTask(String name, String description, int id) {
         super(name, description, id);
-        getStatus();
         subTasksMap = new LinkedHashMap<>();
+        getStatus();
     }
 
     public Map<Integer,SubTask> getSubTasks() {
