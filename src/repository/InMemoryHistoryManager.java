@@ -29,7 +29,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         LinkedUniqueList.clear();
     }
 
-    static final class LinkedUniqueList {
+    private static final class LinkedUniqueList {
         private static final Map<Integer, Node> historyMap = new HashMap();
         private static Node last;
         private static Node first;
