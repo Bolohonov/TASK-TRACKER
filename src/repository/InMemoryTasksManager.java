@@ -6,12 +6,14 @@ import tasks.SingleTask;
 import tasks.Task;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTasksManager implements TaskManager {
 
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
+    private final HistoryManager historyManager = new InMemoryHistoryManager();
 
     private static int id;
     private Task obj;
@@ -160,5 +162,10 @@ public class InMemoryTasksManager implements TaskManager {
             SubTask subTask = (SubTask) getSubTaskOrNullById(id);
             subTask.getEpicTask().removeSubTask(subTask);
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+
     }
 }
