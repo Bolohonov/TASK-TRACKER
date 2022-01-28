@@ -1,41 +1,40 @@
 package repository;
 
-import tasks.EpicTask;
-import tasks.SubTask;
 import tasks.Task;
 
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
+    private final LinkedUniqueList taskManagerHistory = new LinkedUniqueList();
 
     @Override
     public void add(Task task) {
-        LinkedUniqueList.linkLast(task);
-        LinkedUniqueList.addTask(task);
+        taskManagerHistory.linkLast(task);
+        taskManagerHistory.addTask(task);
     }
 
     @Override
     public void remove(int id) {
-        LinkedUniqueList.remove(id);
+        taskManagerHistory.remove(id);
     }
 
     @Override
     public List<Task> getHistory() {
-        return LinkedUniqueList.getTasks();
+        return taskManagerHistory.getTasks();
     }
 
     @Override
     public void clearHistory() {
-        LinkedUniqueList.clear();
+        taskManagerHistory.clear();
     }
 
-    private static final class LinkedUniqueList {
-        private static final Map<Integer, Node> historyMap = new HashMap();
-        private static Node last;
-        private static Node first;
+    private static class LinkedUniqueList {
+        private Map<Integer, Node> historyMap = new HashMap();
+        private Node last;
+        private Node first;
 
 
-        private static void linkLast(Task task) {
+        private void linkLast(Task task) {
             if (task != null) {
                 Node l = last;
                 Node newNode = new Node(task, l, null);
@@ -48,16 +47,15 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
         }
 
-        private static void addTask(Task task) {
+        private void addTask(Task task) {
             int id = task.getId();
             if (historyMap.containsKey(id)) {
-                checkAndRemoveSubTasks(id);
                 removeNode(historyMap.get(id));
             }
             historyMap.put(id, last);
         }
 
-        private static void removeNode(Node node) {
+        private void removeNode(Node node) {
             if (!node.equals(first) && !node.equals(last)) {
                 Node prevNode = node.getPrevNode();
                 Node nextNode = node.getNextNode();
@@ -82,7 +80,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             unlink(node);
         }
 
-        private static ArrayList<Task> getTasks() {
+        private ArrayList<Task> getTasks() {
             ArrayList<Task> historyArrayList = new ArrayList<>(historyMap.size());
             if (historyMap == null || historyMap.isEmpty()) {
                 System.out.println("Истории пока нет");
@@ -99,41 +97,21 @@ public class InMemoryHistoryManager implements HistoryManager {
             return historyArrayList;
         }
 
-        private static void unlink(Node node) {
+        private void unlink(Node node) {
             node.setNextNode(null);
             node.setPrevNode(null);
             node.setTask(null);
         }
 
-        private static void remove(int id) {
+        private void remove(int id) {
             if (historyMap.containsKey(id)) {
-                checkAndRemoveSubTasks(id);
                 removeNode(historyMap.get(id));
             } else {
                 System.out.println("В истории отсутствует задача с таким ID!");
             }
         }
 
-        private static void checkAndRemoveSubTasks(int id) {
-            if (historyMap.get(id).getTask() instanceof EpicTask) {
-                    /*
-                    По замечанию:
-                    Нужно получить лист с SubTask с их idшниками, чтобы быстро удалить эти записи из истории.
-                    Если удалять историю в момент удаления EpicTask в TaskManager, тогда InMemoryTaskManager
-                    будет знать про интерфейс HistoryManager, т.к. там придется его реализацию вызывать,
-                    а сейчас они никак не взаимодействуют. Может все же этот код здесь оставить?
-                     */
-                EpicTask epic = (EpicTask) historyMap.get(id).getTask();
-                Map<Integer, SubTask> subTaskMap = epic.getSubTasks();
-                for (Integer subTaskId : subTaskMap.keySet()) {
-                    if (historyMap.containsKey(subTaskId)) {
-                        removeNode(historyMap.get(subTaskId));
-                    }
-                }
-            }
-        }
-
-        private static void clear() {
+        private void clear() {
             historyMap.clear();
         }
     }

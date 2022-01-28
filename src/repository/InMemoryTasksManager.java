@@ -13,7 +13,7 @@ public class InMemoryTasksManager implements TaskManager {
 
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
-    private final HistoryManager historyManager = new InMemoryHistoryManager();
+    private static final HistoryManager historyManager = new InMemoryHistoryManager();
 
     private static int id;
     private Task obj;
@@ -74,12 +74,15 @@ public class InMemoryTasksManager implements TaskManager {
         obj = null;
         if (singleTaskRepository.getTasksMap().containsKey(id)) {
             obj = singleTaskRepository.getTasksMap().get(id);
+            historyManager.add(obj);
         }
         if (epicTaskRepository.getTasksMap().containsKey(id)) {
             obj = epicTaskRepository.getTasksMap().get(id);
+            historyManager.add(obj);
         }
         if (getSubTaskOrNullById(id) != null) {
             obj = getSubTaskOrNullById(id);
+            historyManager.add(obj);
         }
         return obj;
     }
@@ -113,6 +116,7 @@ public class InMemoryTasksManager implements TaskManager {
                 if (singleTaskRepository.getTasksMap().containsKey(task.getId())
                         && singleTaskRepository.getTasksMap().get(task.getId()).equals(task)) {
                     isUpdate = true;
+                    historyManager.add(task);
                 }
             } catch (ClassCastException exp) {
             }
@@ -120,6 +124,7 @@ public class InMemoryTasksManager implements TaskManager {
                 if (epicTaskRepository.getTasksMap().containsKey(task.getId())
                         && epicTaskRepository.getTasksMap().get(task.getId()).equals(task)) {
                     isUpdate = true;
+                    historyManager.add(task);
                 }
             } catch (ClassCastException exp) {
             }
@@ -127,6 +132,7 @@ public class InMemoryTasksManager implements TaskManager {
                 SubTask subTask = (SubTask) task;
                 if (getSubTaskOrNullById(subTask.getId()).equals(task)) {
                     isUpdate = true;
+                    historyManager.add(task);
                 }
             } catch (ClassCastException exp) {
             }
@@ -148,24 +154,32 @@ public class InMemoryTasksManager implements TaskManager {
         } catch (NullPointerException exp) {
             System.out.println("В списке не было задач");
         }
+        historyManager.clearHistory();
     }
 
     @Override
     public void removeTaskById(int id) {
         if (singleTaskRepository.getTasksMap().containsKey(id)) {
             singleTaskRepository.getTasksMap().remove(id);
+            historyManager.remove(id);
         }
         if (epicTaskRepository.getTasksMap().containsKey(id)) {
             epicTaskRepository.getTasksMap().remove(id);
+            EpicTask epic = epicTaskRepository.getTasksMap().get(id);
+            Map<Integer, SubTask> subTaskMap = epic.getSubTasks();
+            for (Integer subTaskId : subTaskMap.keySet()) {
+                historyManager.remove(subTaskId);
+            }
         }
         if (getSubTaskOrNullById(id) != null) {
             SubTask subTask = (SubTask) getSubTaskOrNullById(id);
             subTask.getEpicTask().removeSubTask(subTask);
+            historyManager.remove(id);
         }
     }
 
     @Override
     public List<Task> getHistory() {
-
+        return historyManager.getHistory();
     }
 }

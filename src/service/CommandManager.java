@@ -47,29 +47,24 @@ public class CommandManager {
                     id = Scan.selectId();
                     manager.getPrinter().printMap(manager.getTaskManager()
                             .getSubTasksByEpic(manager.getTaskManager().getTaskById(id)));
-                    manager.getHistoryManager().add(manager.getTaskManager().getTaskById(id));
                     break;
                 case 6:
                     id = Scan.selectId();
                     manager.getPrinter().printTask(manager.getTaskManager().getTaskById(id));
-                    manager.getHistoryManager().add(manager.getTaskManager().getTaskById(id));
                     break;
                 case 7:
                     id = Scan.selectId();
                     updatePanel(id);
-                    manager.getHistoryManager().add(manager.getTaskManager().getTaskById(id));
                     break;
                 case 8:
                     manager.getTaskManager().removeAllTasks();
-                    manager.getHistoryManager().clearHistory();
                     break;
                 case 9:
                     id = Scan.selectId();
                     manager.getTaskManager().removeTaskById(id);
-                    manager.getHistoryManager().remove(id);
                     break;
                 case 10:
-                    manager.getPrinter().printList(manager.getHistoryManager().getHistory());
+                    manager.getPrinter().printList(manager.getTaskManager().getHistory());
                     break;
                 case 0:
                     Print.printExit();

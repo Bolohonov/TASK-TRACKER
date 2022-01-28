@@ -3,13 +3,10 @@ package service;
 import repository.*;
 
 public class Managers {
-
-
     private final TaskManager manager = new InMemoryTasksManager();
     private final TaskCreator factory = new TaskFactory();
     private final Printable printer = new TaskPrinter();
     private final TaskUpdater updater = new InMemoryTaskUpdater();
-    private final HistoryManager history = new InMemoryHistoryManager();
 
     public TaskManager getTaskManager() {
         return manager;
@@ -25,9 +22,5 @@ public class Managers {
 
     public TaskUpdater getUpdate() {
         return updater;
-    }
-
-    public HistoryManager getHistoryManager() {
-        return history;
     }
 }
