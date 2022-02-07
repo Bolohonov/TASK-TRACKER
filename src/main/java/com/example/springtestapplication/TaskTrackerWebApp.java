@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication(scanBasePackages = {"com.example.springtestapplication", "controller"})
 @ComponentScan({"com.example.springtestapplication", "controller"})
-public class SpringTestApplication implements WebMvcConfigurer {
+public class TaskTrackerWebApp implements WebMvcConfigurer {
 
 	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
 			"classpath:/META-INF/resources/", "classpath:/resources/",
@@ -17,7 +17,7 @@ public class SpringTestApplication implements WebMvcConfigurer {
 	};
 
 	public static void main(String[] args) throws ValidationException {
-		SpringApplication.run(SpringTestApplication.class, args);
+		SpringApplication.run(TaskTrackerWebApp.class, args);
 	}
 
 	@Override
