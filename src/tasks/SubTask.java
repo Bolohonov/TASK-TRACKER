@@ -55,4 +55,15 @@ public class SubTask extends Task {
     public void setStatus(TaskStatus status) {
         super.setStatus(status);
     }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
+    }
+
+    @Override
+    public String toStringToFile() {
+        return super.getId() + "," + getType() + "," + super.getName()
+                + "," + super.getStatus() + "," + super.getDescription();
+    }
 }

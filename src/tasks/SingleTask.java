@@ -36,4 +36,15 @@ public class SingleTask extends Task{
         result = 31 * result + super.getId();
         return result;
     }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
+    @Override
+    public String toStringToFile() {
+        return super.getId() + "," + getType() + "," + super.getName()
+                + "," + super.getStatus() + "," + super.getDescription();
+    }
 }

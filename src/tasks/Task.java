@@ -10,6 +10,7 @@ public abstract class Task {
     private String description;
     private int id;
     private TaskStatus status;
+    private TaskType type;
 
     public Task(String name, String description, int id) {
         this.name = name;
@@ -72,5 +73,13 @@ public abstract class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public TaskType getType() {
+        return type;
+    }
+
+    public String toStringToFile() {
+        return id + "," + getType() + "," + name + "," + getStatus() + "," + getDescription();
     }
 }

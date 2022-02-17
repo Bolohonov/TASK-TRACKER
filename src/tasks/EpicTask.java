@@ -3,6 +3,7 @@ package tasks;
 import repository.TaskStatus;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class EpicTask extends Task {
 
@@ -95,5 +96,20 @@ public class EpicTask extends Task {
     @Override
     public void setStatus(TaskStatus status) {
         System.out.println("Статус не подлежит изменению");
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
+    }
+
+    @Override
+    public String toStringToFile() {
+        String result = super.getId() + "," + getType() + "," + super.getName()
+                + "," + getStatus() + "," + super.getDescription() + "," + "SubTask";
+        for (SubTask o : subTasksMap.values()) {
+            result = result + o.toStringToFile();
+        }
+        return result;
     }
 }
