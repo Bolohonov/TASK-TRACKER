@@ -40,12 +40,12 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                     }
                 });
             } catch (FileNotFoundException e) {
-                System.out.println("Произошла ошибка во время чтения файла.");
+                throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
             } catch (IOException e) {
-                System.out.println("Произошла ошибка во время чтения файла.");
+                throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
             }
         } catch (ManagerSaveException e) {
-
+            System.out.println("Ошибка менеджера: " + e.getMessage());
         }
     }
 
