@@ -11,7 +11,7 @@ public class CommandManager {
         int command = -1;
         int id;
         File file = Paths.get("./resources/data.csv").toFile();
-        manager.getFileManager().loadFromFile(file);
+        manager.loadFromFile(file);
 
         while (command != 0) {
             Print.printMenu();
