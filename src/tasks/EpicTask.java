@@ -2,6 +2,7 @@ package tasks;
 
 import repository.TaskStatus;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -16,6 +17,7 @@ public class EpicTask extends Task {
 
     public EpicTask(int id, String name, TaskStatus status, String description) {
         super(id, name, status, description);
+        subTasksMap = new LinkedHashMap<>();
     }
 
     public Map<Integer,SubTask> getSubTasks() {

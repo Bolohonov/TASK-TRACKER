@@ -4,7 +4,10 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager{
 
@@ -19,15 +22,17 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     public void save() {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             Repository<Task> rep = new Repository<>();
-            fileWriter.write("id,type,name,status,description,epic\n");
+            fileWriter.write("id,type,name,status,description,epic" + System.lineSeparator());
             rep.getTasks().putAll(memoryTasksManager.getSingleTasks());
             rep.getTasks().putAll(memoryTasksManager.getEpicTasks());
             memoryTasksManager.getEpicTasks().values().stream().forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
-            rep.getTasks().entrySet().stream().sorted(Map.Entry.comparingByKey());
-            rep.getTasks().entrySet().forEach(System.out::println);
-            rep.getTasks().values().stream().forEach(o -> {
+            HashMap<Integer, Task> sortedMap = rep.getTasks().entrySet().stream().sorted(Map.Entry.comparingByKey())
+                    .collect(Collectors
+                            .toMap(Map.Entry :: getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));;
+            sortedMap.entrySet().forEach(System.out::println);
+            sortedMap.values().stream().forEach(o -> {
                 try {
-                    fileWriter.append(o.toString(o) + "\n");
+                    fileWriter.append(o.toString(o) + System.lineSeparator());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -42,7 +47,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     private static void loadFromFile(File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while(fileReader.readLine() != null && fileReader.ready()) {
+            while(fileReader.ready() && file.length() != 0) {
                 String s = fileReader.readLine();
                 Task task = fromString(s);
                 memoryTasksManager.putTask(task);
@@ -69,10 +74,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                         ch[2], TaskStatus.valueOf(ch[3]), ch[4]);
             } else if (ch[1].equals(TaskType.SUBTASK.toString())) {
                 task = new SubTask(Integer.parseInt(ch[0]),
-                        ch[2], TaskStatus.valueOf(ch[3]), ch[4], memoryTasksManager.getEpicTasks().get(ch[5]));
+                        ch[2], TaskStatus.valueOf(ch[3]), ch[4], (EpicTask)memoryTasksManager
+                        .getTaskById(Integer.parseInt(ch[5])));
             }
-        } else {
-            System.out.println("Строка не распознана!");
         }
         return task;
     }

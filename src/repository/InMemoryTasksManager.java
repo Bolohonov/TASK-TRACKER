@@ -13,7 +13,6 @@ public class InMemoryTasksManager implements TaskManager {
 
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
-    private static final Repository<EpicTask> subTaskRepository = new Repository<>();
     private static final HistoryManager historyManager = new InMemoryHistoryManager();
 
     private static int id;
@@ -68,6 +67,8 @@ public class InMemoryTasksManager implements TaskManager {
         } else {
             System.out.println("Задача не создана!");
         }
+        singleTaskRepository.getTasks().values().stream().forEach(System.out::println);
+        epicTaskRepository.getTasks().values().stream().forEach(System.out::println);
     }
 
     @Override
