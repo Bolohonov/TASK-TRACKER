@@ -3,7 +3,6 @@ package service;
 import repository.*;
 
 public class Managers {
-
     private final TaskManager manager = new InMemoryTasksManager();
     private final TaskCreator factory = new TaskFactory();
     private final Printable printer = new TaskPrinter();
