@@ -29,7 +29,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             HashMap<Integer, Task> sortedMap = rep.getTasks().entrySet().stream().sorted(Map.Entry.comparingByKey())
                     .collect(Collectors
                             .toMap(Map.Entry :: getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));;
-            sortedMap.entrySet().forEach(System.out::println);
             sortedMap.values().stream().forEach(o -> {
                 try {
                     fileWriter.append(o.toString(o) + System.lineSeparator());
@@ -42,7 +41,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
         }
-
     }
 
     private static void loadFromFile(File file) {
@@ -50,7 +48,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             while(fileReader.ready() && file.length() != 0) {
                 String s = fileReader.readLine();
                 Task task = fromString(s);
-                memoryTasksManager.putTask(task);
+                if (task != null) {
+                    memoryTasksManager.putTask(task);
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("Произошла ошибка во время чтения файла.");

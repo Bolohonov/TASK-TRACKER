@@ -67,8 +67,6 @@ public class InMemoryTasksManager implements TaskManager {
         } else {
             System.out.println("Задача не создана!");
         }
-        singleTaskRepository.getTasks().values().stream().forEach(System.out::println);
-        epicTaskRepository.getTasks().values().stream().forEach(System.out::println);
     }
 
     @Override
