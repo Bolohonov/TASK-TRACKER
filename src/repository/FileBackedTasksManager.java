@@ -4,9 +4,7 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager{
 
@@ -45,9 +43,11 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     private static void loadFromFile(File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while(fileReader.readLine() != null && fileReader.ready()) {
-                String s = fileReader.readLine();
-                Task task = fromString(s);
-                memoryTasksManager.putTask(task);
+                if (!fileReader.readLine().equals("id,type,name,status,description,epic")) {
+                    String s = fileReader.readLine();
+                    Task task = fromString(s);
+                    memoryTasksManager.putTask(task);
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
