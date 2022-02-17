@@ -9,11 +9,11 @@ public class Repository<T extends Task> {
 
     private final Map<Integer, T> tasks = new LinkedHashMap<>();
 
-    public Map<Integer, T> getTasksMap() {
+    public Map<Integer, T> getTasks() {
         return tasks;
     }
 
-    public void putTaskToMap(T task) {
+    public void putTask(T task) {
         tasks.put(task.getId(), task);
     }
 

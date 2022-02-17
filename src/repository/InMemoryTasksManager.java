@@ -20,10 +20,10 @@ public class InMemoryTasksManager implements TaskManager {
 
     private static boolean checkIdNumber(int id) {
         boolean isIDAlreadyExist = false;
-        if (singleTaskRepository.getTasksMap().containsKey(id)) {
+        if (singleTaskRepository.getTasks().containsKey(id)) {
             isIDAlreadyExist = true;
         }
-        if (epicTaskRepository.getTasksMap().containsKey(id)) {
+        if (epicTaskRepository.getTasks().containsKey(id)) {
             isIDAlreadyExist = true;
         }
         if (getSubTaskOrNullById(id) != null) {
@@ -43,7 +43,7 @@ public class InMemoryTasksManager implements TaskManager {
 
     private static Task getSubTaskOrNullById(int id) {
         SubTask subTask = null;
-        for (EpicTask epicTask : epicTaskRepository.getTasksMap().values()) {
+        for (EpicTask epicTask : epicTaskRepository.getTasks().values()) {
             if (epicTask.getSubTasks().containsKey(id)) {
                 subTask = epicTask.getSubTasks().get(id);
             }
@@ -55,10 +55,10 @@ public class InMemoryTasksManager implements TaskManager {
     public void putTask(Task task) {
         if (task != null) {
             if (task instanceof SingleTask) {
-                singleTaskRepository.putTaskToMap((SingleTask) task);
+                singleTaskRepository.putTask((SingleTask) task);
             }
             if (task instanceof EpicTask) {
-                epicTaskRepository.putTaskToMap((EpicTask) task);
+                epicTaskRepository.putTask((EpicTask) task);
             }
             if (task instanceof SubTask) {
                 SubTask subTask = (SubTask) task;
@@ -72,12 +72,12 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         obj = null;
-        if (singleTaskRepository.getTasksMap().containsKey(id)) {
-            obj = singleTaskRepository.getTasksMap().get(id);
+        if (singleTaskRepository.getTasks().containsKey(id)) {
+            obj = singleTaskRepository.getTasks().get(id);
             historyManager.add(obj);
         }
-        if (epicTaskRepository.getTasksMap().containsKey(id)) {
-            obj = epicTaskRepository.getTasksMap().get(id);
+        if (epicTaskRepository.getTasks().containsKey(id)) {
+            obj = epicTaskRepository.getTasks().get(id);
             historyManager.add(obj);
         }
         if (getSubTaskOrNullById(id) != null) {
@@ -89,12 +89,12 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public Map<Integer, SingleTask> getSingleTasks() {
-        return singleTaskRepository.getTasksMap();
+        return singleTaskRepository.getTasks();
     }
 
     @Override
     public Map<Integer, EpicTask> getEpicTasks() {
-        return epicTaskRepository.getTasksMap();
+        return epicTaskRepository.getTasks();
     }
 
     @Override
@@ -113,16 +113,16 @@ public class InMemoryTasksManager implements TaskManager {
         boolean isUpdate = false;
         if (task != null) {
             try {
-                if (singleTaskRepository.getTasksMap().containsKey(task.getId())
-                        && singleTaskRepository.getTasksMap().get(task.getId()).equals(task)) {
+                if (singleTaskRepository.getTasks().containsKey(task.getId())
+                        && singleTaskRepository.getTasks().get(task.getId()).equals(task)) {
                     isUpdate = true;
                     historyManager.add(task);
                 }
             } catch (ClassCastException exp) {
             }
             try {
-                if (epicTaskRepository.getTasksMap().containsKey(task.getId())
-                        && epicTaskRepository.getTasksMap().get(task.getId()).equals(task)) {
+                if (epicTaskRepository.getTasks().containsKey(task.getId())
+                        && epicTaskRepository.getTasks().get(task.getId()).equals(task)) {
                     isUpdate = true;
                     historyManager.add(task);
                 }
@@ -159,18 +159,18 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public void removeTaskById(int id) {
-        if (singleTaskRepository.getTasksMap().containsKey(id)) {
+        if (singleTaskRepository.getTasks().containsKey(id)) {
             historyManager.remove(id);
-            singleTaskRepository.getTasksMap().remove(id);
+            singleTaskRepository.getTasks().remove(id);
         }
-        if (epicTaskRepository.getTasksMap().containsKey(id)) {
-            EpicTask epic = epicTaskRepository.getTasksMap().get(id);
+        if (epicTaskRepository.getTasks().containsKey(id)) {
+            EpicTask epic = epicTaskRepository.getTasks().get(id);
             Map<Integer, SubTask> subTaskMap = epic.getSubTasks();
             for (Integer subTaskId : subTaskMap.keySet()) {
                 historyManager.remove(subTaskId);
             }
             historyManager.remove(id);
-            epicTaskRepository.getTasksMap().remove(id);
+            epicTaskRepository.getTasks().remove(id);
         }
         if (getSubTaskOrNullById(id) != null) {
             historyManager.remove(id);
