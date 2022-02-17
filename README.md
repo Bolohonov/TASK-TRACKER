@@ -1,1 +1,1 @@
-# spring-test-jpa
+# java-sprint5-hw
