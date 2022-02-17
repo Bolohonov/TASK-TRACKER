@@ -10,8 +10,6 @@ public class CommandManager {
     public void getCommandPanel() {
         int command = -1;
         int id;
-        File file = Paths.get("./resources/data.csv").toFile();
-        manager.loadFromFile(file);
 
         while (command != 0) {
             Print.printMenu();
