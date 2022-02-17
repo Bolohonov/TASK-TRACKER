@@ -1,11 +1,17 @@
 package tasks;
 
+import repository.TaskStatus;
+
 import java.util.Objects;
 
 public class SingleTask extends Task{
 
     public SingleTask(String name, String description, int id) {
         super(name, description, id);
+    }
+
+    public SingleTask(int id, String name, TaskStatus status, String description) {
+        super(id, name, status, description);
     }
 
     @Override
@@ -40,11 +46,5 @@ public class SingleTask extends Task{
     @Override
     public TaskType getType() {
         return TaskType.TASK;
-    }
-
-    @Override
-    public String toStringToFile() {
-        return super.getId() + "," + getType() + "," + super.getName()
-                + "," + super.getStatus() + "," + super.getDescription();
     }
 }

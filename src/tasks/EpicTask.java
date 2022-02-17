@@ -14,6 +14,10 @@ public class EpicTask extends Task {
         subTasksMap = new LinkedHashMap<>();
     }
 
+    public EpicTask(int id, String name, TaskStatus status, String description) {
+        super(id, name, status, description);
+    }
+
     public Map<Integer,SubTask> getSubTasks() {
         try {
             return subTasksMap;
@@ -101,15 +105,5 @@ public class EpicTask extends Task {
     @Override
     public TaskType getType() {
         return TaskType.EPIC;
-    }
-
-    @Override
-    public String toStringToFile() {
-        String result = super.getId() + "," + getType() + "," + super.getName()
-                + "," + getStatus() + "," + super.getDescription() + "," + "SubTask";
-        for (SubTask o : subTasksMap.values()) {
-            result = result + o.toStringToFile();
-        }
-        return result;
     }
 }

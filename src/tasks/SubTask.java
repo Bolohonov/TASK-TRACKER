@@ -12,6 +12,11 @@ public class SubTask extends Task {
         setEpicTask(epicTask);
     }
 
+    public SubTask(int id, String name, TaskStatus status, String description, EpicTask epic) {
+        super(id, name, status, description);
+        this.epicTask = epic;
+    }
+
     public void setEpicTask(EpicTask epicTask) {
         this.epicTask = epicTask;
     }
@@ -62,8 +67,7 @@ public class SubTask extends Task {
     }
 
     @Override
-    public String toStringToFile() {
-        return super.getId() + "," + getType() + "," + super.getName()
-                + "," + super.getStatus() + "," + super.getDescription();
+    public String toString(Task task) {
+        return super.toString(task) + epicTask.getId();
     }
 }

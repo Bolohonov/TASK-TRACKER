@@ -19,6 +19,13 @@ public abstract class Task {
         this.status = TaskStatus.NEW;
     }
 
+    public Task(int id, String name, TaskStatus status, String description) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Задача{" +
@@ -79,7 +86,8 @@ public abstract class Task {
         return type;
     }
 
-    public String toStringToFile() {
-        return id + "," + getType() + "," + name + "," + getStatus() + "," + getDescription();
+    public String toString(Task task) {
+        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus()
+                + "," + task.getDescription() + ",";
     }
 }
