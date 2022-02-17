@@ -4,7 +4,6 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -21,13 +20,13 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     public void save() {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            Set<Task> set = new HashSet<>();
             Repository<Task> rep = new Repository<>();
-            fileWriter.write("id,type,name,status,description,epic");
+            fileWriter.write("id,type,name,status,description,epic\n");
             rep.getTasks().putAll(memoryTasksManager.getSingleTasks());
             rep.getTasks().putAll(memoryTasksManager.getEpicTasks());
             memoryTasksManager.getEpicTasks().values().stream().forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
             rep.getTasks().entrySet().stream().sorted(Map.Entry.comparingByKey());
+            rep.getTasks().entrySet().forEach(System.out::println);
             rep.getTasks().values().stream().forEach(o -> {
                 try {
                     fileWriter.append(o.toString(o) + "\n");
@@ -45,30 +44,39 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     private static void loadFromFile(File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while(fileReader.ready()) {
+            while(fileReader.readLine() != null && fileReader.ready()) {
                 String s = fileReader.readLine();
-                String [] ch = new String[] {""};
-                if (!s.isBlank()) {
-                    ch = s.split(",");
-                }
-                if (ch[1].equals(TaskType.TASK)) {
-                    memoryTasksManager.putTask(new SingleTask(Integer.parseInt(ch[0]),
-                            ch[2], TaskStatus.valueOf(ch[3]), ch[4]));
-                } else if (ch[1].equals(TaskType.EPIC)) {
-                    memoryTasksManager.putTask(new EpicTask(Integer.parseInt(ch[0]),
-                            ch[2], TaskStatus.valueOf(ch[3]), ch[4]));
-                } else if (ch[1].equals(TaskType.SUBTASK)) {
-                    SubTask subTask = new SubTask(Integer.parseInt(ch[0]),
-                            ch[2], TaskStatus.valueOf(ch[3]), ch[4], memoryTasksManager.getEpicTasks().get(ch[5]));
-                    memoryTasksManager.putTask(subTask);
-                    memoryTasksManager.getEpicTasks().get(ch[5]).addSubTask(subTask);
-                }
+                Task task = fromString(s);
+                memoryTasksManager.putTask(task);
             }
         } catch (FileNotFoundException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
         }
+    }
+
+    private static Task fromString(String value) {
+        Task task = null;
+        String [] ch = null;
+        if (!value.isBlank() && !value.equals("id,type,name,status,description,epic")) {
+            ch = value.split(",");
+        }
+        if (ch != null) {
+            if (ch[1].equals(TaskType.TASK.toString())) {
+               task = new SingleTask(Integer.parseInt(ch[0]),
+                        ch[2], TaskStatus.valueOf(ch[3]), ch[4]);
+            } else if (ch[1].equals(TaskType.EPIC.toString())) {
+                task = new EpicTask(Integer.parseInt(ch[0]),
+                        ch[2], TaskStatus.valueOf(ch[3]), ch[4]);
+            } else if (ch[1].equals(TaskType.SUBTASK.toString())) {
+                task = new SubTask(Integer.parseInt(ch[0]),
+                        ch[2], TaskStatus.valueOf(ch[3]), ch[4], memoryTasksManager.getEpicTasks().get(ch[5]));
+            }
+        } else {
+            System.out.println("Строка не распознана!");
+        }
+        return task;
     }
 
     @Override
