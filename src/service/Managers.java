@@ -4,12 +4,17 @@ import repository.*;
 
 public class Managers {
     private final TaskManager manager = new InMemoryTasksManager();
+    private final TaskManager fileManager = new FileBackedTasksManager();
     private final TaskCreator factory = new TaskFactory();
     private final Printable printer = new TaskPrinter();
     private final TaskUpdater updater = new InMemoryTaskUpdater();
 
     public TaskManager getTaskManager() {
         return manager;
+    }
+
+    public TaskManager getFileManager() {
+        return fileManager;
     }
 
     public TaskCreator getFactory() {

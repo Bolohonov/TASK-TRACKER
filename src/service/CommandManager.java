@@ -1,5 +1,8 @@
 package service;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 public class CommandManager {
 
     Managers manager = new Managers();
@@ -7,6 +10,8 @@ public class CommandManager {
     public void getCommandPanel() {
         int command = -1;
         int id;
+        File file = Paths.get("./resources/data.csv").toFile();
+        manager.getFileManager().loadFromFile(file);
 
         while (command != 0) {
             Print.printMenu();
