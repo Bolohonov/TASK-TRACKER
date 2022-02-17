@@ -4,6 +4,7 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -109,5 +110,19 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     public void removeTaskById(int id) {
         super.removeTaskById(id);
         save();
+    }
+
+    static void main(String[] args) {
+        File file = Paths.get("./resources/data.csv").toFile();
+        FileBackedTasksManager f = new FileBackedTasksManager(file);
+        Task t = new SingleTask("name1", "desc1", getId());
+        EpicTask t2 = new EpicTask("name2", "desc2", getId());
+        Task t3 = new SubTask(t2,"name3", "desc3", getId());
+        Task t4 = new SubTask(t2,"name4", "desc4", getId());
+
+        f.putTask(t);
+        f.putTask(t2);
+        f.putTask(t3);
+        f.putTask(t4);
     }
 }
