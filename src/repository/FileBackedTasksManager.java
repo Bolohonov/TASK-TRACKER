@@ -43,11 +43,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     private static void loadFromFile(File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while(fileReader.readLine() != null && fileReader.ready()) {
-                if (!fileReader.readLine().equals("id,type,name,status,description,epic")) {
-                    String s = fileReader.readLine();
-                    Task task = fromString(s);
-                    memoryTasksManager.putTask(task);
-                }
+                String s = fileReader.readLine();
+                Task task = fromString(s);
+                memoryTasksManager.putTask(task);
             }
         } catch (FileNotFoundException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
