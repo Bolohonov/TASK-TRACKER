@@ -20,26 +20,31 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     public void save() {
-        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            Repository<Task> rep = new Repository<>();
-            fileWriter.write("id,type,name,status,description,epic" + System.lineSeparator());
-            rep.getTasks().putAll(memoryTasksManager.getSingleTasks());
-            rep.getTasks().putAll(memoryTasksManager.getEpicTasks());
-            memoryTasksManager.getEpicTasks().values().stream().forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
-            HashMap<Integer, Task> sortedMap = rep.getTasks().entrySet().stream().sorted(Map.Entry.comparingByKey())
-                    .collect(Collectors
-                            .toMap(Map.Entry :: getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));;
-            sortedMap.values().stream().forEach(o -> {
-                try {
-                    fileWriter.append(o.toString(o) + System.lineSeparator());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        } catch (FileNotFoundException e) {
-            System.out.println("Произошла ошибка во время чтения файла.");
-        } catch (IOException e) {
-            System.out.println("Произошла ошибка во время чтения файла.");
+        try {
+            try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
+                Repository<Task> rep = new Repository<>();
+                fileWriter.write("id,type,name,status,description,epic" + System.lineSeparator());
+                rep.getTasks().putAll(memoryTasksManager.getSingleTasks());
+                rep.getTasks().putAll(memoryTasksManager.getEpicTasks());
+                memoryTasksManager.getEpicTasks().values().stream().forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
+                HashMap<Integer, Task> sortedMap = rep.getTasks().entrySet().stream().sorted(Map.Entry.comparingByKey())
+                        .collect(Collectors
+                                .toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                ;
+                sortedMap.values().stream().forEach(o -> {
+                    try {
+                        fileWriter.append(o.toString(o) + System.lineSeparator());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                System.out.println("Произошла ошибка во время чтения файла.");
+            } catch (IOException e) {
+                System.out.println("Произошла ошибка во время чтения файла.");
+            }
+        } catch (ManagerSaveException e) {
+
         }
     }
 
