@@ -4,14 +4,12 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager{
+public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager {
 
     private File file;
     private static final TaskManager memoryTasksManager = new InMemoryTasksManager();
@@ -42,7 +40,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                         e.printStackTrace();
                     }
                 });
-                if (historyManager.getHistory() != null &&  !historyManager.getHistory().isEmpty()) {
+                if (historyManager.getHistory() != null && !historyManager.getHistory().isEmpty()) {
                     fileWriter.append(System.lineSeparator());
                     fileWriter.append(toString(historyManager));
                 }
@@ -56,9 +54,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
     }
 
-    private static void loadFromFile (File file) {
+    private static void loadFromFile(File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while(fileReader.ready() && fileReader.read() == -1) {
+            while (fileReader.ready() && fileReader.read() == -1) {
                 String s = fileReader.readLine();
                 if (!s.isBlank() && !s.equals("id,type,name,status,description,epic")) {
                     Task task = fromString(s);
@@ -84,20 +82,20 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     private static Task fromString(String value) {
         Task task = null;
-        String [] values = null;
+        String[] values = null;
         if (!value.isBlank() && !value.equals("id,type,name,status,description,epic")) {
             values = value.split(",");
         }
         if (values != null) {
             if (values[1].equals(TaskType.TASK.toString())) {
-               task = new SingleTask(Integer.parseInt(values[0]),
+                task = new SingleTask(Integer.parseInt(values[0]),
                         values[2], TaskStatus.valueOf(values[3]), values[4]);
             } else if (values[1].equals(TaskType.EPIC.toString())) {
                 task = new EpicTask(Integer.parseInt(values[0]),
                         values[2], TaskStatus.valueOf(values[3]), values[4]);
             } else if (values[1].equals(TaskType.SUBTASK.toString())) {
                 task = new SubTask(Integer.parseInt(values[0]),
-                        values[2], TaskStatus.valueOf(values[3]), values[4], (EpicTask)memoryTasksManager
+                        values[2], TaskStatus.valueOf(values[3]), values[4], (EpicTask) memoryTasksManager
                         .getTaskById(Integer.parseInt(values[5])));
             }
         }
@@ -115,7 +113,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     private static void fromStringToHistory(String value) {
-        String [] values = value.split(",");
+        String[] values = value.split(",");
         if (values != null && values.length != 0) {
             for (int i = 0; i < values.length; i++) {
                 try {
@@ -157,23 +155,5 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     public void removeTaskById(int id) {
         super.removeTaskById(id);
         save();
-    }
-
-    public static void main() {
-        File file = Paths.get("./resources/data.csv").toFile();
-        FileBackedTasksManager f = new FileBackedTasksManager(file);
-        Task t = new SingleTask("name1", "desc1", getId());
-        EpicTask t2 = new EpicTask("name2", "desc2", getId());
-        Task t3 = new SubTask(t2,"name3", "desc3", getId());
-        Task t4 = new SubTask(t2,"name4", "desc4", getId());
-
-        f.putTask(t);
-        f.putTask(t2);
-        f.putTask(t3);
-        f.putTask(t4);
-        f.getTaskById(1);
-        f.getTaskById(3);
-        f.getTaskById(2);
-        f.getTaskById(4);
     }
 }

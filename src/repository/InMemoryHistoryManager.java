@@ -83,7 +83,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         private ArrayList<Task> getTasks() {
             ArrayList<Task> historyArrayList = new ArrayList<>(historyMap.size());
             if (historyMap == null || historyMap.isEmpty()) {
-                System.out.println("Истории пока нет");
                 return null;
             } else {
                 Node node = first;
