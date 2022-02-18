@@ -42,8 +42,10 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                         e.printStackTrace();
                     }
                 });
-                fileWriter.append(" ");
-                fileWriter.append(toString(historyManager));
+                if (historyManager.getHistory() != null &&  !historyManager.getHistory().isEmpty()) {
+                    fileWriter.append(" ");
+                    fileWriter.append(toString(historyManager));
+                }
             } catch (FileNotFoundException e) {
                 throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
             } catch (IOException e) {
@@ -64,9 +66,12 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                         memoryTasksManager.putTask(task);
                     }
                 } else {
+                    while (fileReader.read() != -1)
                     s = fileReader.readLine();
-                    fromStringToHistory(s);
-                    break;
+                    if (!s.isBlank() && !s.equals(null)) {
+                        fromStringToHistory(s);
+                        break;
+                    }
                 }
             }
         } catch (FileNotFoundException e) {
