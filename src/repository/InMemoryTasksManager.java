@@ -13,7 +13,7 @@ public class InMemoryTasksManager implements TaskManager {
 
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
-    private static final HistoryManager historyManager = new InMemoryHistoryManager();
+    protected static final HistoryManager historyManager = new InMemoryHistoryManager();
 
     private static int id;
     private Task obj;

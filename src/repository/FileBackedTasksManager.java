@@ -7,13 +7,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager{
 
     private File file;
-    private static final InMemoryTasksManager memoryTasksManager = new InMemoryTasksManager();
+    private static final TaskManager memoryTasksManager = new InMemoryTasksManager();
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -27,8 +28,10 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 fileWriter.write("id,type,name,status,description,epic" + System.lineSeparator());
                 rep.getTasks().putAll(memoryTasksManager.getSingleTasks());
                 rep.getTasks().putAll(memoryTasksManager.getEpicTasks());
-                memoryTasksManager.getEpicTasks().values().stream().forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
-                HashMap<Integer, Task> sortedMap = rep.getTasks().entrySet().stream().sorted(Map.Entry.comparingByKey())
+                memoryTasksManager.getEpicTasks().values().stream()
+                        .forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
+                HashMap<Integer, Task> sortedMap = rep.getTasks()
+                        .entrySet().stream().sorted(Map.Entry.comparingByKey())
                         .collect(Collectors
                                 .toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
                 ;
@@ -39,6 +42,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                         e.printStackTrace();
                     }
                 });
+                fileWriter.append(" ");
+                fileWriter.append(toString(historyManager));
             } catch (FileNotFoundException e) {
                 throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
             } catch (IOException e) {
@@ -53,9 +58,15 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while(fileReader.ready() && file.length() != 0) {
                 String s = fileReader.readLine();
-                Task task = fromString(s);
-                if (task != null) {
-                    memoryTasksManager.putTask(task);
+                if (!s.isBlank()) {
+                    Task task = fromString(s);
+                    if (task != null) {
+                        memoryTasksManager.putTask(task);
+                    }
+                } else {
+                    s = fileReader.readLine();
+                    fromStringToHistory(s);
+                    break;
                 }
             }
         } catch (FileNotFoundException e) {
@@ -67,24 +78,47 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     private static Task fromString(String value) {
         Task task = null;
-        String [] ch = null;
+        String [] values = null;
         if (!value.isBlank() && !value.equals("id,type,name,status,description,epic")) {
-            ch = value.split(",");
+            values = value.split(",");
         }
-        if (ch != null) {
-            if (ch[1].equals(TaskType.TASK.toString())) {
-               task = new SingleTask(Integer.parseInt(ch[0]),
-                        ch[2], TaskStatus.valueOf(ch[3]), ch[4]);
-            } else if (ch[1].equals(TaskType.EPIC.toString())) {
-                task = new EpicTask(Integer.parseInt(ch[0]),
-                        ch[2], TaskStatus.valueOf(ch[3]), ch[4]);
-            } else if (ch[1].equals(TaskType.SUBTASK.toString())) {
-                task = new SubTask(Integer.parseInt(ch[0]),
-                        ch[2], TaskStatus.valueOf(ch[3]), ch[4], (EpicTask)memoryTasksManager
-                        .getTaskById(Integer.parseInt(ch[5])));
+        if (values != null) {
+            if (values[1].equals(TaskType.TASK.toString())) {
+               task = new SingleTask(Integer.parseInt(values[0]),
+                        values[2], TaskStatus.valueOf(values[3]), values[4]);
+            } else if (values[1].equals(TaskType.EPIC.toString())) {
+                task = new EpicTask(Integer.parseInt(values[0]),
+                        values[2], TaskStatus.valueOf(values[3]), values[4]);
+            } else if (values[1].equals(TaskType.SUBTASK.toString())) {
+                task = new SubTask(Integer.parseInt(values[0]),
+                        values[2], TaskStatus.valueOf(values[3]), values[4], (EpicTask)memoryTasksManager
+                        .getTaskById(Integer.parseInt(values[5])));
             }
         }
         return task;
+    }
+
+    private static String toString(HistoryManager manager) {
+        String historyToString = "";
+        if (!manager.getHistory().isEmpty() && manager.getHistory() != null) {
+            for (Task task : manager.getHistory()) {
+                historyToString += task.getId() + ",";
+            }
+        }
+        return historyToString;
+    }
+
+    private static void fromStringToHistory(String value) {
+        String [] values = value.split(",");
+        if (values != null && values.length != 0) {
+            for (int i = 0; i < values.length; i++) {
+                try {
+                    memoryTasksManager.getHistory().add(memoryTasksManager.getTaskById(Integer.parseInt(values[i])));
+                } catch (NumberFormatException exp) {
+                    System.out.println("Некорректный список истории просмотров!");
+                }
+            }
+        }
     }
 
     @Override
