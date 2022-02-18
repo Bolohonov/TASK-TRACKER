@@ -43,7 +43,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                     }
                 });
                 if (historyManager.getHistory() != null &&  !historyManager.getHistory().isEmpty()) {
-                    fileWriter.append(" ");
+                    fileWriter.append(System.lineSeparator());
                     fileWriter.append(toString(historyManager));
                 }
             } catch (FileNotFoundException e) {
@@ -56,21 +56,22 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
     }
 
-    private static void loadFromFile(File file) {
+    private static void loadFromFile (File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while(fileReader.ready() && file.length() != 0) {
+            while(fileReader.ready() && fileReader.read() == -1) {
                 String s = fileReader.readLine();
-                if (!s.isBlank()) {
+                if (!s.isBlank() && !s.equals("id,type,name,status,description,epic")) {
                     Task task = fromString(s);
                     if (task != null) {
                         memoryTasksManager.putTask(task);
                     }
                 } else {
-                    while (fileReader.read() != -1)
-                    s = fileReader.readLine();
-                    if (!s.isBlank() && !s.equals(null)) {
-                        fromStringToHistory(s);
-                        break;
+                    while (fileReader.read() != -1) {
+                        s = fileReader.readLine();
+                        if (!s.equals(null) && !s.isBlank() && !s.equals("id,type,name,status,description,epic")) {
+                            fromStringToHistory(s);
+                            break;
+                        }
                     }
                 }
             }
@@ -140,6 +141,13 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     @Override
+    public Task getTaskById(int id) {
+        Task task = super.getTaskById(id);
+        save();
+        return task;
+    }
+
+    @Override
     public void removeAllTasks() {
         super.removeAllTasks();
         save();
@@ -151,7 +159,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         save();
     }
 
-    static void main(String[] args) {
+    public static void main() {
         File file = Paths.get("./resources/data.csv").toFile();
         FileBackedTasksManager f = new FileBackedTasksManager(file);
         Task t = new SingleTask("name1", "desc1", getId());
@@ -163,5 +171,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         f.putTask(t2);
         f.putTask(t3);
         f.putTask(t4);
+        f.getTaskById(1);
+        f.getTaskById(3);
+        f.getTaskById(2);
+        f.getTaskById(4);
     }
 }
