@@ -1,8 +1,5 @@
 package service;
 
-import java.io.File;
-import java.nio.file.Paths;
-
 public class CommandManager {
 
     Managers manager = new Managers();
