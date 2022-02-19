@@ -15,7 +15,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     public FileBackedTasksManager(File file) {
         this.file = file;
-        loadFromFile(file);
     }
 
     public void save() {
@@ -27,12 +26,16 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 rep.getTasks().putAll(super.getEpicTasks());
                 super.getEpicTasks().values().stream()
                         .forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
-                HashMap<Integer, Task> sortedMap = rep.getTasks()
+                //Сделал здесь сортировку по ключу-id, чтобы исключить вариант записи в файл задач
+                // с нарушением последовательности id по возрастанию, например, когда подзадача будет записана
+                // и считана раньше своего эпика.
+                //Название было sortedMap, т.к. в итоге собирается в коллекцию LinkedHashMap.
+                HashMap<Integer, Task> map = rep.getTasks()
                         .entrySet().stream().sorted(Map.Entry.comparingByKey())
                         .collect(Collectors
                                 .toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
                 ;
-                sortedMap.values().stream().forEach(o -> {
+                map.values().stream().forEach(o -> {
                     try {
                         fileWriter.append(o.toString(o) + System.lineSeparator());
                     } catch (IOException e) {
@@ -51,7 +54,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
     }
 
-    private void loadFromFile(File file) {
+    public FileBackedTasksManager loadFromFile(File file) {
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while (fileReader.ready()) {
                 String s = fileReader.readLine();
@@ -73,6 +77,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
         }
+        return fileBackedTasksManager;
     }
 
     private Task fromString(String value) {
