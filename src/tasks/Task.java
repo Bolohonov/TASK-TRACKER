@@ -10,7 +10,6 @@ public abstract class Task {
     private String description;
     private int id;
     private TaskStatus status;
-    private TaskType type;
 
     public Task(String name, String description, int id) {
         this.name = name;
@@ -82,10 +81,11 @@ public abstract class Task {
         this.status = status;
     }
 
-    public TaskType getType() {
-        return type;
-    }
+    public abstract TaskType getType();
 
+    //Данный метод перегружается в классе, также он переопределяется в наследнике SubTask.
+    //В классе FileBackedTasksManager как я понял по ТЗ должен быть метод toString()
+    // с сигнатурой String toString(HistoryManager manager)
     public String toString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus()
                 + "," + task.getDescription() + ",";

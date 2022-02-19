@@ -98,13 +98,13 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     private static String toString(HistoryManager manager) {
-        String historyToString = "";
+        StringBuilder historyToString = new StringBuilder();
         if (!manager.getHistory().isEmpty() && manager.getHistory() != null) {
             for (Task task : manager.getHistory()) {
-                historyToString += task.getId() + ",";
+                historyToString.append(task.getId() + ",");
             }
         }
-        return historyToString;
+        return historyToString.toString();
     }
 
     private void fromStringToHistory(String value) {
