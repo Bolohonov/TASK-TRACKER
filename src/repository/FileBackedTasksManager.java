@@ -56,15 +56,15 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     private static void loadFromFile(File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while (fileReader.ready() && fileReader.read() == -1) {
+            while (fileReader.ready()) {
                 String s = fileReader.readLine();
-                if (!s.isBlank() && !s.equals("id,type,name,status,description,epic")) {
+                if (!s.isBlank()) {
                     Task task = fromString(s);
                     if (task != null) {
                         memoryTasksManager.putTask(task);
                     }
                 } else {
-                    while (fileReader.read() != -1) {
+                    while (fileReader.ready()) {
                         s = fileReader.readLine();
                         if (!s.equals(null) && !s.isBlank() && !s.equals("id,type,name,status,description,epic")) {
                             fromStringToHistory(s);
