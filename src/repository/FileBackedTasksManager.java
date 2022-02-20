@@ -15,6 +15,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     public FileBackedTasksManager(File file) {
         this.file = file;
+        loadFromFile(file);
     }
 
     public void save() {
@@ -54,8 +55,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
     }
 
-    public FileBackedTasksManager loadFromFile(File file) {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+    public void loadFromFile(File file) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while (fileReader.ready()) {
                 String s = fileReader.readLine();
@@ -77,7 +77,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
         }
-        return fileBackedTasksManager;
     }
 
     private Task fromString(String value) {

@@ -51,7 +51,6 @@ public class Main {
         f.removeTaskById(6);
         f.removeTaskById(5);
         FileBackedTasksManager f2 = new FileBackedTasksManager(file);
-        f2.loadFromFile(file);
         System.out.println("Проверка истории! (Эпик 5 и его подзадачи 6,7 - удалены)");
         manager.getPrinter().printList(f2.getHistory());
         System.out.println("-------------------------------------");
@@ -69,7 +68,6 @@ public class Main {
         manager.getPrinter().printTask(f2.getTaskById(10));
         System.out.println("-------------------------------------");
         FileBackedTasksManager f3 = new FileBackedTasksManager(file);
-        f3.loadFromFile(file);
         System.out.println("Еще проверка истории!");
         manager.getPrinter().printList(f3.getHistory());
     }
