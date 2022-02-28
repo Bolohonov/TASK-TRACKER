@@ -1,9 +1,9 @@
-package repository;
+package main.java.repository;
 
-import tasks.EpicTask;
-import tasks.SubTask;
-import tasks.SingleTask;
-import tasks.Task;
+import main.java.tasks.EpicTask;
+import main.java.tasks.SubTask;
+import main.java.tasks.SingleTask;
+import main.java.tasks.Task;
 
 import java.util.LinkedHashMap;
 import java.util.List;

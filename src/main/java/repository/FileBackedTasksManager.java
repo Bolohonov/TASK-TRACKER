@@ -1,6 +1,6 @@
-package repository;
+package main.java.repository;
 
-import tasks.*;
+import main.java.tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

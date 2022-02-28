@@ -1,10 +1,8 @@
-package tasks;
+package main.java.tasks;
 
-import repository.TaskStatus;
+import main.java.repository.TaskStatus;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class EpicTask extends Task {
 

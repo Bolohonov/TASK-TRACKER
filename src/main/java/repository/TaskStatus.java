@@ -1,4 +1,4 @@
-package repository;
+package main.java.repository;
 
 public enum TaskStatus {
     NEW("Статус NEW присваивается при создании задачи"),

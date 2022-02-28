@@ -1,9 +1,11 @@
-import repository.FileBackedTasksManager;
+package main.java;
+
+import main.java.repository.FileBackedTasksManager;
 import service.Managers;
-import tasks.EpicTask;
-import tasks.SingleTask;
-import tasks.SubTask;
-import tasks.Task;
+import main.java.tasks.EpicTask;
+import main.java.tasks.SingleTask;
+import main.java.tasks.SubTask;
+import main.java.tasks.Task;
 
 import java.io.File;
 import java.nio.file.Paths;

@@ -1,9 +1,9 @@
-package repository;
+package main.java.repository;
 
-import tasks.EpicTask;
-import tasks.SingleTask;
-import tasks.SubTask;
-import tasks.Task;
+import main.java.tasks.EpicTask;
+import main.java.tasks.SingleTask;
+import main.java.tasks.SubTask;
+import main.java.tasks.Task;
 
 public interface TaskCreator {
 

@@ -1,6 +1,6 @@
-package repository;
+package main.java.repository;
 
-import tasks.Task;
+import main.java.tasks.Task;
 
 import java.util.List;
 
