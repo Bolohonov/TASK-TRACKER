@@ -27,10 +27,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 rep.getTasks().putAll(super.getEpicTasks());
                 super.getEpicTasks().values().stream()
                         .forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
-                //Сделал здесь сортировку по ключу-id, чтобы исключить вариант записи в файл задач
-                // с нарушением последовательности id по возрастанию, например, когда подзадача будет записана
-                // и считана раньше своего эпика.
-                //Название было sortedMap, т.к. в итоге собирается в коллекцию LinkedHashMap.
                 HashMap<Integer, Task> map = rep.getTasks()
                         .entrySet().stream().sorted(Map.Entry.comparingByKey())
                         .collect(Collectors

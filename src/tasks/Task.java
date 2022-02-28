@@ -83,9 +83,6 @@ public abstract class Task {
 
     public abstract TaskType getType();
 
-    //Данный метод перегружается в классе, также он переопределяется в наследнике SubTask.
-    //В классе FileBackedTasksManager как я понял по ТЗ должен быть метод toString()
-    // с сигнатурой String toString(HistoryManager manager)
     public String toString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus()
                 + "," + task.getDescription() + ",";

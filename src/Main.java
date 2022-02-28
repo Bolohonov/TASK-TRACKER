@@ -7,13 +7,9 @@ import tasks.Task;
 
 import java.io.File;
 import java.nio.file.Paths;
-//Привет, Ильдар! Прошу прощения, что убрал тестирующий код
-// и вероятно загрузил неработающую версию, хотя рабочий вариант проверял кодом ниже.
-//Мне остались не совсем понятны два замечания - оставил комментарии в коде - в классах Task,FileBackedTasksManager
 
 public class Main {
     public static void main(String[] args) {
-        //Создаю только, чтобы вызывать Print.
         Managers manager = new Managers();
 
         File file = Paths.get("./resources/data.csv").toFile();
