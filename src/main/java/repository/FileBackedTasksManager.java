@@ -1,7 +1,6 @@
-package main.java.repository;
+package repository;
 
-import main.java.tasks.*;
-
+import tasks.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;

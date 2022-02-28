@@ -1,6 +1,6 @@
 package service;
 
-import main.java.repository.TaskStatus;
+import repository.TaskStatus;
 
 public class Print {
 

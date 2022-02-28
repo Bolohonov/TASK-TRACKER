@@ -1,4 +1,4 @@
-package main.java.repository;
+package repository;
 
 public class ManagerSaveException extends Exception {
     public ManagerSaveException(final String message) {

@@ -1,6 +1,6 @@
 package service;
 
-import main.java.repository.TaskStatus;
+import repository.TaskStatus;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

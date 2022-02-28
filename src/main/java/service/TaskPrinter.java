@@ -1,6 +1,7 @@
 package service;
 
-import main.java.tasks.Task;
+
+import tasks.Task;
 
 import java.util.LinkedHashMap;
 import java.util.List;

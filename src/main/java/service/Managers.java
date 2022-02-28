@@ -1,6 +1,6 @@
 package service;
 
-import main.java.repository.*;
+import repository.*;
 
 import java.io.File;
 import java.nio.file.Paths;

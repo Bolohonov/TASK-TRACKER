@@ -1,6 +1,6 @@
-package main.java.repository;
+package repository;
 
-import main.java.tasks.Task;
+import tasks.Task;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
