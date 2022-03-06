@@ -6,7 +6,7 @@ import tasks.SingleTask;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskManagerTest {
+public class TaskManagerTest<? extends TaskManager> {
 
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
