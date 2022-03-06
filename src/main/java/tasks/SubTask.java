@@ -10,11 +10,13 @@ public class SubTask extends Task {
     public SubTask(EpicTask epicTask, String name, String description, int id) {
         super(name, description, id);
         setEpicTask(epicTask);
+        epicTask.addSubTask(this);
     }
 
-    public SubTask(int id, String name, TaskStatus status, String description, EpicTask epic) {
+    public SubTask(int id, String name, TaskStatus status, String description, EpicTask epicTask) {
         super(id, name, status, description);
-        this.epicTask = epic;
+        setEpicTask(epicTask);
+        epicTask.addSubTask(this);
     }
 
     public void setEpicTask(EpicTask epicTask) {

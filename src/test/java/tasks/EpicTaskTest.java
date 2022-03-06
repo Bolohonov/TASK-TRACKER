@@ -52,6 +52,7 @@ class EpicTaskTest {
         Task t1 = new SubTask(epic,"name1", "desc1", InMemoryTasksManager.getId());
         Task t2 = new SubTask(epic,"name2", "desc2", InMemoryTasksManager.getId());
         Task t3 = new SubTask(epic,"name3", "desc3", InMemoryTasksManager.getId());
+        epic.getSubTasks();
         t1.setStatus(TaskStatus.NEW);
         t2.setStatus(TaskStatus.NEW);
         t3.setStatus(TaskStatus.DONE);

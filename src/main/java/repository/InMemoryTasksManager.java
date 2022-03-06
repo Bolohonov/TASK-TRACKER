@@ -60,10 +60,10 @@ public class InMemoryTasksManager implements TaskManager {
             if (task instanceof EpicTask) {
                 epicTaskRepository.putTask((EpicTask) task);
             }
-            if (task instanceof SubTask) {
-                SubTask subTask = (SubTask) task;
-                subTask.getEpicTask().addSubTask(subTask);
-            }
+//            if (task instanceof SubTask) {
+//                SubTask subTask = (SubTask) task;
+//                subTask.getEpicTask().addSubTask(subTask);
+//            }
         } else {
             System.out.println("Задача не создана!");
         }
