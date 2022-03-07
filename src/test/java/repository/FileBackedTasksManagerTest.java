@@ -1,6 +1,14 @@
 package repository;
 
-public class InMemoryTaskManagerTest implements TaskManagerTest{
+import tasks.EpicTask;
+import tasks.SingleTask;
+
+public class FileBackedTasksManagerTest extends InMemoryTaskManagerTest implements TaskManagerTest{
+
+    private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
+    private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
+    protected static final HistoryManager historyManager = new InMemoryHistoryManager();
+
     @Override
     public void putTask() {
 

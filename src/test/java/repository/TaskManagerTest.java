@@ -6,45 +6,32 @@ import tasks.SingleTask;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskManagerTest<? extends TaskManager> {
-
-    private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
-    private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
-    protected static final HistoryManager historyManager = new InMemoryHistoryManager();
+public interface TaskManagerTest {
 
     @Test
-    void putTask() {
-    }
+    void putTask();
 
     @Test
-    void getTaskById() {
-    }
+    void getTaskById();
 
     @Test
-    void getSingleTasks() {
-    }
+    void getSingleTasks();
 
     @Test
-    void getEpicTasks() {
-    }
+    void getEpicTasks();
 
     @Test
-    void getSubTasksByEpic() {
-    }
+    void getSubTasksByEpic();
 
     @Test
-    void updateTask() {
-    }
+    void updateTask();
 
     @Test
-    void removeAllTasks() {
-    }
+    void removeAllTasks();
 
     @Test
-    void removeTaskById() {
-    }
+    void removeTaskById();
 
     @Test
-    void getHistory() {
-    }
+    void getHistory();
 }
