@@ -5,15 +5,14 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager {
 
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
     protected static final HistoryManager historyManager = new InMemoryHistoryManager();
+    protected static final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     private static int id;
     private Task obj;
@@ -53,6 +52,7 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public void putTask(Task task) {
+        prioritizedTasks.add(task);
         if (task != null) {
             if (task instanceof SingleTask) {
                 singleTaskRepository.putTask((SingleTask) task);
@@ -182,5 +182,10 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+        return prioritizedTasks;
     }
 }
