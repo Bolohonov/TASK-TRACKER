@@ -7,6 +7,7 @@ import repository.TaskStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,11 +29,11 @@ class EpicTaskTest {
     void getStatusWhenAllSubTasksHasStatusNew() {
         EpicTask epic = createEpicTask();
         Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Duration.ofHours(7), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 
@@ -40,11 +41,11 @@ class EpicTaskTest {
     void getStatusWhenAllSubTasksHasStatusDone() {
         EpicTask epic = createEpicTask();
         Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Duration.ofHours(7), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         subTask1.setStatus(TaskStatus.DONE);
         subTask2.setStatus(TaskStatus.DONE);
         subTask3.setStatus(TaskStatus.DONE);
@@ -55,11 +56,11 @@ class EpicTaskTest {
     void getStatusWhenAllSubTasksHasStatusNewAndDone() {
         EpicTask epic = createEpicTask();
         Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Duration.ofHours(7), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         epic.getSubTasks();
         subTask1.setStatus(TaskStatus.NEW);
         subTask2.setStatus(TaskStatus.NEW);
@@ -71,11 +72,11 @@ class EpicTaskTest {
     void getStatusWhenAllSubTasksHasStatusInProgress() {
         EpicTask epic = createEpicTask();
         Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Duration.ofHours(7), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         subTask1.setStatus(TaskStatus.IN_PROGRESS);
         subTask2.setStatus(TaskStatus.IN_PROGRESS);
         subTask3.setStatus(TaskStatus.IN_PROGRESS);

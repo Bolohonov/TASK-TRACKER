@@ -1,14 +1,14 @@
 package tasks;
 
-import repository.TaskStatus;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SingleTask extends Task{
 
-    public SingleTask(String name, String description, int id, Duration duration, LocalDateTime startTime) {
+    public SingleTask(String name, String description, int id,
+                      Optional<Duration> duration, Optional<LocalDateTime> startTime) {
         super(name, description, id, duration, startTime);
     }
 
@@ -19,6 +19,8 @@ public class SingleTask extends Task{
                 ", Описание='" + super.getDescription() + '\'' +
                 ", ID=" + super.getId() +
                 ", Статус=" + super.getStatus() +
+                ", Продолжительность=" + super.getDuration() +
+                ", Время начала=" + super.getStartTime() +
                 '}';
     }
 

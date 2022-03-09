@@ -3,13 +3,16 @@ package repository;
 import org.junit.jupiter.api.Test;
 import tasks.EpicTask;
 import tasks.SingleTask;
+import tasks.Task;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public interface TaskManagerTest {
 
     @Test
-    void putTask();
+    void putTaskStandardBehavior();
 
     @Test
     void getTaskById();
@@ -34,4 +37,7 @@ public interface TaskManagerTest {
 
     @Test
     void getHistory();
+
+    @Test
+    void shouldGetPrioritizedTasks();
 }

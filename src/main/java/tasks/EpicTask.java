@@ -111,22 +111,29 @@ public class EpicTask extends Task {
     }
 
     @Override
-    public Duration getDuration() {
+    public Optional<Duration> getDuration() {
         Duration duration = null;
         if (subTasksMap == null || subTasksMap.isEmpty()) {
+            return Optional.empty();
+        } else {
             for (SubTask sub : subTasksMap.values()) {
-                duration.plus(sub.getDuration());
+                duration.plus(sub.getDuration().get());
             }
+            return Optional.of(duration);
         }
-        return duration;
     }
 
     @Override
-    public LocalDateTime getStartTime() {
+    public Optional<LocalDateTime> getStartTime() {
         LocalDateTime startTime = null;
-        if (subTasksMap == null || subTasksMap.isEmpty()) {
-            startTime = subTasksMap.entrySet().stream().findFirst().get().getValue().getStartTime();
+        if (subTasksMap != null && !subTasksMap.isEmpty()) {
+            startTime = subTasksMap.entrySet().stream().findFirst()
+                    .get().getValue().getStartTime().get();
         }
-        return startTime;
+        if (startTime == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(startTime);
+        }
     }
 }

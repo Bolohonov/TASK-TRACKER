@@ -7,6 +7,7 @@ import repository.TaskStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,7 +16,7 @@ public class SingleTaskTest {
     private SingleTask createSingleTask() {
         SingleTask task = new SingleTask("TestName",
                 "TestDescription", InMemoryTasksManager.getId(),
-                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
         return task;
     }
 

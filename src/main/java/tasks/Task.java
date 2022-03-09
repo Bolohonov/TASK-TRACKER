@@ -6,6 +6,7 @@ import repository.TaskStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public abstract class Task {
 
@@ -13,10 +14,11 @@ public abstract class Task {
     private String description;
     private int id;
     private TaskStatus status;
-    private Duration duration;
-    private LocalDateTime startTime;
+    private Optional<Duration> duration;
+    private Optional<LocalDateTime> startTime;
 
-    public Task(String name, String description, int id, Duration duration, LocalDateTime startTime) {
+    public Task(String name, String description, int id,
+                Optional<Duration> duration, Optional<LocalDateTime> startTime) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -101,19 +103,27 @@ public abstract class Task {
                 + "," + task.getDescription() + ",";
     }
 
-    public Duration getDuration() {
-        return duration;
+    public Optional<Duration> getDuration() {
+        if (duration == null) {
+            return Optional.empty();
+        } else {
+            return duration;
+        }
     }
 
     public void setDuration(Duration duration) {
-        this.duration = duration;
+        this.duration = Optional.of(duration);
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public Optional<LocalDateTime> getStartTime() {
+        if (startTime == null) {
+            return Optional.empty();
+        } else {
+            return startTime;
+        }
     }
 
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+        this.startTime = Optional.of(startTime);
     }
 }

@@ -5,12 +5,13 @@ import repository.TaskStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SubTask extends Task {
     private EpicTask epicTask;
 
     public SubTask(EpicTask epicTask, String name, String description,
-                   int id, Duration duration, LocalDateTime startTime) {
+                   int id, Optional<Duration> duration, Optional<LocalDateTime> startTime) {
         super(name, description, id, duration, startTime);
         setEpicTask(epicTask);
         epicTask.addSubTask(this);

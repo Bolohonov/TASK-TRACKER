@@ -6,10 +6,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager {
@@ -89,14 +86,14 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         if (values != null) {
             if (values[1].equals(TaskType.TASK.toString())) {
                 task = new SingleTask(values[2], values[4], Integer.parseInt(values[0]),
-                        Duration.parse(values[5]), LocalDateTime.parse(values[6]));
+                        Optional.of(Duration.parse(values[5])), Optional.of(LocalDateTime.parse(values[6])));
                 task.setStatus(TaskStatus.valueOf(values[3]));
             } else if (values[1].equals(TaskType.EPIC.toString())) {
                 task = new EpicTask(values[2], values[4], Integer.parseInt(values[0]));
             } else if (values[1].equals(TaskType.SUBTASK.toString())) {
                 task = new SubTask((EpicTask) super
                         .getTaskById(Integer.parseInt(values[5])), values[2], values[4], Integer.parseInt(values[0]),
-                        Duration.parse(values[5]), LocalDateTime.parse(values[6]));
+                        Optional.of(Duration.parse(values[5])), Optional.of(LocalDateTime.parse(values[6])));
                 task.setStatus(TaskStatus.valueOf(values[3]));
             }
         }

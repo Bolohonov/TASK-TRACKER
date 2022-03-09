@@ -10,7 +10,7 @@ public class FileBackedTasksManagerTest extends InMemoryTaskManagerTest implemen
     protected static final HistoryManager historyManager = new InMemoryHistoryManager();
 
     @Override
-    public void putTask() {
+    public void putTaskStandardBehavior() {
 
     }
 
