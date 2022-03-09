@@ -32,6 +32,8 @@ public class SubTask extends Task {
                 ", Описание='" + super.getDescription() + '\'' +
                 ", ID=" + super.getId() +
                 ", Статус=" + super.getStatus() +
+                ", Продолжительность=" + super.getDuration() +
+                ", Время начала=" + super.getStartTime() +
                 '}';
     }
 

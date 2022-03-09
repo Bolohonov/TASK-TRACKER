@@ -41,6 +41,8 @@ public abstract class Task {
                 ", Описание='" + description + '\'' +
                 ", ID=" + id +
                 ", Статус=" + status +
+                ", Продолжительность=" + duration +
+                ", Время начала=" + startTime +
                 '}';
     }
 
