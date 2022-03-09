@@ -3,7 +3,10 @@ package tasks;
 
 import repository.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EpicTask extends Task {
 
@@ -11,11 +14,6 @@ public class EpicTask extends Task {
 
     public EpicTask(String name, String description, int id) {
         super(name, description, id);
-        subTasksMap = new LinkedHashMap<>();
-    }
-
-    public EpicTask(int id, String name, TaskStatus status, String description) {
-        super(id, name, status, description);
         subTasksMap = new LinkedHashMap<>();
     }
 
@@ -106,5 +104,25 @@ public class EpicTask extends Task {
     @Override
     public TaskType getType() {
         return TaskType.EPIC;
+    }
+
+    @Override
+    public Duration getDuration() {
+        Duration duration = null;
+        if (subTasksMap == null || subTasksMap.isEmpty()) {
+            for (SubTask sub : subTasksMap.values()) {
+                duration.plus(sub.getDuration());
+            }
+        }
+        return duration;
+    }
+
+    @Override
+    public LocalDateTime getStartTime() {
+        LocalDateTime startTime = null;
+        if (subTasksMap == null || subTasksMap.isEmpty()) {
+            startTime = subTasksMap.entrySet().stream().findFirst().get().getValue().getStartTime();
+        }
+        return startTime;
     }
 }

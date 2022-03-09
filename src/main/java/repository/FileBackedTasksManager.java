@@ -1,8 +1,11 @@
 package repository;
 
 import tasks.*;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,6 +14,7 @@ import java.util.stream.Collectors;
 public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager {
 
     private File file;
+    private static final String TABLE_HEADER = "id,type,name,status,description,epic,duration,startTime";
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -21,7 +25,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         try {
             try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
                 Repository<Task> rep = new Repository<>();
-                fileWriter.write("id,type,name,status,description,epic" + System.lineSeparator());
+                fileWriter.write(TABLE_HEADER + System.lineSeparator());
                 rep.getTasks().putAll(super.getSingleTasks());
                 rep.getTasks().putAll(super.getEpicTasks());
                 super.getEpicTasks().values().stream()
@@ -62,7 +66,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 } else {
                     while (fileReader.ready()) {
                         s = fileReader.readLine();
-                        if (!s.equals(null) && !s.isBlank() && !s.equals("id,type,name,status,description,epic")) {
+                        if (!s.equals(null) && !s.isBlank()
+                                && !s.equals(TABLE_HEADER)) {
                             fromStringToHistory(s);
                             break;
                         }
@@ -77,20 +82,21 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     private Task fromString(String value) {
         Task task = null;
         String[] values = null;
-        if (!value.isBlank() && !value.equals("id,type,name,status,description,epic")) {
+        if (!value.isBlank() && !value.equals(TABLE_HEADER)) {
             values = value.split(",");
         }
         if (values != null) {
             if (values[1].equals(TaskType.TASK.toString())) {
-                task = new SingleTask(Integer.parseInt(values[0]),
-                        values[2], TaskStatus.valueOf(values[3]), values[4]);
+                task = new SingleTask(values[2], values[4], Integer.parseInt(values[0]),
+                        Duration.parse(values[5]), LocalDateTime.parse(values[6]));
+                task.setStatus(TaskStatus.valueOf(values[3]));
             } else if (values[1].equals(TaskType.EPIC.toString())) {
-                task = new EpicTask(Integer.parseInt(values[0]),
-                        values[2], TaskStatus.valueOf(values[3]), values[4]);
+                task = new EpicTask(values[2], values[4], Integer.parseInt(values[0]));
             } else if (values[1].equals(TaskType.SUBTASK.toString())) {
-                task = new SubTask(Integer.parseInt(values[0]),
-                        values[2], TaskStatus.valueOf(values[3]), values[4], (EpicTask) super
-                        .getTaskById(Integer.parseInt(values[5])));
+                task = new SubTask((EpicTask) super
+                        .getTaskById(Integer.parseInt(values[5])), values[2], values[4], Integer.parseInt(values[0]),
+                        Duration.parse(values[5]), LocalDateTime.parse(values[6]));
+                task.setStatus(TaskStatus.valueOf(values[3]));
             }
         }
         return task;

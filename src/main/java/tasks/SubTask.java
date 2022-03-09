@@ -2,19 +2,16 @@ package tasks;
 
 import repository.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SubTask extends Task {
     private EpicTask epicTask;
 
-    public SubTask(EpicTask epicTask, String name, String description, int id) {
-        super(name, description, id);
-        setEpicTask(epicTask);
-        epicTask.addSubTask(this);
-    }
-
-    public SubTask(int id, String name, TaskStatus status, String description, EpicTask epicTask) {
-        super(id, name, status, description);
+    public SubTask(EpicTask epicTask, String name, String description,
+                   int id, Duration duration, LocalDateTime startTime) {
+        super(name, description, id, duration, startTime);
         setEpicTask(epicTask);
         epicTask.addSubTask(this);
     }

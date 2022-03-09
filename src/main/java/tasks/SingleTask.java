@@ -2,16 +2,14 @@ package tasks;
 
 import repository.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SingleTask extends Task{
 
-    public SingleTask(String name, String description, int id) {
-        super(name, description, id);
-    }
-
-    public SingleTask(int id, String name, TaskStatus status, String description) {
-        super(id, name, status, description);
+    public SingleTask(String name, String description, int id, Duration duration, LocalDateTime startTime) {
+        super(name, description, id, duration, startTime);
     }
 
     @Override
