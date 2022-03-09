@@ -10,10 +10,7 @@ import tasks.Task;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -106,11 +103,11 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
         manager.putTask(task1);
         SingleTask task2 = creator.createSingleTask(
                 new String[]{"TestName2", "TestDescription"},
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(10));
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(3));
         manager.putTask(task2);
         SingleTask task3 = creator.createSingleTask(
                 new String[]{"TestName3", "TestDescription3"},
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(12));
+                Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(5));
         manager.putTask(task3);
         singleTaskRepository.putTask(task1);
         singleTaskRepository.putTask(task2);
@@ -218,18 +215,18 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
         manager.putTask(epicTask3);
         SubTask task4 = creator.createSubTask(epicTask1,
                 new String[]{"TestNameSub1", "TestDescriptionSub1"},
-                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
         SingleTask task1 = creator.createSingleTask(
                 new String[]{"TestName", "TestDescription"},
-                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+                Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(3));
         manager.putTask(task1);
         SingleTask task2 = creator.createSingleTask(
                 new String[]{"TestName2", "TestDescription"},
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(10));
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(10));
         manager.putTask(task2);
         SingleTask task3 = creator.createSingleTask(
                 new String[]{"TestName3", "TestDescription3"},
-                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(12));
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(12));
         manager.putTask(task3);
         epicTaskRepository.putTask(epicTask1);
         epicTaskRepository.putTask(epicTask2);
@@ -270,7 +267,48 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
     }
 
     @Override
-    public void getHistory() {
+    @Test
+    public void getHistoryStandardBehavior() throws IntersectionException {
+        List<Task> historyList = new LinkedList<>();
+        EpicTask epicTask1 = creator.createEpicTask(
+                new String[]{"TestName", "TestDescription"});
+        manager.putTask(epicTask1);
+        EpicTask epicTask2 = creator.createEpicTask(
+                new String[]{"TestName2", "TestDescription"});
+        manager.putTask(epicTask2);
+        EpicTask epicTask3 = creator.createEpicTask(
+                new String[]{"TestName3", "TestDescription3"});
+        manager.putTask(epicTask3);
+        SubTask task4 = creator.createSubTask(epicTask1,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        SingleTask task1 = creator.createSingleTask(
+                new String[]{"TestName", "TestDescription"},
+                Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(3));
+        manager.putTask(task1);
+        SingleTask task2 = creator.createSingleTask(
+                new String[]{"TestName2", "TestDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(10));
+        manager.putTask(task2);
+        SingleTask task3 = creator.createSingleTask(
+                new String[]{"TestName3", "TestDescription3"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(13));
+        manager.putTask(task3);
+        manager.getTaskById(task3.getId());
+        historyList.add(task3);
+        manager.getTaskById(task2.getId());
+        historyList.add(task2);
+        manager.getTaskById(task1.getId());
+        historyList.add(task1);
+        manager.getTaskById(task4.getId());
+        historyList.add(task4);
+        manager.getTaskById(epicTask1.getId());
+        historyList.add(epicTask1);
+        manager.getTaskById(epicTask2.getId());
+        historyList.add(epicTask2);
+        manager.getTaskById(epicTask3.getId());
+        historyList.add(epicTask3);
+        assertEquals(historyList, manager.getHistory());
 
     }
 
