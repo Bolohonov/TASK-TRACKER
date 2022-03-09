@@ -54,7 +54,9 @@ public abstract class Task {
         return id == task.id &&
                 Objects.equals(name, task.name) &&
                 Objects.equals(description, task.description) &&
-                Objects.equals(status, task.status);
+                Objects.equals(status, task.status) &&
+                Objects.equals(duration, task.duration) &&
+                Objects.equals(startTime, task.startTime);
     }
 
     @Override

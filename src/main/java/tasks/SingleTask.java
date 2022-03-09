@@ -30,7 +30,9 @@ public class SingleTask extends Task{
         return  super.getId() == task.getId() &&
                 Objects.equals(super.getName(), task.getName()) &&
                 Objects.equals(super.getDescription(), task.getDescription()) &&
-                Objects.equals(super.getStatus(), task.getStatus());
+                Objects.equals(super.getStatus(), task.getStatus()) &&
+                Objects.equals(super.getDuration(), task.getDuration()) &&
+                Objects.equals(super.getStartTime(), task.getStartTime());
     }
 
     @Override

@@ -46,7 +46,9 @@ public class SubTask extends Task {
                 Objects.equals(super.getName(), subtask.getName()) &&
                 Objects.equals(super.getDescription(), subtask.getDescription()) &&
                 Objects.equals(super.getStatus(), subtask.getStatus()) &&
-                (epicTask.equals(subtask.epicTask));
+                (epicTask.equals(subtask.epicTask)) &&
+                Objects.equals(super.getDuration(), subtask.getDuration()) &&
+                Objects.equals(super.getStartTime(), subtask.getStartTime());
     }
 
     @Override

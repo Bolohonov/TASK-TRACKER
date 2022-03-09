@@ -60,7 +60,9 @@ public class EpicTask extends Task {
         return  super.getId() == task.getId() &&
                 Objects.equals(super.getName(), task.getName()) &&
                 Objects.equals(super.getDescription(), task.getDescription()) &&
-                Objects.equals(getStatus(), task.getStatus());
+                Objects.equals(getStatus(), task.getStatus()) &&
+                Objects.equals(getDuration(), task.getDuration()) &&
+                Objects.equals(getStartTime(), task.getStartTime());
     }
 
     @Override

@@ -1,8 +1,9 @@
 package repository;
 
 public class InMemoryTaskManagerTest implements TaskManagerTest{
+
     @Override
-    public void putTask() {
+    public void putTaskStandardBehavior() {
 
     }
 
