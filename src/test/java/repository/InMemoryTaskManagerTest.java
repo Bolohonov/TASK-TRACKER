@@ -71,9 +71,9 @@ class InMemoryTaskManagerTest implements TaskManagerTest{
     public void shouldGetPrioritizedTasks() {
         Set<Task> prioritizedTasksTest = new TreeSet<>((o1, o2) -> {
             if (!o1.getStartTime().isPresent()) {
-                return -1;
-            } else if (!o2.getStartTime().isPresent()) {
                 return 1;
+            } else if (!o2.getStartTime().isPresent()) {
+                return -1;
             } else {
                 return o1.getStartTime().get().compareTo(o2.getStartTime().get());
             }
@@ -102,8 +102,8 @@ class InMemoryTaskManagerTest implements TaskManagerTest{
         m.putTask(epic1);
         m.putTask(task2);
         m.putTask(task3);
-        m.putTask(epic2);
         m.putTask(task4);
+        m.putTask(epic2);
         prioritizedTasksTest.add(task1);
         prioritizedTasksTest.add(epic1);
         prioritizedTasksTest.add(task2);
@@ -115,6 +115,5 @@ class InMemoryTaskManagerTest implements TaskManagerTest{
         System.out.println("--------");
         prioritizedTasksTest.forEach(System.out::println);
         assertEquals(prioritizedTasksTest, manager.getTaskManager().getPrioritizedTasks());
-
     }
 }

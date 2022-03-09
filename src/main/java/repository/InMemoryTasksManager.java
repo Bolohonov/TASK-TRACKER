@@ -12,15 +12,16 @@ public class InMemoryTasksManager implements TaskManager {
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
     protected static final HistoryManager historyManager = new InMemoryHistoryManager();
-    protected static final Set<Task> prioritizedTasks = new TreeSet<>((o1, o2) -> {
+    protected static final Set<Task> prioritizedTasks = new TreeSet<>(((o1, o2) -> {
         if (!o1.getStartTime().isPresent()) {
-            return -1;
-        } else if (!o2.getStartTime().isPresent()) {
             return 1;
+        } else if (!o2.getStartTime().isPresent()) {
+            return -1;
         } else {
             return o1.getStartTime().get().compareTo(o2.getStartTime().get());
         }
-    });
+    }));
+
 
     private static int id;
     private Task obj;
