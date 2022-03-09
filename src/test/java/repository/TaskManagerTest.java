@@ -11,8 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public interface TaskManagerTest {
 
+    Managers managers = new Managers();
+    TaskManager manager = managers.getTaskManager();
+    TaskManager managerToFile = managers.getTaskManagerToFile();
+    TaskCreator creator = managers.getFactory();
+
     @Test
-    void putTaskStandardBehavior();
+    void putTaskStandardBehavior() throws IntersectionException;
 
     @Test
     void getTaskById();
@@ -39,5 +44,5 @@ public interface TaskManagerTest {
     void getHistory();
 
     @Test
-    void shouldGetPrioritizedTasks();
+    void shouldGetPrioritizedTasks() throws IntersectionException;
 }

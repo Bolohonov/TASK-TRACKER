@@ -1,51 +1,47 @@
 package tasks;
 
-import org.junit.Test;
-import repository.InMemoryTasksManager;
-import repository.TaskStatus;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import repository.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SubTaskTest {
+public class SubTaskTest extends BaseTaskManager{
 
-    private EpicTask createEpicTask() {
-        EpicTask epic = new EpicTask("TestEpicName",
-                "TestEpicDescription", InMemoryTasksManager.getId());
-        return epic;
+    @BeforeEach
+    private void clear() {
+        manager.removeAllTasks();
+        manager.getPrioritizedTasks().clear();
     }
 
     @Test
-    void getEpicTask() {
+    void getEpicTask() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        SubTask subTask = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
+        SubTask subTask = creator.createSubTask(epic, new String[]{"TestEpicName", "TestEpicDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
         assertEquals(epic, subTask.getEpicTask());
 
     }
 
-
     @Test
-    void setStatusInProgress() {
+    void setStatusInProgress() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        SubTask subTask = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
+        SubTask subTask = creator.createSubTask(epic, new String[]{"TestEpicName", "TestEpicDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
         subTask.setStatus(TaskStatus.IN_PROGRESS);
         assertEquals(TaskStatus.IN_PROGRESS, subTask.getStatus());
     }
 
     @Test
-    void setStatusDone() {
+    void setStatusDone() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        SubTask subTask = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
+        SubTask subTask = creator.createSubTask(epic, new String[]{"TestEpicName", "TestEpicDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
         subTask.setStatus(TaskStatus.DONE);
         assertEquals(TaskStatus.DONE, subTask.getStatus());
     }
-
-
 }

@@ -57,8 +57,8 @@ public abstract class Task {
                 Objects.equals(name, task.name) &&
                 Objects.equals(description, task.description) &&
                 Objects.equals(status, task.status) &&
-                Objects.equals(duration, task.duration) &&
-                Objects.equals(startTime, task.startTime);
+                (Objects.equals(getDuration(), task.getDuration())) &&
+                Objects.equals(getStartTime(), task.getStartTime());
     }
 
     @Override

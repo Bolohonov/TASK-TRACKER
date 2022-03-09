@@ -1,87 +1,79 @@
 package tasks;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.InMemoryTasksManager;
-import repository.TaskStatus;
+import repository.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class EpicTaskTest {
+class EpicTaskTest extends BaseTaskManager{
 
-    private EpicTask createEpicTask() {
-        EpicTask epic = new EpicTask("TestEpicName",
-                "TestEpicDescription", InMemoryTasksManager.getId());
-        return epic;
+    @BeforeEach
+    private void clear() {
+        manager.removeAllTasks();
+        manager.getPrioritizedTasks().clear();
     }
 
     @Test
     void getStatusWhenNoSubTasks() {
-        EpicTask epic = createEpicTask();
+        EpicTask epic = super.createEpicTask();
         assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 
     @Test
-    void getStatusWhenAllSubTasksHasStatusNew() {
+    void getStatusWhenAllSubTasksHasStatusNew() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4));
         assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 
     @Test
-    void getStatusWhenAllSubTasksHasStatusDone() {
+    void getStatusWhenAllSubTasksHasStatusDone() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        subTask1.setStatus(TaskStatus.DONE);
-        subTask2.setStatus(TaskStatus.DONE);
-        subTask3.setStatus(TaskStatus.DONE);
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")))
+                .setStatus(TaskStatus.DONE);
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2))
+                .setStatus(TaskStatus.DONE);
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4))
+                .setStatus(TaskStatus.DONE);;
         assertEquals(TaskStatus.DONE, epic.getStatus());
     }
 
     @Test
-    void getStatusWhenAllSubTasksHasStatusNewAndDone() {
+    void getStatusWhenAllSubTasksHasStatusNewAndDone() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        epic.getSubTasks();
-        subTask1.setStatus(TaskStatus.NEW);
-        subTask2.setStatus(TaskStatus.NEW);
-        subTask3.setStatus(TaskStatus.DONE);
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4))
+                .setStatus(TaskStatus.DONE);
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
     }
 
     @Test
-    void getStatusWhenAllSubTasksHasStatusInProgress() {
+    void getStatusWhenAllSubTasksHasStatusInProgress() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        Task subTask1 = new SubTask(epic, "name1", "desc1", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(7)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask2 = new SubTask(epic, "name2", "desc2", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        Task subTask3 = new SubTask(epic, "name3", "desc3", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(5)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        subTask1.setStatus(TaskStatus.IN_PROGRESS);
-        subTask2.setStatus(TaskStatus.IN_PROGRESS);
-        subTask3.setStatus(TaskStatus.IN_PROGRESS);
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
+        creator.createSubTask(epic, new String[]{"name1", "desc1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4))
+                        .setStatus(TaskStatus.IN_PROGRESS);
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
     }
-
-
 }

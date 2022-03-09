@@ -1,5 +1,6 @@
 package repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.EpicTask;
 import tasks.SingleTask;
@@ -8,21 +9,43 @@ import tasks.Task;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class InMemoryTaskManagerTest implements TaskManagerTest{
 
-    Managers manager = new Managers();
-    TaskManager m = manager.getTaskManager();
+    @BeforeEach
+    private void clear() {
+        manager.removeAllTasks();
+        manager.getPrioritizedTasks().clear();
+    }
 
     @Override
-    public void putTaskStandardBehavior() {
+    @Test
+    public void putTaskStandardBehavior() throws IntersectionException {
+        Task task5 = creator.createSingleTask(new String[] {"TestName5",
+                "TestDescription5"}, Duration.ofHours(18), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(task5);
+        int id = task5.getId();
+        Task epic1 = creator.createEpicTask(new String[] {"TestEpicName1",
+                "TestEpicDescription1"});
+        manager.putTask(epic1);
+        int id2 = epic1.getId();
+        Task subTask = creator.createSubTask(epic1, new String[] {"TestEpicName1",
+                "TestEpicDescription1"}, Duration.ofHours(21),
+                LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(25));
+        manager.putTask(subTask);
+        int id3 = subTask.getId();
+        assertEquals(task5,
+                managers.getTaskManager().getTaskById(id));
+        assertEquals(epic1,
+                managers.getTaskManager().getTaskById(id2));
+        assertEquals(subTask,
+                managers.getTaskManager().getTaskById(id3));
 
     }
 
@@ -68,7 +91,7 @@ class InMemoryTaskManagerTest implements TaskManagerTest{
 
     @Override
     @Test
-    public void shouldGetPrioritizedTasks() {
+    public void shouldGetPrioritizedTasks() throws IntersectionException {
         Set<Task> prioritizedTasksTest = new TreeSet<>((o1, o2) -> {
             if (!o1.getStartTime().isPresent()) {
                 return 1;
@@ -78,42 +101,23 @@ class InMemoryTaskManagerTest implements TaskManagerTest{
                 return o1.getStartTime().get().compareTo(o2.getStartTime().get());
             }
         });
-        SingleTask task1 = new SingleTask("TestName",
-                "TestDescription", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(8)), Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow"))));
-        SingleTask task2 = new SingleTask("TestName2",
-                "TestDescription", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(9)),
-                Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(15)));
-        SingleTask task3 = new SingleTask("TestName3",
-                "TestDescription", InMemoryTasksManager.getId(),
-                Optional.of(Duration.ofHours(10)),
-                Optional.of(LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2)));
-        EpicTask epic1 = new EpicTask("TestEpicName",
-                "TestEpicDescription", InMemoryTasksManager.getId());
-        EpicTask epic2 = new EpicTask("TestEpicName",
-                "TestEpicDescription", InMemoryTasksManager.getId());
-        SingleTask task4 = new SingleTask("TestName3",
-                "TestDescription", InMemoryTasksManager.getId(),
-                Optional.empty(),
-                Optional.empty());
+        SingleTask task1 = creator.createSingleTask(new String[] {"TestName",
+                "TestDescription"}, Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(task1);
+        SingleTask task2 = creator.createSingleTask(new String[] {"TestName2",
+                "TestDescription"}, Duration.ofHours(9),
+                LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(10));
+        manager.putTask(task2);
+        SingleTask task3 = creator.createSingleTask(new String[] {"TestName3",
+                "TestDescription3"}, Duration.ofHours(9),
+                LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(12));
+        manager.putTask(task3);
 
-        m.putTask(task1);
-        m.putTask(epic1);
-        m.putTask(task2);
-        m.putTask(task3);
-        m.putTask(task4);
-        m.putTask(epic2);
         prioritizedTasksTest.add(task1);
-        prioritizedTasksTest.add(epic1);
         prioritizedTasksTest.add(task2);
         prioritizedTasksTest.add(task3);
-        prioritizedTasksTest.add(task4);
-        prioritizedTasksTest.add(epic2);
 
-        manager.getTaskManager().getPrioritizedTasks().forEach(System.out::println);
-        System.out.println("--------");
-        prioritizedTasksTest.forEach(System.out::println);
-        assertEquals(prioritizedTasksTest, manager.getTaskManager().getPrioritizedTasks());
+        assertEquals(prioritizedTasksTest,
+                managers.getTaskManager().getPrioritizedTasks());
     }
 }

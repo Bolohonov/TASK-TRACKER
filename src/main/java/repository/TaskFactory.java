@@ -12,9 +12,13 @@ import java.util.Optional;
 public class TaskFactory implements TaskCreator {
 
     @Override
-    public SingleTask createSingleTask(String[] userTask, Duration duration, LocalDateTime startTime) {
-        return new SingleTask(userTask[0], userTask[1], InMemoryTasksManager.getId(),
-                Optional.of(duration), Optional.of(startTime));
+    public SingleTask createSingleTask(String[] userTask, Duration duration, LocalDateTime startTime) throws IntersectionException {
+            if (InMemoryTasksManager.checkIntersection(duration, startTime)) {
+                return new SingleTask(userTask[0], userTask[1], InMemoryTasksManager.getId(),
+                        Optional.ofNullable(duration), Optional.ofNullable(startTime));
+            } else {
+                throw new IntersectionException("Временной интервал занят! Задача " + userTask[0] + " не создана");
+            }
     }
 
     @Override
@@ -23,13 +27,17 @@ public class TaskFactory implements TaskCreator {
     }
 
     @Override
-    public SubTask createSubTask(Task epicTask, String[] userTask, Duration duration, LocalDateTime startTime) {
-        if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
-            return new SubTask((EpicTask) epicTask, userTask[0], userTask[1],
-                    InMemoryTasksManager.getId(), Optional.of(duration), Optional.of(startTime));
+    public SubTask createSubTask(Task epicTask, String[] userTask, Duration duration, LocalDateTime startTime) throws IntersectionException {
+        if (InMemoryTasksManager.checkIntersection(duration, startTime)) {
+            if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
+                return new SubTask((EpicTask) epicTask, userTask[0], userTask[1],
+                        InMemoryTasksManager.getId(), Optional.ofNullable(duration), Optional.ofNullable(startTime));
+            } else {
+                System.out.println("Эпик не найден!");
+                return null;
+            }
         } else {
-            System.out.println("Эпик не найден!");
-            return null;
+            throw new IntersectionException("Временной интервал занят! Задача " + userTask[0] + " не создана");
         }
     }
 }

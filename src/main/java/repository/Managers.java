@@ -13,6 +13,10 @@ public class Managers {
         return manager;
     }
 
+    public TaskManager getTaskManagerToFile() {
+        return managerToFile;
+    }
+
     public TaskCreator getFactory() {
         return factory;
     }
