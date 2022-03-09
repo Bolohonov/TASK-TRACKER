@@ -38,16 +38,22 @@ public interface TaskManagerTest {
     void getSingleTasksEmptyRepository();
 
     @Test
-    void getEpicTasks();
+    void getEpicTasksStandardBehavior() throws IntersectionException;
 
     @Test
-    void getSubTasksByEpic();
+    void getEpicTasksEmptyRepository();
+
+    @Test
+    void getSubTasksByEpicStandardBehavior() throws IntersectionException;
+
+    @Test
+    void getSubTasksByEpicEmptyRepository() throws IntersectionException;
 
     @Test
     void updateTask();
 
     @Test
-    void removeAllTasks();
+    void removeAllTasks() throws IntersectionException;
 
     @Test
     void removeTaskById();

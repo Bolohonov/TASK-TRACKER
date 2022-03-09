@@ -20,34 +20,4 @@ public class FileBackedTasksManagerTest extends InMemoryTaskManagerTest implemen
     public void putTaskStandardBehavior() {
 
     }
-
-    @Override
-    public void getEpicTasks() {
-
-    }
-
-    @Override
-    public void getSubTasksByEpic() {
-
-    }
-
-    @Override
-    public void updateTask() {
-
-    }
-
-    @Override
-    public void removeAllTasks() {
-
-    }
-
-    @Override
-    public void removeTaskById() {
-
-    }
-
-    @Override
-    public void getHistory() {
-
-    }
 }

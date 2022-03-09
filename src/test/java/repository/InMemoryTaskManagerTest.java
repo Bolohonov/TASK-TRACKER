@@ -2,12 +2,16 @@ package repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.EpicTask;
 import tasks.SingleTask;
+import tasks.SubTask;
 import tasks.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -122,14 +126,77 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
         assertEquals(singleTaskRepository.getTasks(), manager.getSingleTasks());
     }
 
+    @Test
     @Override
-    public void getEpicTasks() {
+    public void getEpicTasksStandardBehavior() throws IntersectionException {
+        Repository<EpicTask> epicTaskRepository = new Repository<>();
+        EpicTask task1 = creator.createEpicTask(
+                new String[]{"TestName", "TestDescription"});
+        manager.putTask(task1);
+        EpicTask task2 = creator.createEpicTask(
+                new String[]{"TestName2", "TestDescription"});
+        manager.putTask(task2);
+        EpicTask task3 = creator.createEpicTask(
+                new String[]{"TestName3", "TestDescription3"});
+        manager.putTask(task3);
+        SubTask task4 = creator.createSubTask(task1,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
 
+        epicTaskRepository.putTask(task1);
+        epicTaskRepository.putTask(task2);
+        epicTaskRepository.putTask(task3);
+        assertEquals(epicTaskRepository.getTasks(), manager.getEpicTasks());
     }
 
+    @Test
     @Override
-    public void getSubTasksByEpic() {
+    public void getEpicTasksEmptyRepository() {
+        Repository<EpicTask> epicTaskRepository = new Repository<>();
+        assertEquals(epicTaskRepository.getTasks(), manager.getEpicTasks());
+    }
 
+    @Test
+    @Override
+    public void getSubTasksByEpicStandardBehavior() throws IntersectionException {
+        Map<Integer, SubTask> subTasksMap1 = new LinkedHashMap<>();
+        Map<Integer, SubTask> subTasksMap2 = new LinkedHashMap<>();
+        EpicTask task1 = creator.createEpicTask(
+                new String[]{"TestName", "TestDescription"});
+        manager.putTask(task1);
+        EpicTask task2 = creator.createEpicTask(
+                new String[]{"TestName2", "TestDescription"});
+        manager.putTask(task2);
+        EpicTask task3 = creator.createEpicTask(
+                new String[]{"TestName3", "TestDescription3"});
+        manager.putTask(task3);
+        SubTask subTask1 = creator.createSubTask(task1,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
+        subTasksMap1.put(subTask1.getId(), subTask1);
+        SubTask subTask2 = creator.createSubTask(task1,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(3), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
+        subTasksMap1.put(subTask2.getId(), subTask2);
+        SubTask subTask3 = creator.createSubTask(task2,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(3), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4));
+        SubTask subTask4 = creator.createSubTask(task3,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(3), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(8));
+        subTasksMap2.put(subTask3.getId(), subTask3);
+        assertEquals(subTasksMap1, task1.getSubTasks());
+        assertEquals(subTasksMap2, task2.getSubTasks());
+    }
+
+    @Test
+    @Override
+    public void getSubTasksByEpicEmptyRepository() throws IntersectionException {
+        Map<Integer, SubTask> subTasksMap1 = new LinkedHashMap<>();
+        EpicTask task1 = creator.createEpicTask(
+                new String[]{"TestName", "TestDescription"});
+        manager.putTask(task1);
+        assertEquals(subTasksMap1, task1.getSubTasks());
     }
 
     @Override
@@ -138,8 +205,44 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
     }
 
     @Override
-    public void removeAllTasks() {
-
+    public void removeAllTasks() throws IntersectionException {
+        Repository<EpicTask> epicTaskRepository = new Repository<>();
+        Repository<SingleTask> singleTaskRepository = new Repository<>();
+        EpicTask epicTask1 = creator.createEpicTask(
+                new String[]{"TestName", "TestDescription"});
+        manager.putTask(epicTask1);
+        EpicTask epicTask2 = creator.createEpicTask(
+                new String[]{"TestName2", "TestDescription"});
+        manager.putTask(epicTask2);
+        EpicTask epicTask3 = creator.createEpicTask(
+                new String[]{"TestName3", "TestDescription3"});
+        manager.putTask(epicTask3);
+        SubTask task4 = creator.createSubTask(epicTask1,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        SingleTask task1 = creator.createSingleTask(
+                new String[]{"TestName", "TestDescription"},
+                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(task1);
+        SingleTask task2 = creator.createSingleTask(
+                new String[]{"TestName2", "TestDescription"},
+                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(10));
+        manager.putTask(task2);
+        SingleTask task3 = creator.createSingleTask(
+                new String[]{"TestName3", "TestDescription3"},
+                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(12));
+        manager.putTask(task3);
+        epicTaskRepository.putTask(epicTask1);
+        epicTaskRepository.putTask(epicTask2);
+        epicTaskRepository.putTask(epicTask3);
+        singleTaskRepository.putTask(task1);
+        singleTaskRepository.putTask(task2);
+        singleTaskRepository.putTask(task3);
+        manager.removeAllTasks();
+        singleTaskRepository.removeAllTasks();
+        epicTaskRepository.removeAllTasks();
+        assertEquals(singleTaskRepository.getTasks(), manager.getSingleTasks());
+        assertEquals(epicTaskRepository.getTasks(), manager.getEpicTasks());
     }
 
     @Override
