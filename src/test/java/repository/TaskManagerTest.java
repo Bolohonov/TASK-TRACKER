@@ -5,6 +5,9 @@ import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,10 +23,19 @@ public interface TaskManagerTest {
     void putTaskStandardBehavior() throws IntersectionException;
 
     @Test
-    public void getTaskByIdStandardBehavior() throws IntersectionException;
+    void getTaskByIdStandardBehavior() throws IntersectionException;
 
     @Test
-    void getSingleTasks();
+    void getTaskByIdEmptyRepository() throws IntersectionException;
+
+    @Test
+    void getTaskByIdWrongId() throws IntersectionException;
+
+    @Test
+    void getSingleTasksStandardBehavior() throws IntersectionException;
+
+    @Test
+    void getSingleTasksEmptyRepository();
 
     @Test
     void getEpicTasks();

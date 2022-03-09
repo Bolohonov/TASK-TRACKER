@@ -2,14 +2,12 @@ package repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -69,8 +67,59 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
     }
 
     @Override
-    public void getSingleTasks() {
+    @Test
+    public void getTaskByIdEmptyRepository() throws IntersectionException {
+        int id = 1;
+        assertEquals(null, managers.getTaskManager().getTaskById(id));
+    }
 
+    @Override
+    @Test
+    public void getTaskByIdWrongId() throws IntersectionException {
+        Task task5 = creator.createSingleTask(new String[]{"TestName5", "TestDescription5"},
+                Duration.ofHours(18), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(task5);
+        Task epic1 = creator.createEpicTask(new String[]{"TestEpicName1", "TestEpicDescription1"});
+        manager.putTask(epic1);
+        Task subTask = creator.createSubTask(epic1,
+                new String[]{"TestEpicName1", "TestEpicDescription1"}, Duration.ofHours(21),
+                LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(25));
+        manager.putTask(subTask);
+        int id1 = 4;
+        int id2 = 5;
+        int id3 = 0;
+        assertEquals(null, managers.getTaskManager().getTaskById(id1));
+        assertEquals(null, managers.getTaskManager().getTaskById(id2));
+        assertEquals(null, managers.getTaskManager().getTaskById(id3));
+    }
+
+    @Test
+    @Override
+    public void getSingleTasksStandardBehavior() throws IntersectionException {
+        Repository<SingleTask> singleTaskRepository = new Repository<>();
+        SingleTask task1 = creator.createSingleTask(
+                new String[]{"TestName", "TestDescription"},
+                Duration.ofHours(8), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(task1);
+        SingleTask task2 = creator.createSingleTask(
+                new String[]{"TestName2", "TestDescription"},
+                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(10));
+        manager.putTask(task2);
+        SingleTask task3 = creator.createSingleTask(
+                new String[]{"TestName3", "TestDescription3"},
+                Duration.ofHours(9), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(12));
+        manager.putTask(task3);
+        singleTaskRepository.putTask(task1);
+        singleTaskRepository.putTask(task2);
+        singleTaskRepository.putTask(task3);
+        assertEquals(singleTaskRepository.getTasks(), manager.getSingleTasks());
+    }
+
+    @Test
+    @Override
+    public void getSingleTasksEmptyRepository() {
+        Repository<SingleTask> singleTaskRepository = new Repository<>();
+        assertEquals(singleTaskRepository.getTasks(), manager.getSingleTasks());
     }
 
     @Override
