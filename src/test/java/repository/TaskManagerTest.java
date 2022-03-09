@@ -56,7 +56,7 @@ public interface TaskManagerTest {
     void removeAllTasks() throws IntersectionException;
 
     @Test
-    void removeTaskById();
+    void removeTaskByIdStandardBehavior() throws IntersectionException;
 
     @Test
     void getHistory();

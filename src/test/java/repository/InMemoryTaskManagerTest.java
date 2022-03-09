@@ -15,8 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class InMemoryTaskManagerTest implements TaskManagerTest {
@@ -191,7 +190,7 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
 
     @Test
     @Override
-    public void getSubTasksByEpicEmptyRepository() throws IntersectionException {
+    public void getSubTasksByEpicEmptyRepository() {
         Map<Integer, SubTask> subTasksMap1 = new LinkedHashMap<>();
         EpicTask task1 = creator.createEpicTask(
                 new String[]{"TestName", "TestDescription"});
@@ -246,7 +245,27 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
     }
 
     @Override
-    public void removeTaskById() {
+    @Test
+    public void removeTaskByIdStandardBehavior() throws IntersectionException {
+        EpicTask epicTask1 = creator.createEpicTask(
+                new String[]{"TestName", "TestDescription"});
+        manager.putTask(epicTask1);
+        SingleTask task1 = creator.createSingleTask(
+                new String[]{"TestName", "TestDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(task1);
+        SubTask subTask1 = creator.createSubTask(epicTask1,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
+        int epicTaskId = epicTask1.getId();
+        int taskId = task1.getId();
+        int subTaskId = epicTask1.getSubTasks().get(subTask1.getId()).getId();
+        manager.removeTaskById(subTaskId);
+        assertFalse(epicTask1.getSubTasks().containsKey(subTaskId));
+        manager.removeTaskById(epicTaskId);
+        manager.removeTaskById(taskId);
+        assertFalse(manager.getSingleTasks().containsKey(taskId));
+        assertFalse(manager.getEpicTasks().containsKey(epicTaskId));
 
     }
 
