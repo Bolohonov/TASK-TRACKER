@@ -20,7 +20,7 @@ public interface TaskManagerTest {
     void putTaskStandardBehavior() throws IntersectionException;
 
     @Test
-    void getTaskById();
+    public void getTaskByIdStandardBehavior() throws IntersectionException;
 
     @Test
     void getSingleTasks();

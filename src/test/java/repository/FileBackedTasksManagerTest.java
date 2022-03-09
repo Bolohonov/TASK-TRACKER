@@ -22,11 +22,6 @@ public class FileBackedTasksManagerTest extends InMemoryTaskManagerTest implemen
     }
 
     @Override
-    public void getTaskById() {
-
-    }
-
-    @Override
     public void getSingleTasks() {
 
     }
