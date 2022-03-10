@@ -122,7 +122,8 @@ public class InMemoryTasksManager implements TaskManager {
                     if (task instanceof EpicTask) {
                         epicTaskRepository.putTask((EpicTask) task);
                     }
-                } else if (!checkIntersection(task.getDuration().get(), task.getStartTime().get())) {
+                } else if (!checkIntersection(task.getDuration().get(),
+                        task.getStartTime().get())) {
                     throw new IntersectionException("Временной интервал занят! Задача "
                             + task.getName() + " не сохранена");
                 } else {
@@ -222,20 +223,32 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public void removeTaskById(int id) {
         if (singleTaskRepository.getTasks().containsKey(id)) {
-            historyManager.remove(id);
+            try {
+                historyManager.remove(id);
+            } catch (NoSuchElementException e) {
+                System.out.println(e.getMessage());
+            }
             singleTaskRepository.getTasks().remove(id);
         }
         if (epicTaskRepository.getTasks().containsKey(id)) {
             EpicTask epic = epicTaskRepository.getTasks().get(id);
             Map<Integer, SubTask> subTaskMap = epic.getSubTasks();
             for (Integer subTaskId : subTaskMap.keySet()) {
+                try {
                 historyManager.remove(subTaskId);
+                } catch (NoSuchElementException e) {
+                    System.out.println(e.getMessage());
+                }
             }
             historyManager.remove(id);
             epicTaskRepository.getTasks().remove(id);
         }
         if (getSubTaskOrNullById(id) != null) {
+            try {
             historyManager.remove(id);
+            } catch (NoSuchElementException e) {
+                System.out.println(e.getMessage());
+            }
             SubTask subTask = (SubTask) getSubTaskOrNullById(id);
             subTask.getEpicTask().removeSubTask(subTask);
         }

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import tasks.EpicTask;
 import tasks.SingleTask;
 
-public class FileBackedTasksManagerTest extends InMemoryTaskManagerTest implements TaskManagerTest{
+public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest implements TaskManagerTest{
 
     private static final Repository<SingleTask> singleTaskRepository = new Repository<>();
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();

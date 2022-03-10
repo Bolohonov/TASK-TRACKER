@@ -1,9 +1,7 @@
 package repository;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.SubTask;
@@ -17,7 +15,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class InMemoryTaskManagerTest implements TaskManagerTest {
+class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @BeforeEach
     private void clear() {
@@ -56,12 +54,13 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
         SingleTask task2 = creator.createSingleTask(
                 new String[]{"TestName2", "TestDescription"},
                 Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
-        try {
-            manager.putTask(task2);
-        } catch (IntersectionException e) {
-            assertEquals("Временной интервал занят! Задача TestName2 не сохранена",
-                    e.getMessage());
-        }
+        final IntersectionException exception = assertThrows(
+                IntersectionException.class,
+                () -> manager.putTask(task2)
+        );
+
+        assertEquals("Временной интервал занят! Задача TestName2 не сохранена",
+                exception.getMessage());
     }
 
     @Override

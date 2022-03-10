@@ -15,7 +15,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        taskManagerHistory.remove(id);
+        //try {
+            taskManagerHistory.remove(id);
+       // } catch (NoSuchElementException exp) {
+        //    System.out.println(exp.getMessage());
+       // }
     }
 
     @Override
@@ -102,11 +106,11 @@ public class InMemoryHistoryManager implements HistoryManager {
             node.setTask(null);
         }
 
-        private void remove(int id) {
+        private void remove(int id) throws NoSuchElementException{
             if (historyMap.containsKey(id)) {
                 removeNode(historyMap.get(id));
             } else {
-                System.out.println("В истории отсутствует задача с таким ID!");
+                throw new NoSuchElementException("В истории отсутствует задача с таким ID!");
             }
         }
 
