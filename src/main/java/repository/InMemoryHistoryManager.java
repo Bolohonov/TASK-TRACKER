@@ -15,11 +15,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        //try {
+        try {
             taskManagerHistory.remove(id);
-       // } catch (NoSuchElementException exp) {
-        //    System.out.println(exp.getMessage());
-       // }
+        } catch (NoSuchElementException exp) {
+        }
     }
 
     @Override
