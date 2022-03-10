@@ -356,19 +356,26 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     @Test
     @Override
     public void shouldGetPrioritizedTasks() throws IntersectionException {
-        Set<Task> prioritizedTasksTest = new TreeSet<>((o1, o2) -> {
-            if (!o1.getStartTime().isPresent()) {
-                return 1;
-            } else if (!o2.getStartTime().isPresent()) {
-                return -1;
-            } else {
-                return o1.getStartTime().get().compareTo(o2.getStartTime().get());
-            }
-        });
-        manager.putTask(epicTask3);
-        prioritizedTasksTest.add(epicTask3);
-        System.out.println(prioritizedTasksTest.contains(epicTask3));
+        Set<Task> prioritizedTasksTest = new TreeSet<>(Comparator.<Task, LocalDateTime>comparing(
+                        t -> t.getStartTime().orElse(null),
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                )
+                .thenComparingInt(Task::getId));
 
+        manager.putTask(epicTask1);
+        manager.putTask(epicTask2);
+        manager.putTask(epicTask3);
+        manager.putTask(subTask1);
+        manager.putTask(subTask2);
+        manager.putTask(task1);
+        manager.putTask(task2);
+        prioritizedTasksTest.add(epicTask1);
+        prioritizedTasksTest.add(epicTask2);
+        prioritizedTasksTest.add(epicTask3);
+        prioritizedTasksTest.add(subTask1);
+        prioritizedTasksTest.add(subTask2);
+        prioritizedTasksTest.add(task1);
+        prioritizedTasksTest.add(task2);
         assertEquals(prioritizedTasksTest, managers.getTaskManager().getPrioritizedTasks());
     }
 }
