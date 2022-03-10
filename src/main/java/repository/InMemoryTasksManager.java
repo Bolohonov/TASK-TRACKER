@@ -61,7 +61,8 @@ public class InMemoryTasksManager implements TaskManager {
                         flag = false;
                     }
                     if (startTime.isBefore(taskStart)
-                            && (finishTime.isAfter(taskStart) && finishTime.isBefore(taskFinish))) {
+                            && (finishTime.isAfter(taskStart)
+                            && finishTime.isBefore(taskFinish))) {
                         flag = false;
                     }
                     if (startTime.isAfter(taskStart)
