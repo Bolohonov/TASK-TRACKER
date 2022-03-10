@@ -42,14 +42,20 @@ public class InMemoryTasksManager implements TaskManager {
         return isIDAlreadyExist;
     }
 
-    public static boolean checkIntersection(Duration duration, LocalDateTime startTime) {
+    public static boolean checkIntersection(Task taskToCheck, Duration duration,
+                                            LocalDateTime startTime) {
         boolean flag = true;
         if (duration != null && startTime != null) {
             LocalDateTime finishTime = startTime.plus(duration);
             for (Task task : prioritizedTasks) {
-                if (task.getStartTime().isPresent() && task.getDuration().isPresent()) {
+                if (((taskToCheck instanceof SubTask && task instanceof EpicTask)
+                        && !((SubTask) taskToCheck).getEpicTask().equals(task))
+                        && task.getStartTime().isPresent() && task.getDuration().isPresent()) {
                     LocalDateTime taskStart = task.getStartTime().get();
                     LocalDateTime taskFinish = taskStart.plus(task.getDuration().get());
+                    if(startTime.isEqual(taskStart) || finishTime.isEqual(taskFinish)) {
+                        flag = false;
+                    }
                     if (startTime.isAfter(taskStart)
                             && startTime.isBefore(taskFinish)) {
                         flag = false;
@@ -96,7 +102,8 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public void putTask(Task task) throws IntersectionException {
             if (task.getDuration().isPresent() && task.getStartTime().isPresent()
-                    && checkIntersection(task.getDuration().get(), task.getStartTime().get())) {
+                    && checkIntersection(task, task.getDuration().get(),
+                    task.getStartTime().get())) {
                 prioritizedTasks.add(task);
                 if (task != null) {
                     if (task instanceof SingleTask) {
@@ -122,7 +129,7 @@ public class InMemoryTasksManager implements TaskManager {
                     if (task instanceof EpicTask) {
                         epicTaskRepository.putTask((EpicTask) task);
                     }
-                } else if (!checkIntersection(task.getDuration().get(),
+                } else if (!checkIntersection(task, task.getDuration().get(),
                         task.getStartTime().get())) {
                     throw new IntersectionException("Временной интервал занят! Задача "
                             + task.getName() + " не сохранена");

@@ -10,6 +10,9 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest impleme
     private static final Repository<EpicTask> epicTaskRepository = new Repository<>();
     protected static final HistoryManager historyManager = new InMemoryHistoryManager();
 
+    FileBackedTasksManagerTest() throws IntersectionException {
+    }
+
     @BeforeEach
     private void clear() {
         manager.removeAllTasks();

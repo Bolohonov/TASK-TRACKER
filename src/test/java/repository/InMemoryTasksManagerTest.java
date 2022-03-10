@@ -17,6 +17,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTasksManagerTest implements TaskManagerTest {
 
+    EpicTask epicTask1 = creator.createEpicTask(
+            new String[]{"TestEpicName", "TestDescription"});
+    EpicTask epicTask2 = creator.createEpicTask(
+            new String[]{"TestEpicName2", "TestDescription"});
+    EpicTask epicTask3 = creator.createEpicTask(
+            new String[]{"TestEpicName3", "TestDescription3"});
+    SubTask subTask1 = creator.createSubTask(epicTask1,
+            new String[]{"TestNameSub1", "TestDescriptionSub1"},
+            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(1));
+    SubTask subTask2 = creator.createSubTask(epicTask1,
+            new String[]{"TestNameSub2", "TestDescriptionSub1"},
+            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4));
+    SubTask subTask3 = creator.createSubTask(epicTask2,
+            new String[]{"TestNameSub3", "TestDescriptionSub1"},
+            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(7));
+    SingleTask task1 = creator.createSingleTask(
+            new String[]{"TestName1", "TestDescription"},
+            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(11));
+    SingleTask task2 = creator.createSingleTask(
+            new String[]{"TestName2", "TestDescription"},
+            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(14));
+
+    InMemoryTasksManagerTest() throws IntersectionException {
+    }
+
     @BeforeEach
     private void clear() {
         manager.removeAllTasks();
@@ -26,61 +51,60 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     @Override
     @Test
     public void putTaskStandardBehavior() throws IntersectionException {
-        Task task5 = creator.createSingleTask(
-                new String[]{"TestName5", "TestDescription5"}, Duration.ofHours(18),
-                LocalDateTime.now(ZoneId.of("Europe/Moscow")));
-        manager.putTask(task5);
-        int id = task5.getId();
-        Task epic1 = creator.createEpicTask(new String[]{"TestEpicName1", "TestEpicDescription1"});
-        manager.putTask(epic1);
-        int id2 = epic1.getId();
-        Task subTask = creator.createSubTask(epic1,
-                new String[]{"TestEpicName1", "TestEpicDescription1"},
-                Duration.ofHours(21), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(25));
-        manager.putTask(subTask);
-        int id3 = subTask.getId();
-        assertTrue(manager.getSingleTasks().containsKey(id));
-        assertTrue(manager.getEpicTasks().containsKey(id2));
-        assertTrue(manager.getSubTasksByEpic(epic1).containsKey(id3));
+        manager.putTask(epicTask1);
+        manager.putTask(epicTask2);
+        manager.putTask(epicTask3);
+        manager.putTask(subTask1);
+        manager.putTask(subTask2);
+        manager.putTask(subTask3);
+        manager.putTask(task1);
+        manager.putTask(task2);
+        assertTrue(manager.getSingleTasks().containsKey(task1.getId()));
+        assertTrue(manager.getSingleTasks().containsKey(task2.getId()));
+        assertTrue(manager.getEpicTasks().containsKey(epicTask1.getId()));
+        assertTrue(manager.getEpicTasks().containsKey(epicTask2.getId()));
+        assertTrue(manager.getEpicTasks().containsKey(epicTask3.getId()));
+        assertTrue(manager.getSubTasksByEpic(epicTask1).containsKey(subTask1.getId()));
+        assertTrue(manager.getSubTasksByEpic(epicTask1).containsKey(subTask2.getId()));
+        assertTrue(manager.getSubTasksByEpic(epicTask2).containsKey(subTask3.getId()));
     }
 
     @Override
     @Test
     public void putTaskIntersectionException() throws IntersectionException {
-        SingleTask task1 = creator.createSingleTask(
-                new String[]{"TestName", "TestDescription"},
-                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
-        manager.putTask(task1);
-        SingleTask task2 = creator.createSingleTask(
-                new String[]{"TestName2", "TestDescription"},
-                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(epicTask1);
+        manager.putTask(subTask2);
+        SingleTask taskIntersection = creator.createSingleTask(
+                new String[]{"Intersection", "TestDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4));
         final IntersectionException exception = assertThrows(
                 IntersectionException.class,
-                () -> manager.putTask(task2)
+                () -> manager.putTask(taskIntersection)
         );
 
-        assertEquals("Временной интервал занят! Задача TestName2 не сохранена",
+        assertEquals("Временной интервал занят! Задача Intersection не сохранена",
                 exception.getMessage());
     }
 
     @Override
     @Test
     public void getTaskByIdStandardBehavior() throws IntersectionException {
-        Task task5 = creator.createSingleTask(new String[]{"TestName5", "TestDescription5"},
-                Duration.ofHours(18), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
-        manager.putTask(task5);
-        int id = task5.getId();
-        Task epic1 = creator.createEpicTask(new String[]{"TestEpicName1", "TestEpicDescription1"});
-        manager.putTask(epic1);
-        int id2 = epic1.getId();
-        Task subTask = creator.createSubTask(epic1,
-                new String[]{"TestEpicName1", "TestEpicDescription1"}, Duration.ofHours(21),
-                LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(25));
-        manager.putTask(subTask);
-        int id3 = subTask.getId();
-        assertEquals(task5, managers.getTaskManager().getTaskById(id));
-        assertEquals(epic1, managers.getTaskManager().getTaskById(id2));
-        assertEquals(subTask, managers.getTaskManager().getTaskById(id3));
+        manager.putTask(epicTask1);
+        manager.putTask(epicTask2);
+        manager.putTask(epicTask3);
+        manager.putTask(subTask1);
+        manager.putTask(subTask2);
+        manager.putTask(subTask3);
+        manager.putTask(task1);
+        manager.putTask(task2);
+        assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
+        assertEquals(epicTask2, managers.getTaskManager().getTaskById(epicTask2.getId()));
+        assertEquals(epicTask3, managers.getTaskManager().getTaskById(epicTask3.getId()));
+        assertEquals(subTask1, managers.getTaskManager().getTaskById(subTask1.getId()));
+        assertEquals(subTask2, managers.getTaskManager().getTaskById(subTask2.getId()));
+        assertEquals(subTask3, managers.getTaskManager().getTaskById(subTask3.getId()));
+        assertEquals(task1, managers.getTaskManager().getTaskById(task1.getId()));
+        assertEquals(task2, managers.getTaskManager().getTaskById(task2.getId()));
     }
 
     @Override
