@@ -16,7 +16,7 @@ public class EpicTask extends Task {
         subTasksMap = new LinkedHashMap<>();
     }
 
-    public Map<Integer,SubTask> getSubTasks() {
+    public Map<Integer, SubTask> getSubTasks() {
         try {
             return subTasksMap;
         } catch (NullPointerException exp) {
@@ -56,7 +56,7 @@ public class EpicTask extends Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EpicTask task = (EpicTask) o;
-        return  super.getId() == task.getId() &&
+        return super.getId() == task.getId() &&
                 Objects.equals(super.getName(), task.getName()) &&
                 Objects.equals(super.getDescription(), task.getDescription()) &&
                 Objects.equals(getStatus(), task.getStatus()) &&
@@ -129,7 +129,8 @@ public class EpicTask extends Task {
     public Optional<LocalDateTime> getStartTime() {
         LocalDateTime startTime = null;
         if (subTasksMap != null && !subTasksMap.isEmpty()) {
-            if (subTasksMap.entrySet().stream().findFirst().get().getValue().getStartTime().isPresent()) {
+            if (subTasksMap.entrySet().stream().findFirst()
+                    .get().getValue().getStartTime().isPresent()) {
                 startTime = subTasksMap.entrySet().stream().findFirst()
                         .get().getValue().getStartTime().get();
             }

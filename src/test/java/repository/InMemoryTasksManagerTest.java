@@ -176,11 +176,11 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         manager.putTask(epicTask2);
         manager.putTask(epicTask3);
         manager.putTask(subTask1);
-        subTasksMap1.put(subTask1.getId(),subTask1);
+        subTasksMap1.put(subTask1.getId(), subTask1);
         manager.putTask(subTask2);
-        subTasksMap1.put(subTask2.getId(),subTask2);
+        subTasksMap1.put(subTask2.getId(), subTask2);
         manager.putTask(subTask3);
-        subTasksMap2.put(subTask3.getId(),subTask3);
+        subTasksMap2.put(subTask3.getId(), subTask3);
         assertEquals(subTasksMap1, epicTask1.getSubTasks());
         assertEquals(subTasksMap2, epicTask2.getSubTasks());
         assertEquals(subTasksMap3, epicTask3.getSubTasks());

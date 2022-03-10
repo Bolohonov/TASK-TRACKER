@@ -4,8 +4,8 @@ import java.nio.file.Paths;
 
 public class Managers {
     private final TaskManager manager = new InMemoryTasksManager();
-    private final TaskManager managerToFile = new FileBackedTasksManager(Paths.get("./resources/data.csv")
-            .toFile());
+    private final TaskManager managerToFile =
+            new FileBackedTasksManager(Paths.get("./resources/data.csv").toFile());
     private final TaskCreator factory = new TaskFactory();
     private final TaskUpdater updater = new InMemoryTaskUpdater();
 

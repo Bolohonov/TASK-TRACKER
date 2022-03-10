@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 
 public interface TaskCreator {
 
-    SingleTask createSingleTask(String[] userTask, Duration duration, LocalDateTime startTime) throws IntersectionException;
+    SingleTask createSingleTask(String[] userTask,
+                                Duration duration,
+                                LocalDateTime startTime) throws IntersectionException;
 
     EpicTask createEpicTask(String[] userTask);
 
-    SubTask createSubTask(Task epicTask, String[] userTask, Duration duration, LocalDateTime startTime) throws IntersectionException;
+    SubTask createSubTask(Task epicTask, String[] userTask,
+                          Duration duration, LocalDateTime startTime) throws IntersectionException;
 }

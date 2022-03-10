@@ -105,7 +105,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             node.setTask(null);
         }
 
-        private void remove(int id) throws NoSuchElementException{
+        private void remove(int id) throws NoSuchElementException {
             if (historyMap.containsKey(id)) {
                 removeNode(historyMap.get(id));
             } else {
