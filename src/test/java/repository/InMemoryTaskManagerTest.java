@@ -1,7 +1,9 @@
 package repository;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.SubTask;
@@ -42,9 +44,25 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
         assertTrue(manager.getSingleTasks().containsKey(id));
         assertTrue(manager.getEpicTasks().containsKey(id2));
         assertTrue(manager.getSubTasksByEpic(epic1).containsKey(id3));
-
     }
 
+    @Override
+    @Test
+    public void putTaskIntersectionException() throws IntersectionException {
+        SingleTask task1 = creator.createSingleTask(
+                new String[]{"TestName", "TestDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        manager.putTask(task1);
+        SingleTask task2 = creator.createSingleTask(
+                new String[]{"TestName2", "TestDescription"},
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        try {
+            manager.putTask(task2);
+        } catch (IntersectionException e) {
+            assertEquals("Временной интервал занят! Задача TestName2 не сохранена",
+                    e.getMessage());
+        }
+    }
 
     @Override
     @Test
@@ -187,7 +205,7 @@ class InMemoryTaskManagerTest implements TaskManagerTest {
 
     @Test
     @Override
-    public void getSubTasksByEpicEmptyRepository() {
+    public void getSubTasksByEpicEmptyRepository() throws IntersectionException {
         Map<Integer, SubTask> subTasksMap1 = new LinkedHashMap<>();
         EpicTask task1 = creator.createEpicTask(
                 new String[]{"TestName", "TestDescription"});

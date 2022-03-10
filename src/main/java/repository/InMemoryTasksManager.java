@@ -50,14 +50,22 @@ public class InMemoryTasksManager implements TaskManager {
                 if (task.getStartTime().isPresent() && task.getDuration().isPresent()) {
                     LocalDateTime taskStart = task.getStartTime().get();
                     LocalDateTime taskFinish = taskStart.plus(task.getDuration().get());
-                    if ((!(startTime.isAfter(taskStart)
-                            && startTime.isAfter(taskFinish) ||
-                            !(startTime.isBefore(taskStart)
-                                    && startTime.isBefore(taskFinish))))
-                            && (!(finishTime.isAfter(taskStart)
-                            && finishTime.isAfter(taskFinish) ||
-                            !(finishTime.isBefore(taskStart)
-                                    && finishTime.isBefore(taskFinish))))) {
+                    if (startTime.isAfter(taskStart)
+                            && startTime.isBefore(taskFinish)) {
+                        flag = false;
+                    }
+                    if (startTime.isBefore(taskStart)
+                            && (finishTime.isAfter(taskStart) && finishTime.isBefore(taskFinish))) {
+                        flag = false;
+                    }
+                    if (startTime.isAfter(taskStart)
+                            && finishTime.isBefore(taskFinish)) {
+                        flag = false;
+                    }
+                    if (startTime.isAfter(taskStart) && startTime.isBefore(taskFinish)) {
+                        flag = false;
+                    }
+                    if (startTime.isBefore(taskStart) && finishTime.isAfter(taskFinish)) {
                         flag = false;
                     }
                 }
@@ -86,37 +94,41 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public void putTask(Task task) {
-        if (task.getDuration().isPresent() && task.getStartTime().isPresent()
-                && checkIntersection(task.getDuration().get(), task.getStartTime().get())) {
-            prioritizedTasks.add(task);
-            if (task != null) {
-                if (task instanceof SingleTask) {
-                    singleTaskRepository.putTask((SingleTask) task);
-                }
-                if (task instanceof EpicTask) {
-                    epicTaskRepository.putTask((EpicTask) task);
-                }
+    public void putTask(Task task) throws IntersectionException {
+            if (task.getDuration().isPresent() && task.getStartTime().isPresent()
+                    && checkIntersection(task.getDuration().get(), task.getStartTime().get())) {
+                prioritizedTasks.add(task);
+                if (task != null) {
+                    if (task instanceof SingleTask) {
+                        singleTaskRepository.putTask((SingleTask) task);
+                    }
+                    if (task instanceof EpicTask) {
+                        epicTaskRepository.putTask((EpicTask) task);
+                    }
 //            if (task instanceof SubTask) {
 //                SubTask subTask = (SubTask) task;
 //                subTask.getEpicTask().addSubTask(subTask);
 //            }
-            } else {
-                System.out.println("Задача не создана!");
-            }
-        } else {
-            if ((!task.getDuration().isPresent() || !task.getStartTime().isPresent()) && task != null) {
-                prioritizedTasks.add(task);
-                if (task instanceof SingleTask) {
-                    singleTaskRepository.putTask((SingleTask) task);
-                }
-                if (task instanceof EpicTask) {
-                    epicTaskRepository.putTask((EpicTask) task);
+                } else {
+                    System.out.println("Задача не создана!");
                 }
             } else {
-                System.out.println("Задача не создана!");
+                if ((!task.getDuration().isPresent()
+                        || !task.getStartTime().isPresent()) && task != null) {
+                    prioritizedTasks.add(task);
+                    if (task instanceof SingleTask) {
+                        singleTaskRepository.putTask((SingleTask) task);
+                    }
+                    if (task instanceof EpicTask) {
+                        epicTaskRepository.putTask((EpicTask) task);
+                    }
+                } else if (!checkIntersection(task.getDuration().get(), task.getStartTime().get())) {
+                    throw new IntersectionException("Временной интервал занят! Задача "
+                            + task.getName() + " не сохранена");
+                } else {
+                    System.out.println("Задача не создана!");
+                }
             }
-        }
     }
 
     @Override

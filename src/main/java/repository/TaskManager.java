@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface TaskManager {
 
-    void putTask(Task task);
+    void putTask(Task task) throws IntersectionException;
 
     Task getTaskById(int id);
 

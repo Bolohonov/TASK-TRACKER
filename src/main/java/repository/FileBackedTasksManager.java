@@ -74,6 +74,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             }
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
+        } catch (IntersectionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -124,7 +126,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     @Override
-    public void putTask(Task task) {
+    public void putTask(Task task) throws IntersectionException {
         super.putTask(task);
         save();
     }

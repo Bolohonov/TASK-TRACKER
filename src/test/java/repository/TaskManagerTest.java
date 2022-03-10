@@ -23,6 +23,9 @@ public interface TaskManagerTest {
     void putTaskStandardBehavior() throws IntersectionException;
 
     @Test
+    void putTaskIntersectionException() throws IntersectionException;
+
+    @Test
     void getTaskByIdStandardBehavior() throws IntersectionException;
 
     @Test
