@@ -63,7 +63,7 @@ public abstract class Task {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, description, id, status);
+        int result = Objects.hash(name, description, id, status, getDuration(), getStartTime());
         result = 31 * result + id;
         return result;
     }

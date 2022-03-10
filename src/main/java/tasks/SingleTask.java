@@ -40,7 +40,7 @@ public class SingleTask extends Task{
     @Override
     public int hashCode() {
         int result = Objects.hash(super.getName(), super.getDescription(),
-                super.getId(), super.getStatus());
+                super.getId(), super.getStatus(), super.getDuration(), super.getStartTime());
         result = 31 * result + super.getId();
         return result;
     }

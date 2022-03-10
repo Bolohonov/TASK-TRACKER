@@ -66,7 +66,8 @@ public class EpicTask extends Task {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(super.getName(), super.getDescription(), super.getId(), getStatus());
+        int result = Objects.hash(super.getName(), super.getDescription(),
+                super.getId(), getStatus(), getDuration(), getStartTime());
         result = 37 * result + super.getId();
         return result;
     }

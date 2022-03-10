@@ -55,7 +55,7 @@ public class SubTask extends Task {
     @Override
     public int hashCode() {
         int result = Objects.hash(super.getName(), super.getDescription(),
-                super.getId(), super.getStatus());
+                super.getId(), super.getStatus(), super.getDuration(), super.getStartTime());
         result = 41 * result + epicTask.hashCode() + super.getId();
         return result;
     }
