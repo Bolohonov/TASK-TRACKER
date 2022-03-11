@@ -7,6 +7,8 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -50,7 +52,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void putTaskStandardBehavior() throws IntersectionException {
+    public void putTaskStandardBehavior() throws IntersectionException, IOException {
         manager.putTask(epicTask1);
         manager.putTask(epicTask2);
         manager.putTask(epicTask3);

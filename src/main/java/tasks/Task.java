@@ -99,8 +99,16 @@ public abstract class Task {
     public abstract TaskType getType();
 
     public String toString(Task task) {
+        String durationOrNull = null;
+        String startTimeOrNull = null;
+        if(getDuration().isPresent()) {
+            durationOrNull = getDuration().get().toString();
+        }
+        if(getStartTime().isPresent()) {
+            startTimeOrNull = getStartTime().get().toString();
+        }
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus()
-                + "," + task.getDescription() + ",";
+                + "," + task.getDescription() + "," + durationOrNull + "," + startTimeOrNull + ",";
     }
 
     public Optional<Duration> getDuration() {

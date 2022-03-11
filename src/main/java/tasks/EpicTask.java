@@ -46,8 +46,8 @@ public class EpicTask extends Task {
                 ", Описание='" + super.getDescription() + '\'' +
                 ", ID=" + super.getId() +
                 ", Статус=" + getStatus() +
-                ", Продолжительность=" + super.getDuration() +
-                ", Время начала=" + super.getStartTime() +
+                ", Продолжительность=" + super.getDuration().get() +
+                ", Время начала=" + super.getStartTime().get() +
                 '}';
     }
 

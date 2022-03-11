@@ -6,13 +6,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager {
 
     private File file;
-    private static final String TABLE_HEADER = "id,type,name,status,description,epic,duration,startTime";
+    private static final String TABLE_HEADER = "id,type,name,status,description,duration,startTime,epic";
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -86,17 +87,21 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             values = value.split(",");
         }
         if (values != null) {
-            if (values[1].equals(TaskType.TASK.toString())) {
-                task = new SingleTask(values[2], values[4], Integer.parseInt(values[0]),
-                        Optional.of(Duration.parse(values[5])), Optional.of(LocalDateTime.parse(values[6])));
-                task.setStatus(TaskStatus.valueOf(values[3]));
-            } else if (values[1].equals(TaskType.EPIC.toString())) {
-                task = new EpicTask(values[2], values[4], Integer.parseInt(values[0]));
-            } else if (values[1].equals(TaskType.SUBTASK.toString())) {
-                task = new SubTask((EpicTask) super
-                        .getTaskById(Integer.parseInt(values[5])), values[2], values[4], Integer.parseInt(values[0]),
-                        Optional.of(Duration.parse(values[5])), Optional.of(LocalDateTime.parse(values[6])));
-                task.setStatus(TaskStatus.valueOf(values[3]));
+            try {
+                if (values[1].equals(TaskType.TASK.toString())) {
+                    task = new SingleTask(values[2], values[4], Integer.parseInt(values[0]),
+                            Optional.of(Duration.parse(values[5])), Optional.of(LocalDateTime.parse(values[6])));
+                    task.setStatus(TaskStatus.valueOf(values[3]));
+                } else if (values[1].equals(TaskType.EPIC.toString())) {
+                    task = new EpicTask(values[2], values[4], Integer.parseInt(values[0]));
+                } else if (values[1].equals(TaskType.SUBTASK.toString())) {
+                    task = new SubTask((EpicTask) super
+                            .getTaskById(Integer.parseInt(values[7])), values[2], values[4], Integer.parseInt(values[0]),
+                            Optional.of(Duration.parse(values[5])), Optional.of(LocalDateTime.parse(values[6])));
+                    task.setStatus(TaskStatus.valueOf(values[3]));
+                }
+            } catch(DateTimeParseException exp) {
+
             }
         }
         return task;

@@ -2,6 +2,9 @@ package repository;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public interface TaskManagerTest {
 
     Managers managers = new Managers();
@@ -10,7 +13,7 @@ public interface TaskManagerTest {
     TaskCreator creator = managers.getFactory();
 
     @Test
-    void putTaskStandardBehavior() throws IntersectionException;
+    void putTaskStandardBehavior() throws IntersectionException, IOException;
 
     @Test
     void putTaskIntersectionException() throws IntersectionException;
