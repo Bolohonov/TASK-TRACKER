@@ -37,8 +37,6 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest impleme
     }
 
     private void fillRepository() throws IntersectionException {
-        manager.removeAllTasks();
-        manager.getPrioritizedTasks().clear();
         managerToFile.putTask(epicTask1);
         managerToFile.putTask(epicTask2);
         managerToFile.putTask(epicTask3);
@@ -53,9 +51,9 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest impleme
     @Test
     public void putTaskStandardBehavior() throws IntersectionException, IOException {
         fillRepository();
-        InputStream input1 = new FileInputStream(REPOSITORY.toFile());
-        InputStream input2
-                = new FileInputStream(TEST_PUT_TASK_STANDARD_BEHAVIOR.toFile());
-        assertTrue(IOUtils.contentEquals(input1, input2));
+        FileReader input1 = new FileReader(REPOSITORY.toFile());
+        FileReader input2
+                = new FileReader(TEST_PUT_TASK_STANDARD_BEHAVIOR.toFile());
+        assertTrue(IOUtils.contentEqualsIgnoreEOL(input1, input2));
     }
 }

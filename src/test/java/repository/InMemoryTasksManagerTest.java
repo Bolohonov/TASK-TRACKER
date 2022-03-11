@@ -33,19 +33,19 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
             new String[]{"TestEpicName3", "TestDescription3"});
     SubTask subTask1 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub1", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(1));
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 10,0,00));
     SubTask subTask2 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub2", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4));
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 14,0,00));
     SubTask subTask3 = creator.createSubTask(epicTask2,
             new String[]{"TestNameSub3", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(7));
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 17,0,00));
     SingleTask task1 = creator.createSingleTask(
             new String[]{"TestName1", "TestDescription"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(11));
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 21,0,00));
     SingleTask task2 = creator.createSingleTask(
             new String[]{"TestName2", "TestDescription"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(14));
+            Duration.ofHours(2), LocalDateTime.of(2022,03,12, 00,0,00));
 
     InMemoryTasksManagerTest() throws IntersectionException {
     }
