@@ -18,30 +18,53 @@ class InMemoryHistoryManagerTest {
 
     Managers managers = new Managers();
     TaskCreator creator = managers.getFactory();
+    TaskManager manager = managers.getTaskManager();
     HistoryManager historyManager = new InMemoryHistoryManager();
 
     List<Task> list = new LinkedList<>();
     EpicTask epicTask1 = creator.createEpicTask(
-            new String[]{"TestName", "TestDescription"});
+            new String[]{"TestEpicName", "TestDescription"});
     EpicTask epicTask2 = creator.createEpicTask(
-            new String[]{"TestName2", "TestDescription"});
+            new String[]{"TestEpicName2", "TestDescription"});
     EpicTask epicTask3 = creator.createEpicTask(
-            new String[]{"TestName3", "TestDescription3"});
+            new String[]{"TestEpicName3", "TestDescription3"});
     SubTask subTask1 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub1", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 10,0,00));
     SubTask subTask2 = creator.createSubTask(epicTask1,
-            new String[]{"TestNameSub1", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(3));
+            new String[]{"TestNameSub2", "TestDescriptionSub1"},
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 14,0,00));
     SubTask subTask3 = creator.createSubTask(epicTask2,
-            new String[]{"TestNameSub1", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(7));
+            new String[]{"TestNameSub3", "TestDescriptionSub1"},
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 17,0,00));
     SingleTask task1 = creator.createSingleTask(
-            new String[]{"TestName", "TestDescription"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(11));
+            new String[]{"TestName1", "TestDescription"},
+            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 21,0,00));
     SingleTask task2 = creator.createSingleTask(
-            new String[]{"TestName", "TestDescription"},
-            Duration.ofHours(2), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(14));
+            new String[]{"TestName2", "TestDescription"},
+            Duration.ofHours(2), LocalDateTime.of(2022,03,12, 00,0,00));
+
+    private void fillRepository() throws IntersectionException {
+        manager.putTask(epicTask1);
+        manager.putTask(epicTask2);
+        manager.putTask(epicTask3);
+        manager.putTask(subTask1);
+        manager.putTask(subTask2);
+        manager.putTask(subTask3);
+        manager.putTask(task1);
+        manager.putTask(task2);
+    }
+
+    private void fillHistory() throws IntersectionException {
+        historyManager.add(epicTask1);
+        historyManager.add(epicTask2);
+        historyManager.add(epicTask3);
+        historyManager.add(subTask1);
+        historyManager.add(subTask2);
+        historyManager.add(subTask3);
+        historyManager.add(task1);
+        historyManager.add(task2);
+    }
 
     InMemoryHistoryManagerTest() throws IntersectionException {
     }

@@ -7,7 +7,6 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -20,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @BeforeEach
-    private void clear() {
+    private void clear() throws IntersectionException {
         manager.removeAllTasks();
         manager.getPrioritizedTasks().clear();
     }
@@ -47,12 +46,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
             new String[]{"TestName2", "TestDescription"},
             Duration.ofHours(2), LocalDateTime.of(2022,03,12, 00,0,00));
 
-    InMemoryTasksManagerTest() throws IntersectionException {
-    }
-
-    @Override
-    @Test
-    public void putTaskStandardBehavior() throws IntersectionException, IOException {
+    private void fillRepository() throws IntersectionException {
         manager.putTask(epicTask1);
         manager.putTask(epicTask2);
         manager.putTask(epicTask3);
@@ -61,6 +55,15 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         manager.putTask(subTask3);
         manager.putTask(task1);
         manager.putTask(task2);
+    }
+
+    InMemoryTasksManagerTest() throws IntersectionException {
+    }
+
+    @Override
+    @Test
+    public void putTaskStandardBehavior() throws IntersectionException, IOException {
+        fillRepository();
         assertTrue(manager.getSingleTasks().containsKey(task1.getId()));
         assertTrue(manager.getSingleTasks().containsKey(task2.getId()));
         assertTrue(manager.getEpicTasks().containsKey(epicTask1.getId()));
@@ -78,7 +81,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         manager.putTask(subTask2);
         SingleTask taskIntersection = creator.createSingleTask(
                 new String[]{"Intersection", "TestDescription"},
-                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4));
+                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(3));
         final IntersectionException exception = assertThrows(
                 IntersectionException.class,
                 () -> manager.putTask(taskIntersection)
@@ -91,14 +94,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     @Override
     @Test
     public void getTaskByIdStandardBehavior() throws IntersectionException {
-        manager.putTask(epicTask1);
-        manager.putTask(epicTask2);
-        manager.putTask(epicTask3);
-        manager.putTask(subTask1);
-        manager.putTask(subTask2);
-        manager.putTask(subTask3);
-        manager.putTask(task1);
-        manager.putTask(task2);
+        fillRepository();
         assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
         assertEquals(epicTask2, managers.getTaskManager().getTaskById(epicTask2.getId()));
         assertEquals(epicTask3, managers.getTaskManager().getTaskById(epicTask3.getId()));
@@ -111,7 +107,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void getTaskByIdEmptyRepository() throws IntersectionException {
+    public void getTaskByIdEmptyRepository() {
         int id = 1;
         assertEquals(null, managers.getTaskManager().getTaskById(id));
     }
@@ -121,8 +117,8 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     public void getTaskByIdWrongId() throws IntersectionException {
         manager.putTask(epicTask1);
         manager.putTask(task1);
-        assertEquals(null, managers.getTaskManager().getTaskById(epicTask1.getId()));
-        assertEquals(null, managers.getTaskManager().getTaskById(task1.getId()));
+        assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
+        assertEquals(task1, managers.getTaskManager().getTaskById(task1.getId()));
         assertEquals(null, managers.getTaskManager().getTaskById(0));
     }
 
@@ -148,13 +144,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     @Override
     public void getEpicTasksStandardBehavior() throws IntersectionException {
         Repository<EpicTask> epicTaskRepository = new Repository<>();
-        manager.putTask(epicTask1);
-        manager.putTask(epicTask2);
-        manager.putTask(epicTask3);
-        manager.putTask(subTask1);
-        manager.putTask(subTask2);
-        manager.putTask(subTask3);
-
+        fillRepository();
         epicTaskRepository.putTask(epicTask1);
         epicTaskRepository.putTask(epicTask2);
         epicTaskRepository.putTask(epicTask3);
@@ -174,14 +164,9 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         Map<Integer, Task> subTasksMap1 = new LinkedHashMap();
         Map<Integer, Task> subTasksMap2 = new LinkedHashMap();
         Map<Integer, Task> subTasksMap3 = new LinkedHashMap();
-        manager.putTask(epicTask1);
-        manager.putTask(epicTask2);
-        manager.putTask(epicTask3);
-        manager.putTask(subTask1);
+        fillRepository();
         subTasksMap1.put(subTask1.getId(), subTask1);
-        manager.putTask(subTask2);
         subTasksMap1.put(subTask2.getId(), subTask2);
-        manager.putTask(subTask3);
         subTasksMap2.put(subTask3.getId(), subTask3);
         assertEquals(subTasksMap1, epicTask1.getSubTasks());
         assertEquals(subTasksMap2, epicTask2.getSubTasks());
@@ -208,14 +193,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     public void removeAllTasks() throws IntersectionException {
         Repository<EpicTask> epicTaskRepository = new Repository<>();
         Repository<SingleTask> singleTaskRepository = new Repository<>();
-        manager.putTask(epicTask1);
-        manager.putTask(epicTask2);
-        manager.putTask(epicTask3);
-        manager.putTask(subTask1);
-        manager.putTask(subTask2);
-        manager.putTask(subTask3);
-        manager.putTask(task1);
-        manager.putTask(task2);
+        fillRepository();
         manager.removeAllTasks();
         assertEquals(singleTaskRepository.getTasks(), manager.getSingleTasks());
         assertEquals(epicTaskRepository.getTasks(), manager.getEpicTasks());
@@ -224,14 +202,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     @Override
     @Test
     public void removeTaskByIdStandardBehavior() throws IntersectionException {
-        manager.putTask(epicTask1);
-        manager.putTask(epicTask2);
-        manager.putTask(epicTask3);
-        manager.putTask(subTask1);
-        manager.putTask(subTask2);
-        manager.putTask(subTask3);
-        manager.putTask(task1);
-        manager.putTask(task2);
+        fillRepository();
         manager.removeTaskById(epicTask1.getId());
         assertFalse(manager.getEpicTasks().containsKey(epicTask1.getId()));
         manager.removeTaskById(subTask3.getId());
@@ -244,14 +215,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     @Test
     public void getHistoryStandardBehavior() throws IntersectionException {
         List<Task> historyList = new LinkedList<>();
-        manager.putTask(epicTask1);
-        manager.putTask(epicTask2);
-        manager.putTask(epicTask3);
-        manager.putTask(subTask1);
-        manager.putTask(subTask2);
-        manager.putTask(subTask3);
-        manager.putTask(task1);
-        manager.putTask(task2);
+        fillRepository();
         manager.getTaskById(epicTask1.getId());
         historyList.add(epicTask1);
         manager.getTaskById(epicTask2.getId());
