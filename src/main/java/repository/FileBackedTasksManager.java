@@ -22,38 +22,34 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     public void save() {
-        try {
-            try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file,
-                    StandardCharsets.UTF_8))) {
-                Repository<Task> rep = new Repository<>();
-                fileWriter.write(TABLE_HEADER + System.lineSeparator());
-                rep.getTasks().putAll(super.getSingleTasks());
-                rep.getTasks().putAll(super.getEpicTasks());
-                super.getEpicTasks().values().stream()
-                        .forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
-                HashMap<Integer, Task> map = rep.getTasks()
-                        .entrySet().stream()
-                        .sorted(Map.Entry.comparingByKey())
-                        .collect(Collectors
-                                .toMap(Map.Entry::getKey,
-                                        Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-                ;
-                map.values().stream().forEach(o -> {
-                    try {
-                        fileWriter.append(o.toString(o) + System.lineSeparator());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                if (historyManager.getHistory() != null && !historyManager.getHistory().isEmpty()) {
-                    fileWriter.append(System.lineSeparator());
-                    fileWriter.append(toString(historyManager));
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file,
+                StandardCharsets.UTF_8))) {
+            Repository<Task> rep = new Repository<>();
+            fileWriter.write(TABLE_HEADER + System.lineSeparator());
+            rep.getTasks().putAll(super.getSingleTasks());
+            rep.getTasks().putAll(super.getEpicTasks());
+            super.getEpicTasks().values().stream()
+                    .forEach(o -> rep.getTasks().putAll(o.getSubTasks()));
+            HashMap<Integer, Task> map = rep.getTasks()
+                    .entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .collect(Collectors
+                            .toMap(Map.Entry::getKey,
+                                    Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+            ;
+            map.values().stream().forEach(o -> {
+                try {
+                    fileWriter.append(o.toString(o) + System.lineSeparator());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
+            });
+            if (historyManager.getHistory() != null && !historyManager.getHistory().isEmpty()) {
+                fileWriter.append(System.lineSeparator());
+                fileWriter.append(toString(historyManager));
             }
-        } catch (ManagerSaveException e) {
-            System.out.println("Ошибка менеджера: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Произошла ошибка во время чтения файла.");
         }
     }
 
@@ -79,7 +75,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 }
             }
         } catch (IOException e) {
-            System.out.println("Произошла ошибка во время чтения файла.");
+            System.out.println("Произошла ошибка во время загрузки из файла.");
         } catch (IntersectionException e) {
             System.out.println("Совпадение временного интервала во время загрузки из файла!");;
         }
