@@ -7,10 +7,12 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,10 +20,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTasksManagerTest implements TaskManagerTest {
 
+    protected static final Path REPOSITORY = Paths.get("./resources/data.csv");
+    protected static final Path TEST_PUT_TASK_STANDARD_BEHAVIOR
+            = Paths.get("./resources/testPutStandardBehavior.csv");
+
     @BeforeEach
-    private void clear() throws IntersectionException {
+    private void clear() throws IOException {
         manager.removeAllTasks();
         manager.getPrioritizedTasks().clear();
+        manager.getHistory().clear();
+        File file = REPOSITORY.toFile();
+        if (file.delete()) {
+            file.createNewFile();
+        }
     }
 
     EpicTask epicTask1 = creator.createEpicTask(
@@ -32,19 +43,24 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
             new String[]{"TestEpicName3", "TestDescription3"});
     SubTask subTask1 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub1", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 10,0,00));
+            Duration.ofHours(2), LocalDateTime
+                    .of(2022, 03, 3, 10, 0, 00));
     SubTask subTask2 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub2", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 14,0,00));
+            Duration.ofHours(2), LocalDateTime
+                    .of(2022, 03, 3, 14, 0, 00));
     SubTask subTask3 = creator.createSubTask(epicTask2,
             new String[]{"TestNameSub3", "TestDescriptionSub1"},
-            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 17,0,00));
+            Duration.ofHours(2), LocalDateTime
+                    .of(2022, 03, 3, 17, 0, 00));
     SingleTask task1 = creator.createSingleTask(
             new String[]{"TestName1", "TestDescription"},
-            Duration.ofHours(2), LocalDateTime.of(2022,03,11, 21,0,00));
+            Duration.ofHours(2), LocalDateTime
+                    .of(2022, 03, 3, 21, 0, 00));
     SingleTask task2 = creator.createSingleTask(
             new String[]{"TestName2", "TestDescription"},
-            Duration.ofHours(2), LocalDateTime.of(2022,03,12, 00,0,00));
+            Duration.ofHours(2), LocalDateTime
+                    .of(2022, 03, 4, 00, 0, 00));
 
     private void fillRepository() throws IntersectionException {
         manager.putTask(epicTask1);
@@ -81,13 +97,15 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         manager.putTask(subTask2);
         SingleTask taskIntersection = creator.createSingleTask(
                 new String[]{"Intersection", "TestDescription"},
-                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(3));
+                Duration.ofHours(1), LocalDateTime
+                        .of(2022, 03, 3, 15, 0, 00));
         final IntersectionException exception = assertThrows(
                 IntersectionException.class,
                 () -> manager.putTask(taskIntersection)
         );
 
-        assertEquals("Временной интервал занят! Задача Intersection не сохранена",
+        assertEquals("Временной интервал занят! Задача с ID "
+                        + taskIntersection.getId() + " не сохранена",
                 exception.getMessage());
     }
 
@@ -184,8 +202,12 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     }
 
     @Override
-    public void updateTask() {
-
+    @Test
+    public void updateTask() throws IntersectionException {
+        fillRepository();
+        manager.getTaskById(task1.getId()).setStatus(TaskStatus.IN_PROGRESS);
+        assertTrue(manager.updateTask(task1));
+        manager.getHistory().clear();
     }
 
     @Override
@@ -209,31 +231,6 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         assertFalse(epicTask2.getSubTasks().containsKey(subTask3.getId()));
         manager.removeTaskById(task1.getId());
         assertFalse(manager.getSingleTasks().containsKey(task1.getId()));
-    }
-
-    @Override
-    @Test
-    public void getHistoryStandardBehavior() throws IntersectionException {
-        List<Task> historyList = new LinkedList<>();
-        fillRepository();
-        manager.getTaskById(epicTask1.getId());
-        historyList.add(epicTask1);
-        manager.getTaskById(epicTask2.getId());
-        historyList.add(epicTask2);
-        manager.getTaskById(epicTask3.getId());
-        historyList.add(epicTask3);
-        manager.getTaskById(subTask1.getId());
-        historyList.add(subTask1);
-        manager.getTaskById(subTask2.getId());
-        historyList.add(subTask2);
-        manager.getTaskById(subTask3.getId());
-        historyList.add(subTask3);
-        manager.getTaskById(task1.getId());
-        historyList.add(task1);
-        manager.getTaskById(task2.getId());
-        historyList.add(task2);
-        assertEquals(historyList, manager.getHistory());
-
     }
 
     @Test
@@ -260,5 +257,26 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         prioritizedTasksTest.add(task1);
         prioritizedTasksTest.add(task2);
         assertEquals(prioritizedTasksTest, managers.getTaskManager().getPrioritizedTasks());
+    }
+
+    @Test
+    public void getHistory() throws IntersectionException {
+        List<Task> list = new LinkedList<>();
+        fillRepository();
+        manager.getTaskById(epicTask1.getId());
+        list.add(epicTask1);
+        manager.getTaskById(subTask2.getId());
+        list.add(subTask2);
+        manager.getTaskById(task1.getId());
+        list.add(task1);
+        manager.getTaskById(epicTask2.getId());
+        list.add(epicTask2);
+        List<Task> actualList = new LinkedList<>();
+        int length = manager.getHistory().size();
+        actualList.add(manager.getHistory().get(length-4));
+        actualList.add(manager.getHistory().get(length-3));
+        actualList.add(manager.getHistory().get(length-2));
+        actualList.add(manager.getHistory().get(length-1));
+        assertEquals(list, actualList);
     }
 }

@@ -29,8 +29,8 @@ public class Node {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        return task.equals(node.getTask()) && prevNode.equals(node.prevNode)
-                && nextNode.equals(node.nextNode);
+        return this.equals(node.getTask()) && this.prevNode.equals(node.prevNode)
+                && this.nextNode.equals(node.nextNode);
     }
 
     @Override

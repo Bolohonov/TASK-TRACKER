@@ -39,41 +39,63 @@ public class InMemoryTasksManager implements TaskManager {
         return isIDAlreadyExist;
     }
 
-    public static boolean checkIntersection(Task taskToCheck, Duration duration,
-                                            LocalDateTime startTime) {
+    private static boolean checkIntersection(Task taskToCheck, Duration duration,
+                                             LocalDateTime startTime) {
         boolean flag = true;
         if (duration != null && startTime != null) {
             LocalDateTime finishTime = startTime.plus(duration);
             for (Task task : prioritizedTasks) {
-                if (((taskToCheck instanceof SubTask && task instanceof EpicTask)
-                        && !((SubTask) taskToCheck).getEpicTask().equals(task))
-                        && task.getStartTime().isPresent() && task.getDuration().isPresent()) {
-                    LocalDateTime taskStart = task.getStartTime().get();
-                    LocalDateTime taskFinish = taskStart.plus(task.getDuration().get());
-                    if (startTime.isEqual(taskStart) || finishTime.isEqual(taskFinish)) {
-                        flag = false;
+                if (taskToCheck instanceof SubTask && task instanceof EpicTask) {
+                    if (!((SubTask) taskToCheck).getEpicTask().equals(task)
+                            && task.getStartTime().isPresent() && task.getDuration().isPresent()) {
+                        LocalDateTime taskStart = task.getStartTime().get();
+                        LocalDateTime taskFinish = taskStart.plus(task.getDuration().get());
+                        if (!checkIntersectionTimeSegment(startTime,
+                                finishTime, taskStart, taskFinish)) {
+                            flag = false;
+                        }
                     }
-                    if (startTime.isAfter(taskStart)
-                            && startTime.isBefore(taskFinish)) {
-                        flag = false;
-                    }
-                    if (startTime.isBefore(taskStart)
-                            && (finishTime.isAfter(taskStart)
-                            && finishTime.isBefore(taskFinish))) {
-                        flag = false;
-                    }
-                    if (startTime.isAfter(taskStart)
-                            && finishTime.isBefore(taskFinish)) {
-                        flag = false;
-                    }
-                    if (startTime.isAfter(taskStart) && startTime.isBefore(taskFinish)) {
-                        flag = false;
-                    }
-                    if (startTime.isBefore(taskStart) && finishTime.isAfter(taskFinish)) {
-                        flag = false;
+                } else {
+                    if (task.getStartTime().isPresent() && task.getDuration().isPresent()) {
+                        LocalDateTime taskStart = task.getStartTime().get();
+                        LocalDateTime taskFinish = taskStart.plus(task.getDuration().get());
+                        if (!checkIntersectionTimeSegment(startTime,
+                                finishTime, taskStart, taskFinish)) {
+                            flag = false;
+                        }
                     }
                 }
             }
+        }
+        return flag;
+    }
+
+    private static boolean checkIntersectionTimeSegment(LocalDateTime startTime,
+                                                        LocalDateTime finishTime,
+                                                        LocalDateTime taskStart,
+                                                        LocalDateTime taskFinish) {
+        boolean flag = true;
+        if (startTime.isEqual(taskStart) || finishTime.isEqual(taskFinish)) {
+            flag = false;
+        }
+        if (startTime.isAfter(taskStart)
+                && startTime.isBefore(taskFinish)) {
+            flag = false;
+        }
+        if (startTime.isBefore(taskStart)
+                && (finishTime.isAfter(taskStart)
+                && finishTime.isBefore(taskFinish))) {
+            flag = false;
+        }
+        if (startTime.isAfter(taskStart)
+                && finishTime.isBefore(taskFinish)) {
+            flag = false;
+        }
+        if (startTime.isAfter(taskStart) && startTime.isBefore(taskFinish)) {
+            flag = false;
+        }
+        if (startTime.isBefore(taskStart) && finishTime.isAfter(taskFinish)) {
+            flag = false;
         }
         return flag;
     }
@@ -110,10 +132,6 @@ public class InMemoryTasksManager implements TaskManager {
                 if (task instanceof EpicTask) {
                     epicTaskRepository.putTask((EpicTask) task);
                 }
-//            if (task instanceof SubTask) {
-//                SubTask subTask = (SubTask) task;
-//                subTask.getEpicTask().addSubTask(subTask);
-//            }
             } else {
                 System.out.println("Задача не создана!");
             }
@@ -129,8 +147,8 @@ public class InMemoryTasksManager implements TaskManager {
                 }
             } else if (!checkIntersection(task, task.getDuration().get(),
                     task.getStartTime().get())) {
-                throw new IntersectionException("Временной интервал занят! Задача "
-                        + task.getName() + " не сохранена");
+                throw new IntersectionException("Временной интервал занят! Задача с ID "
+                        + task.getId() + " не сохранена");
             } else {
                 System.out.println("Задача не создана!");
             }
@@ -184,6 +202,7 @@ public class InMemoryTasksManager implements TaskManager {
                 if (singleTaskRepository.getTasks().containsKey(task.getId())
                         && singleTaskRepository.getTasks().get(task.getId()).equals(task)) {
                     isUpdate = true;
+                    prioritizedTasks.add(task);
                     historyManager.add(task);
                 }
             } catch (ClassCastException exp) {
@@ -192,6 +211,7 @@ public class InMemoryTasksManager implements TaskManager {
                 if (epicTaskRepository.getTasks().containsKey(task.getId())
                         && epicTaskRepository.getTasks().get(task.getId()).equals(task)) {
                     isUpdate = true;
+                    prioritizedTasks.add(task);
                     historyManager.add(task);
                 }
             } catch (ClassCastException exp) {
@@ -200,6 +220,7 @@ public class InMemoryTasksManager implements TaskManager {
                 SubTask subTask = (SubTask) task;
                 if (getSubTaskOrNullById(subTask.getId()).equals(task)) {
                     isUpdate = true;
+                    prioritizedTasks.add(task);
                     historyManager.add(task);
                 }
             } catch (ClassCastException exp) {
@@ -222,6 +243,7 @@ public class InMemoryTasksManager implements TaskManager {
         } catch (NullPointerException exp) {
             System.out.println("В списке не было задач");
         }
+        prioritizedTasks.clear();
         historyManager.clearHistory();
     }
 
@@ -230,6 +252,7 @@ public class InMemoryTasksManager implements TaskManager {
         if (singleTaskRepository.getTasks().containsKey(id)) {
             try {
                 historyManager.remove(id);
+                prioritizedTasks.remove(singleTaskRepository.getTasks().get(id));
             } catch (NoSuchElementException e) {
                 System.out.println(e.getMessage());
             }
@@ -241,11 +264,13 @@ public class InMemoryTasksManager implements TaskManager {
             for (Integer subTaskId : subTaskMap.keySet()) {
                 try {
                     historyManager.remove(subTaskId);
+                    prioritizedTasks.remove(epic.getSubTasks().get(subTaskId));
                 } catch (NoSuchElementException e) {
                     System.out.println(e.getMessage());
                 }
             }
             historyManager.remove(id);
+            prioritizedTasks.remove(epicTaskRepository.getTasks().get(id));
             epicTaskRepository.getTasks().remove(id);
         }
         if (getSubTaskOrNullById(id) != null) {
@@ -255,6 +280,7 @@ public class InMemoryTasksManager implements TaskManager {
                 System.out.println(e.getMessage());
             }
             SubTask subTask = (SubTask) getSubTaskOrNullById(id);
+            prioritizedTasks.remove(subTask);
             subTask.getEpicTask().removeSubTask(subTask);
         }
     }

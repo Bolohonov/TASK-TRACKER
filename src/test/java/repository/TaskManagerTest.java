@@ -1,9 +1,12 @@
 package repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public interface TaskManagerTest {
 
@@ -46,16 +49,13 @@ public interface TaskManagerTest {
     void getSubTasksByEpicEmptyRepository() throws IntersectionException;
 
     @Test
-    void updateTask();
+    void updateTask() throws IntersectionException;
 
     @Test
     void removeAllTasks() throws IntersectionException;
 
     @Test
     void removeTaskByIdStandardBehavior() throws IntersectionException;
-
-    @Test
-    void getHistoryStandardBehavior() throws IntersectionException;
 
     @Test
     void shouldGetPrioritizedTasks() throws IntersectionException;

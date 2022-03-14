@@ -10,7 +10,7 @@ import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SubTaskTest extends BaseTaskManager{
+public class SubTaskTest extends BaseTaskManager {
 
     @BeforeEach
     private void clear() {
@@ -21,7 +21,8 @@ public class SubTaskTest extends BaseTaskManager{
     @Test
     void getEpicTask() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        SubTask subTask = creator.createSubTask(epic, new String[]{"TestEpicName", "TestEpicDescription"},
+        SubTask subTask = creator.createSubTask(epic,
+                new String[]{"TestEpicName", "TestEpicDescription"},
                 Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
         assertEquals(epic, subTask.getEpicTask());
 
@@ -30,7 +31,8 @@ public class SubTaskTest extends BaseTaskManager{
     @Test
     void setStatusInProgress() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        SubTask subTask = creator.createSubTask(epic, new String[]{"TestEpicName", "TestEpicDescription"},
+        SubTask subTask = creator.createSubTask(epic,
+                new String[]{"TestEpicName", "TestEpicDescription"},
                 Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
         subTask.setStatus(TaskStatus.IN_PROGRESS);
         assertEquals(TaskStatus.IN_PROGRESS, subTask.getStatus());
@@ -39,7 +41,8 @@ public class SubTaskTest extends BaseTaskManager{
     @Test
     void setStatusDone() throws IntersectionException {
         EpicTask epic = createEpicTask();
-        SubTask subTask = creator.createSubTask(epic, new String[]{"TestEpicName", "TestEpicDescription"},
+        SubTask subTask = creator.createSubTask(epic,
+                new String[]{"TestEpicName", "TestEpicDescription"},
                 Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
         subTask.setStatus(TaskStatus.DONE);
         assertEquals(TaskStatus.DONE, subTask.getStatus());

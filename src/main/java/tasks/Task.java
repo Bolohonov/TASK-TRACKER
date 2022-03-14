@@ -101,10 +101,10 @@ public abstract class Task {
     public String toString(Task task) {
         String durationOrNull = null;
         String startTimeOrNull = null;
-        if(getDuration().isPresent()) {
+        if (getDuration().isPresent()) {
             durationOrNull = getDuration().get().toString();
         }
-        if(getStartTime().isPresent()) {
+        if (getStartTime().isPresent()) {
             startTimeOrNull = getStartTime().get().toString();
         }
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus()
@@ -129,9 +129,5 @@ public abstract class Task {
         } else {
             return startTime;
         }
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = Optional.of(startTime);
     }
 }

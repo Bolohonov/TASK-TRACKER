@@ -11,8 +11,4 @@ public enum TaskType {
     TaskType(String taskType) {
         this.taskType = taskType;
     }
-
-    public String getType() {
-        return this.taskType;
-    }
 }

@@ -18,12 +18,18 @@ public class InMemoryHistoryManager implements HistoryManager {
         try {
             taskManagerHistory.remove(id);
         } catch (NoSuchElementException exp) {
+            exp.getMessage();
         }
     }
 
     @Override
     public List<Task> getHistory() {
-        return taskManagerHistory.getTasks();
+        if (taskManagerHistory.getTasks() == null) {
+            List<Task> list = new ArrayList();
+            return list;
+        } else {
+            return taskManagerHistory.getTasks();
+        }
     }
 
     @Override

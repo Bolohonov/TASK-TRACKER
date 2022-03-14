@@ -20,19 +20,26 @@ class EpicTaskTest extends BaseTaskManager{
 
     @Test
     void getStatusWhenNoSubTasks() {
-        EpicTask epic = super.createEpicTask();
+        EpicTask epic = createEpicTask();
         assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 
     @Test
     void getStatusWhenAllSubTasksHasStatusNew() throws IntersectionException {
-        EpicTask epic = createEpicTask();
-        creator.createSubTask(epic, new String[]{"name1", "desc1"},
-                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")));
-        creator.createSubTask(epic, new String[]{"name1", "desc1"},
-                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
-        creator.createSubTask(epic, new String[]{"name1", "desc1"},
-                Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(4));
+        EpicTask epic = new EpicTask("TEST_EPIC_NAME",
+                "TEST_EPIC_Description",1200);
+        creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 10, 0, 00));
+        creator.createSubTask(epic,
+                new String[]{"TestNameSub2", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 14, 0, 00));
+        creator.createSubTask(epic,
+                new String[]{"TestNameSub3", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 17, 0, 00));
         assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 

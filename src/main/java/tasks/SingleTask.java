@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
-public class SingleTask extends Task{
+public class SingleTask extends Task {
 
     public SingleTask(String name, String description, int id,
                       Optional<Duration> duration, Optional<LocalDateTime> startTime) {
@@ -14,14 +14,25 @@ public class SingleTask extends Task{
 
     @Override
     public String toString() {
-        return "Задача{" +
-                "Имя='" + super.getName() + '\'' +
-                ", Описание='" + super.getDescription() + '\'' +
-                ", ID=" + super.getId() +
-                ", Статус=" + super.getStatus() +
-                ", Продолжительность=" + super.getDuration().get() +
-                ", Время начала=" + super.getStartTime().get() +
-                '}';
+        if (super.getDuration().isPresent() && super.getStartTime().isPresent()) {
+            return "Задача{" +
+                    "Имя='" + super.getName() + '\'' +
+                    ", Описание='" + super.getDescription() + '\'' +
+                    ", ID=" + super.getId() +
+                    ", Статус=" + getStatus() +
+                    ", Продолжительность=" + super.getDuration().get() +
+                    ", Время начала=" + super.getStartTime().get() +
+                    '}';
+        } else {
+            return "Задача{" +
+                    "Имя='" + super.getName() + '\'' +
+                    ", Описание='" + super.getDescription() + '\'' +
+                    ", ID=" + super.getId() +
+                    ", Статус=" + getStatus() +
+                    ", Продолжительность=" + super.getDuration() +
+                    ", Время начала=" + super.getStartTime() +
+                    '}';
+        }
     }
 
     @Override
@@ -29,7 +40,7 @@ public class SingleTask extends Task{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SingleTask task = (SingleTask) o;
-        return  super.getId() == task.getId() &&
+        return super.getId() == task.getId() &&
                 Objects.equals(super.getName(), task.getName()) &&
                 Objects.equals(super.getDescription(), task.getDescription()) &&
                 Objects.equals(super.getStatus(), task.getStatus()) &&

@@ -41,14 +41,25 @@ public class EpicTask extends Task {
 
     @Override
     public String toString() {
-        return "Эпик{" +
-                "Имя='" + super.getName() + '\'' +
-                ", Описание='" + super.getDescription() + '\'' +
-                ", ID=" + super.getId() +
-                ", Статус=" + getStatus() +
-                ", Продолжительность=" + super.getDuration().get() +
-                ", Время начала=" + super.getStartTime().get() +
-                '}';
+        if (super.getDuration().isPresent() && super.getStartTime().isPresent()) {
+            return "Эпик{" +
+                    "Имя='" + super.getName() + '\'' +
+                    ", Описание='" + super.getDescription() + '\'' +
+                    ", ID=" + super.getId() +
+                    ", Статус=" + getStatus() +
+                    ", Продолжительность=" + super.getDuration().get() +
+                    ", Время начала=" + super.getStartTime().get() +
+                    '}';
+        } else {
+            return "Эпик{" +
+                    "Имя='" + super.getName() + '\'' +
+                    ", Описание='" + super.getDescription() + '\'' +
+                    ", ID=" + super.getId() +
+                    ", Статус=" + getStatus() +
+                    ", Продолжительность=" + super.getDuration() +
+                    ", Время начала=" + super.getStartTime() +
+                    '}';
+        }
     }
 
     @Override
