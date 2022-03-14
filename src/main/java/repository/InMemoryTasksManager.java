@@ -23,7 +23,6 @@ public class InMemoryTasksManager implements TaskManager {
                     .thenComparingInt(Task::getId));
 
     private static int id;
-    private Task obj;
 
     private static boolean checkIdNumber(int id) {
         boolean isIDAlreadyExist = false;
@@ -136,8 +135,8 @@ public class InMemoryTasksManager implements TaskManager {
                 System.out.println("Задача не создана!");
             }
         } else {
-            if ((!task.getDuration().isPresent()
-                    || !task.getStartTime().isPresent()) && task != null) {
+            if (task != null && (!task.getDuration().isPresent()
+                    || !task.getStartTime().isPresent())) {
                 prioritizedTasks.add(task);
                 if (task instanceof SingleTask) {
                     singleTaskRepository.putTask((SingleTask) task);
@@ -157,7 +156,7 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        obj = null;
+        Task obj = null;
         if (singleTaskRepository.getTasks().containsKey(id)) {
             obj = singleTaskRepository.getTasks().get(id);
             historyManager.add(obj);

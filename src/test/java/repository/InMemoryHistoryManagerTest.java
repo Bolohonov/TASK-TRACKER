@@ -15,35 +15,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
 
-    Managers managers = new Managers();
-    TaskCreator creator = managers.getFactory();
-    TaskManager manager = managers.getTaskManager();
-    HistoryManager historyManager = new InMemoryHistoryManager();
+    private static final Managers managers = new Managers();
+    private static final TaskCreator creator = managers.getFactory();
+    private static final TaskManager manager = managers.getTaskManager();
+    private HistoryManager historyManager = new InMemoryHistoryManager();
+    private static final List<Task> list = new LinkedList<>();
 
-    List<Task> list = new LinkedList<>();
-    EpicTask epicTask1 = creator.createEpicTask(
+    private EpicTask epicTask1 = creator.createEpicTask(
             new String[]{"TestEpicName", "TestDescription"});
-    EpicTask epicTask2 = creator.createEpicTask(
+    private EpicTask epicTask2 = creator.createEpicTask(
             new String[]{"TestEpicName2", "TestDescription"});
-    EpicTask epicTask3 = creator.createEpicTask(
+    private EpicTask epicTask3 = creator.createEpicTask(
             new String[]{"TestEpicName3", "TestDescription3"});
-    SubTask subTask1 = creator.createSubTask(epicTask1,
+    private SubTask subTask1 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub1", "TestDescriptionSub1"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 7, 10, 0, 00));
-    SubTask subTask2 = creator.createSubTask(epicTask1,
+    private SubTask subTask2 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub2", "TestDescriptionSub1"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 8, 14, 0, 00));
-    SubTask subTask3 = creator.createSubTask(epicTask2,
+    private SubTask subTask3 = creator.createSubTask(epicTask2,
             new String[]{"TestNameSub3", "TestDescriptionSub1"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 8, 17, 0, 00));
-    SingleTask task1 = creator.createSingleTask(
+    private SingleTask task1 = creator.createSingleTask(
             new String[]{"TestName1", "TestDescription"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 11, 21, 0, 00));
-    SingleTask task2 = creator.createSingleTask(
+    private SingleTask task2 = creator.createSingleTask(
             new String[]{"TestName2", "TestDescription"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 12, 00, 0, 00));

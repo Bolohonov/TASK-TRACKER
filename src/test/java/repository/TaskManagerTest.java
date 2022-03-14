@@ -10,11 +10,6 @@ import java.nio.file.Paths;
 
 public interface TaskManagerTest {
 
-    Managers managers = new Managers();
-    TaskManager manager = managers.getTaskManager();
-    TaskManager managerToFile = managers.getTaskManagerToFile();
-    TaskCreator creator = managers.getFactory();
-
     @Test
     void putTaskStandardBehavior() throws IntersectionException, IOException;
 
