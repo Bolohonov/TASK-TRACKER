@@ -81,7 +81,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время чтения файла.");
         } catch (IntersectionException e) {
-            e.getMessage();
+            System.out.println("Совпадение временного интервала во время загрузки из файла!");;
         }
     }
 
