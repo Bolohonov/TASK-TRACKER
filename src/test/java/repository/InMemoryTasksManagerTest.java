@@ -28,6 +28,11 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     protected static final Path TEST_PUT_TASK_STANDARD_BEHAVIOR
             = Paths.get("./resources/testPutStandardBehavior.csv");
 
+    protected static final Managers managers = new Managers();
+    protected static final TaskManager manager = managers.getTaskManager();
+    protected static final TaskManager managerToFile = managers.getTaskManagerToFile();
+    protected static final TaskCreator creator = managers.getFactory();
+
     @BeforeEach
     private void clear() throws IOException {
         manager.removeAllTasks();

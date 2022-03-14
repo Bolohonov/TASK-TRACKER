@@ -3,10 +3,7 @@ package repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public interface TaskManagerTest {
 
@@ -53,5 +50,5 @@ public interface TaskManagerTest {
     void removeTaskByIdStandardBehavior() throws IntersectionException;
 
     @Test
-    void shouldGetPrioritizedTasks() throws IntersectionException;
+    void shouldGetPrioritizedTasks() throws IntersectionException, ManagerSaveException;
 }

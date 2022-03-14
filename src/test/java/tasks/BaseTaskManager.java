@@ -11,7 +11,7 @@ import java.time.ZoneId;
 
 public class BaseTaskManager {
 
-    private static final Managers managers = new Managers();
+    protected static final Managers managers = new Managers();
     protected static final TaskCreator creator = managers.getFactory();
     protected static final TaskManager manager = managers.getTaskManager();
 

@@ -21,29 +21,29 @@ class InMemoryHistoryManagerTest {
     private HistoryManager historyManager = new InMemoryHistoryManager();
     private static final List<Task> list = new LinkedList<>();
 
-    private EpicTask epicTask1 = creator.createEpicTask(
+    EpicTask epicTask1 = creator.createEpicTask(
             new String[]{"TestEpicName", "TestDescription"});
-    private EpicTask epicTask2 = creator.createEpicTask(
+    EpicTask epicTask2 = creator.createEpicTask(
             new String[]{"TestEpicName2", "TestDescription"});
-    private EpicTask epicTask3 = creator.createEpicTask(
+    EpicTask epicTask3 = creator.createEpicTask(
             new String[]{"TestEpicName3", "TestDescription3"});
-    private SubTask subTask1 = creator.createSubTask(epicTask1,
+    SubTask subTask1 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub1", "TestDescriptionSub1"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 7, 10, 0, 00));
-    private SubTask subTask2 = creator.createSubTask(epicTask1,
+    SubTask subTask2 = creator.createSubTask(epicTask1,
             new String[]{"TestNameSub2", "TestDescriptionSub1"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 8, 14, 0, 00));
-    private SubTask subTask3 = creator.createSubTask(epicTask2,
+    SubTask subTask3 = creator.createSubTask(epicTask2,
             new String[]{"TestNameSub3", "TestDescriptionSub1"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 8, 17, 0, 00));
-    private SingleTask task1 = creator.createSingleTask(
+    SingleTask task1 = creator.createSingleTask(
             new String[]{"TestName1", "TestDescription"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 11, 21, 0, 00));
-    private SingleTask task2 = creator.createSingleTask(
+    SingleTask task2 = creator.createSingleTask(
             new String[]{"TestName2", "TestDescription"},
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 12, 00, 0, 00));
