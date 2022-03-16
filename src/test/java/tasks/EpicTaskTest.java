@@ -99,9 +99,86 @@ class EpicTaskTest extends BaseTaskManager{
                 new String[]{"TestNameSub1", "TestDescriptionSub1"},
                 Duration.ofHours(2), LocalDateTime
                         .of(2022, 01, 3, 10, 0, 00));
-        System.out.println(sub.getDuration());
-        dur.plus(sub.getDuration().get());
-        System.out.println(dur);
         assertEquals(Optional.of(Duration.ofHours(2)), epic.getDuration());
+    }
+
+    @Test
+    void getDurationWhenTwoSubTasks() throws IntersectionException {
+        EpicTask epic = new EpicTask("TEST_EPIC_NAME",
+                "TEST_EPIC_Description",1200);
+        SubTask sub = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 10, 0, 00));
+        SubTask sub2 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(5), LocalDateTime
+                        .of(2022, 01, 3, 13, 0, 00));
+        assertEquals(Optional.of(Duration.ofHours(7)), epic.getDuration());
+    }
+
+    @Test
+    void getStartTimeWhenNoSubTasks() {
+        EpicTask epic = createEpicTask();
+        assertEquals(Optional.empty(), epic.getStartTime());
+    }
+
+    @Test
+    void getStartTimeWhenOneSubTask() throws IntersectionException {
+        EpicTask epic = new EpicTask("TEST_EPIC_NAME",
+                "TEST_EPIC_Description",1200);
+        SubTask sub = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 10, 0, 00));
+        assertEquals(Optional.of(LocalDateTime
+                .of(2022, 01, 3, 10, 0, 00)),
+                epic.getStartTime());
+    }
+
+    @Test
+    void getStartTimeStartTimeWhenTwoSubTasks() throws IntersectionException {
+        EpicTask epic = new EpicTask("TEST_EPIC_NAME",
+                "TEST_EPIC_Description",1200);
+        SubTask sub = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 10, 0, 00));
+        SubTask sub2 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(5), LocalDateTime
+                        .of(2022, 01, 2, 13, 0, 00));
+        assertEquals(Optional.of(LocalDateTime
+                        .of(2022, 01, 2, 13, 0, 00)),
+                epic.getStartTime());
+    }
+
+    @Test
+    void getStartTimeStartTimeWhenManyoSubTasks() throws IntersectionException {
+        EpicTask epic = new EpicTask("TEST_EPIC_NAME",
+                "TEST_EPIC_Description",1200);
+        SubTask sub = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 10, 0, 00));
+        SubTask sub2 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(5), LocalDateTime
+                        .of(2022, 01, 2, 13, 0, 00));
+        SubTask sub3 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(1), LocalDateTime
+                        .of(2022, 01, 2, 18, 0, 10));
+        SubTask sub4 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofSeconds(10), LocalDateTime
+                        .of(2022, 01, 1, 10, 0, 10));
+        SubTask sub5 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(1), LocalDateTime
+                        .of(2022, 01, 1, 10, 0, 21));
+        assertEquals(Optional.of(LocalDateTime
+                        .of(2022, 01, 1, 10, 0, 10)),
+                epic.getStartTime());
     }
 }

@@ -1,6 +1,6 @@
 id,type,name,status,description,duration,startTime,epic
-1001,EPIC,TestEpicName,NEW,TestEpicDescription,PT0S,2022-03-10T01:00:10,
-1002,EPIC,TestEpicName2,NEW,TestEpicDescription2,PT0S,2022-03-10T08:00:10,
+1001,EPIC,TestEpicName,NEW,TestEpicDescription,PT3H,2022-03-10T01:00:10,
+1002,EPIC,TestEpicName2,NEW,TestEpicDescription2,PT2H,2022-03-10T08:00:10,
 1003,EPIC,TestEpicName3,NEW,TestEpicDescription3,null,null,
 1004,SUBTASK,TestNameSub1,NEW,TestDescriptionSub1,PT1H,2022-03-10T01:00:10,1001
 1005,SUBTASK,TestNameSub1,NEW,TestDescriptionSub1,PT2H,2022-03-10T03:00:10,1001

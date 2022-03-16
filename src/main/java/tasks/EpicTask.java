@@ -6,6 +6,7 @@ import repository.TaskStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EpicTask extends Task {
 
@@ -123,18 +124,14 @@ public class EpicTask extends Task {
 
     @Override
     public Optional<Duration> getDuration() {
+        Duration duration = Duration.ZERO;
         if (subTasksMap == null || subTasksMap.isEmpty()) {
             return Optional.empty();
         } else {
-            List<Duration> list = null;
-            Duration
             for (SubTask sub : subTasksMap.values()) {
                 if (sub.getDuration().isPresent()) {
-                    list.add(sub.getDuration().get());
+                    duration = duration.plus(sub.getDuration().get());
                 }
-            }
-            for (Duration dur : list) {
-                Duration duration = dur.plus(dur);
             }
             return Optional.of(duration);
         }
@@ -144,11 +141,9 @@ public class EpicTask extends Task {
     public Optional<LocalDateTime> getStartTime() {
         LocalDateTime startTime = null;
         if (subTasksMap != null && !subTasksMap.isEmpty()) {
-            if (subTasksMap.entrySet().stream().findFirst()
-                    .get().getValue().getStartTime().isPresent()) {
-                startTime = subTasksMap.entrySet().stream().findFirst()
-                        .get().getValue().getStartTime().get();
-            }
+            return subTasksMap.values().stream()
+                    .sorted(Comparator.comparing(o -> o.getStartTime().get()))
+                    .collect(Collectors.toCollection(LinkedList::new)).get(0).getStartTime();
         }
         if (startTime == null) {
             return Optional.empty();

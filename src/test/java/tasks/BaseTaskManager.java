@@ -120,7 +120,7 @@ public class BaseTaskManager {
 
     @Test
     void getStatus() {
-        assertEquals(TaskStatus.IN_PROGRESS, epicTask2.getStatus());
+        assertEquals(TaskStatus.NEW, epicTask2.getStatus());
         assertEquals(TaskStatus.NEW, task1.getStatus());
         assertEquals(TaskStatus.NEW, subTask1.getStatus());
     }
