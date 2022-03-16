@@ -112,7 +112,7 @@ public abstract class Task {
     }
 
     public Optional<Duration> getDuration() {
-        if (duration == null) {
+        if (!duration.isPresent()) {
             return Optional.empty();
         } else {
             return duration;
@@ -124,7 +124,7 @@ public abstract class Task {
     }
 
     public Optional<LocalDateTime> getStartTime() {
-        if (startTime == null) {
+        if (!startTime.isPresent()) {
             return Optional.empty();
         } else {
             return startTime;

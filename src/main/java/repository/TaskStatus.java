@@ -10,8 +10,4 @@ public enum TaskStatus {
     TaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
     }
-
-    public String getStatus() {
-        return this.taskStatus;
-    }
 }

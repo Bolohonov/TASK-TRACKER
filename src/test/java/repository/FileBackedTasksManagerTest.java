@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
         implements TaskManagerTest {
 
+    protected static final Path TEST_PUT_TASK_STANDARD_BEHAVIOR
+            = Paths.get("./resources/testPutStandardBehavior.csv");
+
     FileBackedTasksManagerTest() throws IntersectionException {
     }
 
@@ -33,23 +36,11 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
         }
     }
 
-    private void fillRepository() throws IntersectionException {
-        managerToFile.putTask(epicTask1);
-        managerToFile.putTask(epicTask2);
-        managerToFile.putTask(epicTask3);
-        managerToFile.putTask(subTask1);
-        managerToFile.putTask(subTask2);
-        managerToFile.putTask(subTask3);
-        managerToFile.putTask(task1);
-        managerToFile.putTask(task2);
-    }
-
     private void fillRepositoryWithTestId() throws IntersectionException {
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);
         EpicTask epicTask2 = new EpicTask("TestEpicName2",
                 "TestEpicDescription2", 1002);
-        ;
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1003);
         SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",

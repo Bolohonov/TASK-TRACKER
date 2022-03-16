@@ -25,8 +25,6 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     protected static final TaskManager managerToFile = managers.getTaskManagerToFile();
     protected static final TaskCreator creator = managers.getFactory();
     protected static final Path REPOSITORY = Paths.get("./resources/data.csv");
-    protected static final Path TEST_PUT_TASK_STANDARD_BEHAVIOR
-            = Paths.get("./resources/testPutStandardBehavior.csv");
 
     @BeforeEach
     private void clear() throws IOException {
@@ -66,7 +64,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 4, 00, 0, 00));
 
-    private void fillRepository() throws IntersectionException {
+    protected void fillRepository() throws IntersectionException {
         manager.putTask(epicTask1);
         manager.putTask(epicTask2);
         manager.putTask(epicTask3);

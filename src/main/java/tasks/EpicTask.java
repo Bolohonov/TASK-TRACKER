@@ -126,11 +126,15 @@ public class EpicTask extends Task {
         if (subTasksMap == null || subTasksMap.isEmpty()) {
             return Optional.empty();
         } else {
-            Duration duration = Duration.ofHours(0);
+            List<Duration> list = null;
+            Duration
             for (SubTask sub : subTasksMap.values()) {
                 if (sub.getDuration().isPresent()) {
-                    duration.plus(sub.getDuration().get());
+                    list.add(sub.getDuration().get());
                 }
+            }
+            for (Duration dur : list) {
+                Duration duration = dur.plus(dur);
             }
             return Optional.of(duration);
         }
