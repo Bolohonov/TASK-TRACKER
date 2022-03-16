@@ -186,13 +186,34 @@ public class BaseTaskManager {
 
     @Test
     void getDuration() {
+        assertEquals(Optional.of(Duration.ofHours(3)), epicTask1.getDuration());
         assertEquals(Optional.of(Duration.ofHours(2)), task1.getDuration());
         assertEquals(Optional.of(Duration.ofHours(1)), subTask1.getDuration());
     }
 
-    @Test
-    void setDuration() {
-    }
+//    @Test
+//    void setDuration() {
+//        EpicTask epicTask1 = new EpicTask("TestEpicName",
+//                "TestEpicDescription", 1001);
+//        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+//                "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
+//                Optional.of(LocalDateTime
+//                        .of(2022, 01, 10, 1, 00, 10)));
+//        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+//                "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
+//                Optional.of(LocalDateTime
+//                        .of(2022, 01, 10, 3, 00, 10)));
+//        SingleTask task1 = new SingleTask("TestSingleName",
+//                "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
+//                Optional.of(LocalDateTime
+//                        .of(2022, 01, 13, 7, 00, 10)));
+//        epicTask1.setStatus(TaskStatus.DONE);
+//        subTask1.setStatus(TaskStatus.DONE);
+//        task1.setStatus(TaskStatus.DONE);
+//        assertEquals(TaskStatus.IN_PROGRESS, epicTask1.getStatus());
+//        assertEquals(TaskStatus.DONE, subTask1.getStatus());
+//        assertEquals(TaskStatus.DONE, task1.getStatus());
+//    }
 
     @Test
     void getStartTime() {
