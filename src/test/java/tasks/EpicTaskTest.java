@@ -154,7 +154,7 @@ class EpicTaskTest extends BaseTaskManager{
     }
 
     @Test
-    void getStartTimeStartTimeWhenManyoSubTasks() throws IntersectionException {
+    void getStartTimeStartTimeWhenManySubTasks() throws IntersectionException {
         EpicTask epic = new EpicTask("TEST_EPIC_NAME",
                 "TEST_EPIC_Description",1200);
         SubTask sub = creator.createSubTask(epic,

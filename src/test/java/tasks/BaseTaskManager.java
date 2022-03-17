@@ -191,31 +191,65 @@ public class BaseTaskManager {
         assertEquals(Optional.of(Duration.ofHours(1)), subTask1.getDuration());
     }
 
-//    @Test
-//    void setDuration() {
-//        EpicTask epicTask1 = new EpicTask("TestEpicName",
-//                "TestEpicDescription", 1001);
-//        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
-//                "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
-//                Optional.of(LocalDateTime
-//                        .of(2022, 01, 10, 1, 00, 10)));
-//        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
-//                "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
-//                Optional.of(LocalDateTime
-//                        .of(2022, 01, 10, 3, 00, 10)));
-//        SingleTask task1 = new SingleTask("TestSingleName",
-//                "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
-//                Optional.of(LocalDateTime
-//                        .of(2022, 01, 13, 7, 00, 10)));
-//        epicTask1.setStatus(TaskStatus.DONE);
-//        subTask1.setStatus(TaskStatus.DONE);
-//        task1.setStatus(TaskStatus.DONE);
-//        assertEquals(TaskStatus.IN_PROGRESS, epicTask1.getStatus());
-//        assertEquals(TaskStatus.DONE, subTask1.getStatus());
-//        assertEquals(TaskStatus.DONE, task1.getStatus());
-//    }
+    @Test
+    void setDuration() throws IntersectionException {
+        EpicTask epic = new EpicTask("TEST_EPIC_NAME",
+                "TEST_EPIC_Description",1200);
+        SubTask sub = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 10, 0, 00));
+        SubTask sub2 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(5), LocalDateTime
+                        .of(2022, 01, 7, 13, 0, 00));
+        epic.setDuration(Duration.ofHours(2));
+        sub.setDuration(Duration.ofHours(5));
+        sub2.setDuration(Duration.ofHours(4));
+        assertEquals(Duration.ofHours(9), epic.getDuration().get());
+        assertEquals(Duration.ofHours(5), sub.getDuration().get());
+        assertEquals(Duration.ofHours(4), sub2.getDuration().get());
+    }
 
     @Test
     void getStartTime() {
+        assertEquals(LocalDateTime
+                .of(2022, 01, 10, 1, 00, 10),
+                epicTask1.getStartTime().get());
+        assertEquals(LocalDateTime
+                .of(2022, 01, 13, 7, 00, 10),
+                task1.getStartTime().get());
+        assertEquals(LocalDateTime
+                .of(2022, 01, 10, 1, 00, 10),
+                subTask1.getStartTime().get());
+    }
+
+    @Test
+    void setStartTime() throws IntersectionException {
+        EpicTask epic = new EpicTask("TEST_EPIC_NAME",
+                "TEST_EPIC_Description",1200);
+        SubTask sub = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(2), LocalDateTime
+                        .of(2022, 01, 3, 10, 0, 00));
+        SubTask sub2 = creator.createSubTask(epic,
+                new String[]{"TestNameSub1", "TestDescriptionSub1"},
+                Duration.ofHours(5), LocalDateTime
+                        .of(2022, 01, 7, 13, 0, 00));
+        epic.setStartTime(LocalDateTime
+                .of(2022, 01, 10, 10, 0, 00));
+        sub.setStartTime(LocalDateTime
+                .of(2022, 01, 11, 10, 0, 00));
+        sub2.setStartTime(LocalDateTime
+                .of(2022, 01, 11, 13, 0, 00));
+        assertEquals(LocalDateTime
+                .of(2022, 01, 11, 10, 0, 00),
+                epic.getStartTime().get());
+        assertEquals(LocalDateTime
+                .of(2022, 01, 11, 10, 0, 00),
+                sub.getStartTime().get());
+        assertEquals(LocalDateTime
+                .of(2022, 01, 11, 13, 0, 00),
+                sub2.getStartTime().get());
     }
 }

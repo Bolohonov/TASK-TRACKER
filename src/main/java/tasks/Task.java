@@ -123,6 +123,10 @@ public abstract class Task {
         this.duration = Optional.of(duration);
     }
 
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = Optional.of(startTime);
+    }
+
     public Optional<LocalDateTime> getStartTime() {
         if (!startTime.isPresent()) {
             return Optional.empty();

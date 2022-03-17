@@ -118,6 +118,11 @@ public class EpicTask extends Task {
     }
 
     @Override
+    public void setStartTime(LocalDateTime startTime) {
+        System.out.println("Статус не подлежит изменению");
+    }
+
+    @Override
     public TaskType getType() {
         return TaskType.EPIC;
     }
