@@ -1,4 +1,4 @@
-# java-sprint5-hw
+# java-sprint6-hw
 ## Трекер задач
 
 Fifth sprint homework
