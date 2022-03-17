@@ -192,6 +192,13 @@ public class BaseTaskManager {
     }
 
     @Test
+    void getDurationWhenNull() {
+        EpicTask epicTask1 = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1001);
+        assertEquals(Optional.empty(), epicTask1.getDuration());
+    }
+
+    @Test
     void setDuration() throws IntersectionException {
         EpicTask epic = new EpicTask("TEST_EPIC_NAME",
                 "TEST_EPIC_Description",1200);
@@ -222,6 +229,13 @@ public class BaseTaskManager {
         assertEquals(LocalDateTime
                 .of(2022, 01, 10, 1, 00, 10),
                 subTask1.getStartTime().get());
+    }
+
+    @Test
+    void getStartTimeWhenNull() {
+        EpicTask epicTask1 = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1001);
+        assertEquals(Optional.empty(), epicTask1.getStartTime());
     }
 
     @Test

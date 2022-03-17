@@ -214,6 +214,14 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
+    public void updateTaskWithWrongId() throws IntersectionException {
+        fillRepository();
+        manager.getTaskById(task1.getId()).setStatus(TaskStatus.IN_PROGRESS);
+        assertFalse(manager.updateTask(manager.getTaskById(1515)));
+    }
+
+    @Override
+    @Test
     public void removeAllTasks() throws IntersectionException {
         Repository<EpicTask> epicTaskRepository = new Repository<>();
         Repository<SingleTask> singleTaskRepository = new Repository<>();

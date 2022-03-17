@@ -22,6 +22,8 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     protected static final Path TEST_PUT_TASK_STANDARD_BEHAVIOR
             = Paths.get("./resources/testPutStandardBehavior.csv");
+    protected static final Path EMPTY_FILE
+            = Paths.get("./resources/empty.csv");
 
     FileBackedTasksManagerTest() throws IntersectionException {
     }
@@ -83,6 +85,15 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
         FileReader input2
                 = new FileReader(TEST_PUT_TASK_STANDARD_BEHAVIOR.toFile());
         assertTrue(IOUtils.contentEqualsIgnoreEOL(input1, input2));
+    }
+
+    @Test
+    public void putTaskEmptyFile() {
+        TaskManager emptyToFile =
+                new FileBackedTasksManager(EMPTY_FILE.toFile());
+        managerToFile.removeAllTasks();
+        assertEquals(emptyToFile.getSingleTasks(), managerToFile.getSingleTasks());
+        assertEquals(emptyToFile.getEpicTasks(), managerToFile.getEpicTasks());
     }
 
     @Override
@@ -293,5 +304,45 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
         testRep.putTask(task1);
         testRep.putTask(task2);
         assertEquals(testRep.getTasks(), testManager.getSingleTasks());
+    }
+
+    @Test
+    public void shouldFillHistoryFromFile() throws IntersectionException {
+        FileBackedTasksManager testManager
+                = new FileBackedTasksManager(Paths
+                .get("./resources/shouldFillHistoryFromFile.csv").toFile());
+        List<Task> actualList = new LinkedList<>();
+        for (int i=5; i>0; i--) {
+            actualList.add(testManager.getHistory().get(testManager.getHistory().size()-i));
+        }
+
+        EpicTask epicTask1 = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1001);
+        EpicTask epicTask3 = new EpicTask("TestEpicName3",
+                "TestEpicDescription3", 1003);
+        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+                "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
+                Optional.of(LocalDateTime
+                        .of(2022, 03, 12, 1, 00, 10)));
+        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+                "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2022, 03, 12, 3, 00, 10)));
+        SingleTask task1 = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2022, 03, 13, 7, 00, 10)));
+        SingleTask task2 = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1008, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2022, 03, 13, 10, 00, 10)));
+
+        List<Task> list = new LinkedList<>();
+        list.add(task2);
+        list.add(task1);
+        list.add(epicTask1);
+        list.add(subTask2);
+        list.add(epicTask3);
+        assertEquals(list, actualList);
     }
 }

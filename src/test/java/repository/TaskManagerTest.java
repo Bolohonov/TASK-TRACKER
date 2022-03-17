@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public interface TaskManagerTest {
 
     @Test
@@ -42,6 +44,9 @@ public interface TaskManagerTest {
 
     @Test
     void updateTask() throws IntersectionException;
+
+    @Test
+    void updateTaskWithWrongId() throws IntersectionException;
 
     @Test
     void removeAllTasks() throws IntersectionException;

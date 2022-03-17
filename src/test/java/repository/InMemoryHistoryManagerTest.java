@@ -109,6 +109,7 @@ class InMemoryHistoryManagerTest {
         assertEquals(list, historyManager.getHistory());
     }
 
+
     @Test
     void removeStandardBehavior() throws IntersectionException {
         fillHistory();
@@ -119,6 +120,33 @@ class InMemoryHistoryManagerTest {
         list.remove(task1);
         historyManager.remove(subTask1.getId());
         list.remove(subTask1);
+        assertEquals(list, historyManager.getHistory());
+    }
+
+    @Test
+    void removeFirstElement() throws IntersectionException {
+        fillHistory();
+        fillLinkedList();
+        list.remove(epicTask1);
+        historyManager.remove(epicTask1.getId());
+        assertEquals(list, historyManager.getHistory());
+    }
+
+    @Test
+    void removeLastElement() throws IntersectionException {
+        fillHistory();
+        fillLinkedList();
+        list.remove(task2);
+        historyManager.remove(task2.getId());
+        assertEquals(list, historyManager.getHistory());
+    }
+
+    @Test
+    void removeHalfElement() throws IntersectionException {
+        fillHistory();
+        fillLinkedList();
+        list.remove(subTask2);
+        historyManager.remove(subTask2.getId());
         assertEquals(list, historyManager.getHistory());
     }
 
@@ -149,7 +177,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void geHistoryStandardBehavior() throws IntersectionException {
+    void getHistoryStandardBehavior() throws IntersectionException {
         fillHistory();
         fillLinkedList();
         assertEquals(list, historyManager.getHistory());
