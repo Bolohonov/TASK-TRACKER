@@ -36,7 +36,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                     .collect(Collectors
                             .toMap(Map.Entry::getKey,
                                     Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-            ;
             map.values().stream().forEach(o -> {
                 try {
                     fileWriter.append(o.toString(o) + System.lineSeparator());
