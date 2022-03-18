@@ -12,7 +12,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaseTaskManager {
 
-    protected static final Managers managers = new Managers();
+    protected static Managers managers;
+
+    static {
+        try {
+            managers = new Managers();
+        } catch (ManagerSaveException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected static final TaskCreator creator = managers.getFactory();
     protected static final TaskManager manager = managers.getTaskManager();
 

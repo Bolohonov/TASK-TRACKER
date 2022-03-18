@@ -20,7 +20,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTasksManagerTest implements TaskManagerTest {
 
-    protected static final Managers managers = new Managers();
+    protected static Managers managers;
+
+    static {
+        try {
+            managers = new Managers();
+        } catch (ManagerSaveException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected static final TaskManager manager = managers.getTaskManager();
     protected static final TaskManager managerToFile = managers.getTaskManagerToFile();
     protected static final TaskCreator creator = managers.getFactory();

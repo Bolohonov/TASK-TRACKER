@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class EpicTaskTest extends BaseTaskManager{
 
     @BeforeEach
-    private void clear() {
+    private void clear() throws ManagerSaveException {
         manager.removeAllTasks();
         manager.getPrioritizedTasks().clear();
     }

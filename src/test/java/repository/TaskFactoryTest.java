@@ -13,7 +13,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskFactoryTest implements TaskCreatorTest{
 
-    protected static final Managers managers = new Managers();
+    protected static Managers managers;
+
+    static {
+        try {
+            managers = new Managers();
+        } catch (ManagerSaveException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected static final TaskCreator creator = managers.getFactory();
 
     @Test

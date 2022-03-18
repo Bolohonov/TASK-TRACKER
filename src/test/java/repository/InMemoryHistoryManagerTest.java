@@ -15,7 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
 
-    private static final Managers managers = new Managers();
+    private static Managers managers;
+
+    static {
+        try {
+            managers = new Managers();
+        } catch (ManagerSaveException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private static final TaskCreator creator = managers.getFactory();
     private static final TaskManager manager = managers.getTaskManager();
     private HistoryManager historyManager = new InMemoryHistoryManager();
