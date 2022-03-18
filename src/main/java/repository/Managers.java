@@ -9,6 +9,9 @@ public class Managers {
     private final TaskCreator factory = new TaskFactory();
     private final TaskUpdater updater = new InMemoryTaskUpdater();
 
+    public Managers() throws ManagerSaveException {
+    }
+
     public TaskManager getTaskManager() {
         return manager;
     }

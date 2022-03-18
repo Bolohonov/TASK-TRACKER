@@ -27,13 +27,17 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     protected static final Path REPOSITORY = Paths.get("./resources/data.csv");
 
     @BeforeEach
-    private void clear() throws IOException {
-        manager.removeAllTasks();
-        manager.getPrioritizedTasks().clear();
-        manager.getHistory().clear();
-        File file = REPOSITORY.toFile();
-        if (file.delete()) {
-            file.createNewFile();
+    private void clear() throws ManagerSaveException {
+        try {
+            manager.removeAllTasks();
+            manager.getPrioritizedTasks().clear();
+            manager.getHistory().clear();
+            File file = REPOSITORY.toFile();
+            if (file.delete()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +68,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 4, 00, 0, 00));
 
-    protected void fillRepository() throws IntersectionException {
+    protected void fillRepository() throws IntersectionException, ManagerSaveException {
         manager.putTask(epicTask1);
         manager.putTask(epicTask2);
         manager.putTask(epicTask3);
@@ -162,7 +166,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Test
     @Override
-    public void getEpicTasksStandardBehavior() throws IntersectionException {
+    public void getEpicTasksStandardBehavior() throws IntersectionException, ManagerSaveException {
         Repository<EpicTask> epicTaskRepository = new Repository<>();
         fillRepository();
         epicTaskRepository.putTask(epicTask1);
@@ -180,7 +184,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Test
     @Override
-    public void getSubTasksByEpicStandardBehavior() throws IntersectionException {
+    public void getSubTasksByEpicStandardBehavior() throws IntersectionException, ManagerSaveException {
         Map<Integer, Task> subTasksMap1 = new LinkedHashMap();
         Map<Integer, Task> subTasksMap2 = new LinkedHashMap();
         Map<Integer, Task> subTasksMap3 = new LinkedHashMap();
@@ -214,7 +218,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void updateTaskWithWrongId() throws IntersectionException {
+    public void updateTaskWithWrongId() throws IntersectionException, ManagerSaveException {
         fillRepository();
         manager.getTaskById(task1.getId()).setStatus(TaskStatus.IN_PROGRESS);
         assertFalse(manager.updateTask(manager.getTaskById(1515)));
@@ -245,7 +249,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Test
     @Override
-    public void shouldGetPrioritizedTasks() throws IntersectionException {
+    public void shouldGetPrioritizedTasks() throws IntersectionException, ManagerSaveException {
         Set<Task> prioritizedTasksTest = new TreeSet<>(Comparator.<Task, LocalDateTime>comparing(
                         t -> t.getStartTime().orElse(null),
                         Comparator.nullsLast(Comparator.naturalOrder())
@@ -270,7 +274,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     }
 
     @Test
-    public void getHistory() throws IntersectionException {
+    public void getHistory() throws IntersectionException, ManagerSaveException {
         List<Task> list = new LinkedList<>();
         fillRepository();
         manager.getTaskById(epicTask1.getId());

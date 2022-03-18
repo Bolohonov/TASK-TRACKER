@@ -38,7 +38,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
                 file.createNewFile();
             }
         } catch (IOException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -186,7 +186,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Test
     @Override
-    public void getEpicTasksStandardBehavior() throws IntersectionException {
+    public void getEpicTasksStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepository();
         Repository<EpicTask> epicTaskRepository = new Repository<>();
         epicTaskRepository.putTask(epicTask1);
@@ -245,7 +245,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Test
     @Override
-    public void shouldGetPrioritizedTasks() throws IntersectionException {
+    public void shouldGetPrioritizedTasks() throws IntersectionException, ManagerSaveException {
         Set<Task> prioritizedTasksTest = new TreeSet<>(Comparator.<Task, LocalDateTime>comparing(
                         t -> t.getStartTime().orElse(null),
                         Comparator.nullsLast(Comparator.naturalOrder())

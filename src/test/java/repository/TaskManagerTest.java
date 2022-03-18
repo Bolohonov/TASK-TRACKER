@@ -31,13 +31,13 @@ public interface TaskManagerTest {
     void getSingleTasksEmptyRepository();
 
     @Test
-    void getEpicTasksStandardBehavior() throws IntersectionException;
+    void getEpicTasksStandardBehavior() throws IntersectionException, ManagerSaveException;
 
     @Test
     void getEpicTasksEmptyRepository();
 
     @Test
-    void getSubTasksByEpicStandardBehavior() throws IntersectionException;
+    void getSubTasksByEpicStandardBehavior() throws IntersectionException, ManagerSaveException;
 
     @Test
     void getSubTasksByEpicEmptyRepository() throws IntersectionException, ManagerSaveException;
@@ -46,7 +46,7 @@ public interface TaskManagerTest {
     void updateTask() throws IntersectionException, ManagerSaveException;
 
     @Test
-    void updateTaskWithWrongId() throws IntersectionException;
+    void updateTaskWithWrongId() throws IntersectionException, ManagerSaveException;
 
     @Test
     void removeAllTasks() throws IntersectionException, ManagerSaveException;
