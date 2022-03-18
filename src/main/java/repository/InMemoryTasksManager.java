@@ -119,20 +119,16 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public void putTask(Task task) throws IntersectionException {
+    public void putTask(Task task) throws IntersectionException, ManagerSaveException {
         if (task.getDuration().isPresent() && task.getStartTime().isPresent()
                 && checkIntersection(task, task.getDuration().get(),
                 task.getStartTime().get())) {
             prioritizedTasks.add(task);
-            if (task != null) {
-                if (task instanceof SingleTask) {
-                    singleTaskRepository.putTask((SingleTask) task);
-                }
-                if (task instanceof EpicTask) {
-                    epicTaskRepository.putTask((EpicTask) task);
-                }
-            } else {
-                System.out.println("Задача не создана!");
+            if (task instanceof SingleTask) {
+                singleTaskRepository.putTask((SingleTask) task);
+            }
+            if (task instanceof EpicTask) {
+                epicTaskRepository.putTask((EpicTask) task);
             }
         } else {
             if (task != null && (!task.getDuration().isPresent()
@@ -155,21 +151,21 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int id) {
-        Task obj = null;
+    public Task getTaskById(int id) throws ManagerSaveException {
+        Task task = null;
         if (singleTaskRepository.getTasks().containsKey(id)) {
-            obj = singleTaskRepository.getTasks().get(id);
-            historyManager.add(obj);
+            task = singleTaskRepository.getTasks().get(id);
+            historyManager.add(task);
         }
         if (epicTaskRepository.getTasks().containsKey(id)) {
-            obj = epicTaskRepository.getTasks().get(id);
-            historyManager.add(obj);
+            task = epicTaskRepository.getTasks().get(id);
+            historyManager.add(task);
         }
         if (getSubTaskOrNullById(id) != null) {
-            obj = getSubTaskOrNullById(id);
-            historyManager.add(obj);
+            task = getSubTaskOrNullById(id);
+            historyManager.add(task);
         }
-        return obj;
+        return task;
     }
 
     @Override
@@ -194,7 +190,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public boolean updateTask(Task task) {
+    public boolean updateTask(Task task) throws ManagerSaveException {
         boolean isUpdate = false;
         if (task != null) {
             try {
@@ -231,7 +227,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public void removeAllTasks() {
+    public void removeAllTasks() throws ManagerSaveException {
         try {
             singleTaskRepository.removeAllTasks();
         } catch (NullPointerException exp) {
@@ -247,7 +243,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public void removeTaskById(int id) {
+    public void removeTaskById(int id) throws ManagerSaveException {
         if (singleTaskRepository.getTasks().containsKey(id)) {
             try {
                 historyManager.remove(id);

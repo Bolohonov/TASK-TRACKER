@@ -10,22 +10,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public interface TaskManagerTest {
 
     @Test
-    void putTaskStandardBehavior() throws IntersectionException, IOException;
+    void putTaskStandardBehavior() throws IntersectionException, IOException, ManagerSaveException;
 
     @Test
-    void putTaskIntersectionException() throws IntersectionException;
+    void putTaskIntersectionException() throws IntersectionException, ManagerSaveException;
 
     @Test
-    void getTaskByIdStandardBehavior() throws IntersectionException;
+    void getTaskByIdStandardBehavior() throws IntersectionException, ManagerSaveException;
 
     @Test
-    void getTaskByIdEmptyRepository() throws IntersectionException;
+    void getTaskByIdEmptyRepository() throws IntersectionException, ManagerSaveException;
 
     @Test
-    void getTaskByIdWrongId() throws IntersectionException;
+    void getTaskByIdWrongId() throws IntersectionException, ManagerSaveException;
 
     @Test
-    void getSingleTasksStandardBehavior() throws IntersectionException;
+    void getSingleTasksStandardBehavior() throws IntersectionException, ManagerSaveException;
 
     @Test
     void getSingleTasksEmptyRepository();
@@ -40,19 +40,19 @@ public interface TaskManagerTest {
     void getSubTasksByEpicStandardBehavior() throws IntersectionException;
 
     @Test
-    void getSubTasksByEpicEmptyRepository() throws IntersectionException;
+    void getSubTasksByEpicEmptyRepository() throws IntersectionException, ManagerSaveException;
 
     @Test
-    void updateTask() throws IntersectionException;
+    void updateTask() throws IntersectionException, ManagerSaveException;
 
     @Test
     void updateTaskWithWrongId() throws IntersectionException;
 
     @Test
-    void removeAllTasks() throws IntersectionException;
+    void removeAllTasks() throws IntersectionException, ManagerSaveException;
 
     @Test
-    void removeTaskByIdStandardBehavior() throws IntersectionException;
+    void removeTaskByIdStandardBehavior() throws IntersectionException, ManagerSaveException;
 
     @Test
     void shouldGetPrioritizedTasks() throws IntersectionException, ManagerSaveException;

@@ -29,16 +29,20 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     }
 
     @BeforeEach
-    private void clear() throws IOException {
-        managerToFile.removeAllTasks();
-        managerToFile.getPrioritizedTasks().clear();
-        File file = REPOSITORY.toFile();
-        if (file.delete()) {
-            file.createNewFile();
+    private void clear() throws ManagerSaveException {
+        try {
+            managerToFile.removeAllTasks();
+            managerToFile.getPrioritizedTasks().clear();
+            File file = REPOSITORY.toFile();
+            if (file.delete()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
         }
     }
 
-    private void fillRepositoryWithTestId() throws IntersectionException {
+    private void fillRepositoryWithTestId() throws IntersectionException, ManagerSaveException {
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);
         EpicTask epicTask2 = new EpicTask("TestEpicName2",
@@ -79,16 +83,20 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Override
     @Test
-    public void putTaskStandardBehavior() throws IntersectionException, IOException {
+    public void putTaskStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepositoryWithTestId();
-        FileReader input1 = new FileReader(REPOSITORY.toFile());
-        FileReader input2
-                = new FileReader(TEST_PUT_TASK_STANDARD_BEHAVIOR.toFile());
-        assertTrue(IOUtils.contentEqualsIgnoreEOL(input1, input2));
+        try {
+            FileReader input1 = new FileReader(REPOSITORY.toFile());
+            FileReader input2
+                    = new FileReader(TEST_PUT_TASK_STANDARD_BEHAVIOR.toFile());
+            assertTrue(IOUtils.contentEqualsIgnoreEOL(input1, input2));
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
     }
 
     @Test
-    public void putTaskEmptyFile() {
+    public void putTaskEmptyFile() throws ManagerSaveException {
         TaskManager emptyToFile =
                 new FileBackedTasksManager(EMPTY_FILE.toFile());
         managerToFile.removeAllTasks();
@@ -98,7 +106,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Override
     @Test
-    public void putTaskIntersectionException() throws IntersectionException {
+    public void putTaskIntersectionException() throws IntersectionException, ManagerSaveException {
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);
         SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
@@ -123,7 +131,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Override
     @Test
-    public void getTaskByIdStandardBehavior() throws IntersectionException {
+    public void getTaskByIdStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepository();
         assertEquals(epicTask1, managerToFile.getTaskById(epicTask1.getId()));
         assertEquals(epicTask2, managerToFile.getTaskById(epicTask2.getId()));
@@ -137,20 +145,20 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Override
     @Test
-    public void getTaskByIdEmptyRepository() {
+    public void getTaskByIdEmptyRepository() throws ManagerSaveException {
         int id = 1;
         assertEquals(null, managerToFile.getTaskById(id));
     }
 
     @Test
-    public void getEpicTaskWithoutSubTasks() throws IntersectionException {
+    public void getEpicTaskWithoutSubTasks() throws IntersectionException, ManagerSaveException {
         fillRepository();
         assertEquals(epicTask3, managerToFile.getTaskById(epicTask3.getId()));
     }
 
     @Override
     @Test
-    public void getTaskByIdWrongId() throws IntersectionException {
+    public void getTaskByIdWrongId() throws IntersectionException, ManagerSaveException {
         managerToFile.putTask(epicTask1);
         managerToFile.putTask(task1);
         assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
@@ -160,7 +168,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Test
     @Override
-    public void getSingleTasksStandardBehavior() throws IntersectionException {
+    public void getSingleTasksStandardBehavior() throws IntersectionException, ManagerSaveException {
         Repository<SingleTask> singleTaskRepository = new Repository<>();
         managerToFile.putTask(task1);
         managerToFile.putTask(task2);
@@ -196,7 +204,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Test
     @Override
-    public void getSubTasksByEpicEmptyRepository() throws IntersectionException {
+    public void getSubTasksByEpicEmptyRepository() throws IntersectionException, ManagerSaveException {
         Map<Integer, SubTask> subTasksMap1 = new LinkedHashMap<>();
         EpicTask epic1 = creator.createEpicTask(
                 new String[]{"TestName", "TestDescription"});
@@ -206,7 +214,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Override
     @Test
-    public void updateTask() throws IntersectionException {
+    public void updateTask() throws IntersectionException, ManagerSaveException {
         fillRepository();
         managerToFile.getTaskById(task1.getId()).setStatus(TaskStatus.IN_PROGRESS);
         assertTrue(managerToFile.updateTask(task1));
@@ -214,7 +222,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Override
     @Test
-    public void removeAllTasks() throws IntersectionException {
+    public void removeAllTasks() throws IntersectionException, ManagerSaveException {
         fillRepository();
         Repository<EpicTask> epicTaskRepository = new Repository<>();
         Repository<SingleTask> singleTaskRepository = new Repository<>();
@@ -225,7 +233,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
 
     @Override
     @Test
-    public void removeTaskByIdStandardBehavior() throws IntersectionException {
+    public void removeTaskByIdStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepository();
         managerToFile.removeTaskById(epicTask1.getId());
         assertFalse(manager.getEpicTasks().containsKey(epicTask1.getId()));
@@ -257,7 +265,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     }
 
     @Test
-    public void shouldFillRepositoryFromFile() throws IntersectionException {
+    public void shouldFillRepositoryFromFile() throws ManagerSaveException {
         FileBackedTasksManager testManager
                 = new FileBackedTasksManager(Paths
                 .get("./resources/shouldFillRepositoryFromFile.csv").toFile());
@@ -307,7 +315,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     }
 
     @Test
-    public void shouldFillHistoryFromFile() throws IntersectionException {
+    public void shouldFillHistoryFromFile() throws ManagerSaveException {
         FileBackedTasksManager testManager
                 = new FileBackedTasksManager(Paths
                 .get("./resources/shouldFillHistoryFromFile.csv").toFile());

@@ -80,7 +80,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void putTaskStandardBehavior() throws IntersectionException, IOException {
+    public void putTaskStandardBehavior() throws IntersectionException, IOException, ManagerSaveException {
         fillRepository();
         assertTrue(manager.getSingleTasks().containsKey(task1.getId()));
         assertTrue(manager.getSingleTasks().containsKey(task2.getId()));
@@ -94,7 +94,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void putTaskIntersectionException() throws IntersectionException {
+    public void putTaskIntersectionException() throws IntersectionException, ManagerSaveException {
         manager.putTask(epicTask1);
         manager.putTask(subTask2);
         SingleTask taskIntersection = creator.createSingleTask(
@@ -113,7 +113,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void getTaskByIdStandardBehavior() throws IntersectionException {
+    public void getTaskByIdStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepository();
         assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
         assertEquals(epicTask2, managers.getTaskManager().getTaskById(epicTask2.getId()));
@@ -127,14 +127,14 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void getTaskByIdEmptyRepository() {
+    public void getTaskByIdEmptyRepository() throws ManagerSaveException {
         int id = 1;
         assertEquals(null, managers.getTaskManager().getTaskById(id));
     }
 
     @Override
     @Test
-    public void getTaskByIdWrongId() throws IntersectionException {
+    public void getTaskByIdWrongId() throws IntersectionException, ManagerSaveException {
         manager.putTask(epicTask1);
         manager.putTask(task1);
         assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
@@ -144,7 +144,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Test
     @Override
-    public void getSingleTasksStandardBehavior() throws IntersectionException {
+    public void getSingleTasksStandardBehavior() throws IntersectionException, ManagerSaveException {
         Repository<SingleTask> singleTaskRepository = new Repository<>();
         manager.putTask(task1);
         manager.putTask(task2);
@@ -195,7 +195,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Test
     @Override
-    public void getSubTasksByEpicEmptyRepository() throws IntersectionException {
+    public void getSubTasksByEpicEmptyRepository() throws IntersectionException, ManagerSaveException {
         Map<Integer, SubTask> subTasksMap1 = new LinkedHashMap<>();
         EpicTask task1 = creator.createEpicTask(
                 new String[]{"TestName", "TestDescription"});
@@ -205,7 +205,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void updateTask() throws IntersectionException {
+    public void updateTask() throws IntersectionException, ManagerSaveException {
         fillRepository();
         manager.getTaskById(task1.getId()).setStatus(TaskStatus.IN_PROGRESS);
         assertTrue(manager.updateTask(task1));
@@ -222,7 +222,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void removeAllTasks() throws IntersectionException {
+    public void removeAllTasks() throws IntersectionException, ManagerSaveException {
         Repository<EpicTask> epicTaskRepository = new Repository<>();
         Repository<SingleTask> singleTaskRepository = new Repository<>();
         fillRepository();
@@ -233,7 +233,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void removeTaskByIdStandardBehavior() throws IntersectionException {
+    public void removeTaskByIdStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepository();
         manager.removeTaskById(epicTask1.getId());
         assertFalse(manager.getEpicTasks().containsKey(epicTask1.getId()));

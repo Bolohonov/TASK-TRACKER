@@ -16,12 +16,12 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     private static final String TABLE_HEADER
             = "id,type,name,status,description,duration,startTime,epic";
 
-    public FileBackedTasksManager(File file) {
+    public FileBackedTasksManager(File file) throws ManagerSaveException {
         this.file = file;
         loadFromFile(file);
     }
 
-    public void save() {
+    public void save() throws ManagerSaveException {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file,
                 StandardCharsets.UTF_8))) {
             Repository<Task> rep = new Repository<>();
@@ -49,11 +49,11 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 fileWriter.append(toString(historyManager));
             }
         } catch (IOException e) {
-            System.out.println("Произошла ошибка во время чтения файла.");
+            throw new ManagerSaveException("Произошла ошибка во время сохранения файла!");
         }
     }
 
-    public void loadFromFile(File file) {
+    public void loadFromFile(File file) throws ManagerSaveException {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file,
                 StandardCharsets.UTF_8))) {
             while (fileReader.ready()) {
@@ -75,7 +75,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 }
             }
         } catch (IOException e) {
-            System.out.println("Произошла ошибка во время загрузки из файла.");
+            throw new ManagerSaveException("Произошла ошибка во время загрузки файла!");
         } catch (IntersectionException e) {
             System.out.println("Совпадение временного интервала во время загрузки из файла!");;
         }
@@ -104,8 +104,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                             Optional.of(LocalDateTime.parse(values[6])));
                     task.setStatus(TaskStatus.valueOf(values[3]));
                 }
-            } catch (DateTimeParseException exp) {
-
+            } catch (DateTimeParseException | ManagerSaveException exp) {
+                System.out.println(exp.getMessage());
             }
         }
         return task;
@@ -121,7 +121,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         return historyToString.toString();
     }
 
-    private void fromStringToHistory(String value) {
+    private void fromStringToHistory(String value) throws ManagerSaveException{
         String[] values = value.split(",");
         if (values != null && values.length != 0) {
             for (int i = 0; i < values.length; i++) {
@@ -135,33 +135,33 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     @Override
-    public void putTask(Task task) throws IntersectionException {
+    public void putTask(Task task) throws IntersectionException, ManagerSaveException {
         super.putTask(task);
         save();
     }
 
     @Override
-    public boolean updateTask(Task task) {
+    public boolean updateTask(Task task) throws ManagerSaveException {
         boolean result = super.updateTask(task);
         save();
         return result;
     }
 
     @Override
-    public Task getTaskById(int id) {
+    public Task getTaskById(int id) throws ManagerSaveException {
         Task task = super.getTaskById(id);
         save();
         return task;
     }
 
     @Override
-    public void removeAllTasks() {
+    public void removeAllTasks() throws ManagerSaveException {
         super.removeAllTasks();
         save();
     }
 
     @Override
-    public void removeTaskById(int id) {
+    public void removeTaskById(int id) throws ManagerSaveException {
         super.removeTaskById(id);
         save();
     }

@@ -11,9 +11,9 @@ import java.util.Set;
 
 public interface TaskManager {
 
-    void putTask(Task task) throws IntersectionException;
+    void putTask(Task task) throws IntersectionException, ManagerSaveException;
 
-    Task getTaskById(int id);
+    Task getTaskById(int id) throws ManagerSaveException;
 
     Map<Integer, SingleTask> getSingleTasks();
 
@@ -21,11 +21,11 @@ public interface TaskManager {
 
     Map<Integer, SubTask> getSubTasksByEpic(Task task);
 
-    boolean updateTask(Task newTask);
+    boolean updateTask(Task newTask) throws ManagerSaveException;
 
-    void removeAllTasks();
+    void removeAllTasks() throws ManagerSaveException;
 
-    void removeTaskById(int id);
+    void removeTaskById(int id) throws ManagerSaveException;
 
     List<Task> getHistory();
 
