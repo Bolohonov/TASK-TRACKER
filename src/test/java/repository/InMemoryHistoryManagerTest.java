@@ -21,7 +21,7 @@ class InMemoryHistoryManagerTest {
         try {
             managers = new Managers();
         } catch (ManagerSaveException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -57,7 +57,7 @@ class InMemoryHistoryManagerTest {
             Duration.ofHours(2), LocalDateTime
                     .of(2022, 03, 12, 00, 0, 00));
 
-    private void fillLinkedList() throws IntersectionException {
+    private void fillLinkedList() {
         list.add(epicTask1);
         list.add(epicTask2);
         list.add(epicTask3);
@@ -69,7 +69,7 @@ class InMemoryHistoryManagerTest {
     }
 
 
-    private void fillHistory() throws IntersectionException {
+    private void fillHistory() {
         historyManager.add(epicTask1);
         historyManager.add(epicTask2);
         historyManager.add(epicTask3);
@@ -91,7 +91,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void addStandardBehavior() throws IntersectionException {
+    void addStandardBehavior() {
         fillHistory();
         fillLinkedList();
         assertEquals(list, historyManager.getHistory());
@@ -106,7 +106,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void addDuplication() throws IntersectionException {
+    void addDuplication() {
         fillHistory();
         fillLinkedList();
         historyManager.add(task1);
@@ -120,7 +120,7 @@ class InMemoryHistoryManagerTest {
 
 
     @Test
-    void removeStandardBehavior() throws IntersectionException {
+    void removeStandardBehavior() {
         fillHistory();
         fillLinkedList();
         list.remove(subTask1);
@@ -133,7 +133,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeFirstElement() throws IntersectionException {
+    void removeFirstElement() {
         fillHistory();
         fillLinkedList();
         list.remove(epicTask1);
@@ -142,7 +142,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeLastElement() throws IntersectionException {
+    void removeLastElement() {
         fillHistory();
         fillLinkedList();
         list.remove(task2);
@@ -151,7 +151,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeHalfElement() throws IntersectionException {
+    void removeHalfElement() {
         fillHistory();
         fillLinkedList();
         list.remove(subTask2);
@@ -160,7 +160,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeDuplication() throws IntersectionException {
+    void removeDuplication() {
         fillHistory();
         fillLinkedList();
         historyManager.add(subTask1);
@@ -186,14 +186,14 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void getHistoryStandardBehavior() throws IntersectionException {
+    void getHistoryStandardBehavior() {
         fillHistory();
         fillLinkedList();
         assertEquals(list, historyManager.getHistory());
     }
 
     @Test
-    void clearHistoryStandardBehavior() throws IntersectionException {
+    void clearHistoryStandardBehavior() {
         fillHistory();
         historyManager.clearHistory();
         List<Task> list = new ArrayList();

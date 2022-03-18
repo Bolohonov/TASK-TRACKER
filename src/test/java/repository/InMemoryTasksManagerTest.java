@@ -93,7 +93,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
 
     @Override
     @Test
-    public void putTaskStandardBehavior() throws IntersectionException, IOException, ManagerSaveException {
+    public void putTaskStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepository();
         assertTrue(manager.getSingleTasks().containsKey(task1.getId()));
         assertTrue(manager.getSingleTasks().containsKey(task2.getId()));
