@@ -131,8 +131,8 @@ public class InMemoryTasksManager implements TaskManager {
                 epicTaskRepository.putTask((EpicTask) task);
             }
         } else {
-            if (task != null && (!task.getDuration().isPresent()
-                    || !task.getStartTime().isPresent())) {
+            if (!task.getDuration().isPresent()
+                    || !task.getStartTime().isPresent()) {
                 prioritizedTasks.add(task);
                 if (task instanceof SingleTask) {
                     singleTaskRepository.putTask((SingleTask) task);
