@@ -97,32 +97,20 @@ public class HttpTaskServer {
                     break;
                 case "DELETE":
                     switch(getBodyFromDeleteRequest(httpExchange)) {
-                        case "getSingleTasks":
-                            managerToFile.getSingleTasks();
+                        case "removeAllTasks":
+                            try {
+                                managerToFile.removeAllTasks();
+                            } catch (ManagerSaveException e) {
+                                e.printStackTrace();
+                            }
                             break;
-                        case "getEpicTasks":
-                            managerToFile.getEpicTasks();
-                            break;
-                        case "getHistory":
-                            managerToFile.getHistory();
-                            break;
-                        case "getTaskById":
+                        case "removeTaskById":
                             String path = httpExchange.getRequestURI().getPath();
                             String [] parameters = path.split("/");
                             try {
-                                managerToFile.getTaskById(Integer.parseInt(parameters[3]));
-                            } catch (ManagerSaveException | NumberFormatException e) {
-                                System.out.println(e.getMessage() + " " + e.getStackTrace());
-                            }
-                            break;
-                        case "getSubTasksByEpic":
-                            path = httpExchange.getRequestURI().getPath();
-                            parameters = path.split("/");
-                            try {
-                                managerToFile.getSubTasksByEpic(managerToFile
-                                        .getTaskById(Integer.parseInt(parameters[4])));
-                            } catch (ManagerSaveException | NumberFormatException e) {
-                                System.out.println(e.getMessage() + " " + e.getStackTrace());
+                                managerToFile.removeTaskById(Integer.parseInt(parameters[3]));
+                            } catch (ManagerSaveException e) {
+                                e.printStackTrace();
                             }
                             break;
                         default:
@@ -164,8 +152,17 @@ public class HttpTaskServer {
             return command;
         }
 
-        private String getBodyFromPostRequest(HttpExchange httpExchange) throws IOException {
+        private String getBodyFromDeleteRequest(HttpExchange httpExchange) throws IOException {
             String command = null;
+            String path = httpExchange.getRequestURI().getPath();
+            String [] parameters = path.split("/");
+            if(parameters.length == 3) {
+                command = "removeAllTasks";
+            } else {
+                if (parameters.length == 4) {
+                    command = "removeTaskById";
+                }
+            }
             return command;
         }
     }
