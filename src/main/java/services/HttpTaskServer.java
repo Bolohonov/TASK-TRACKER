@@ -1,5 +1,9 @@
 package services;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -78,33 +82,52 @@ public class HttpTaskServer {
                             }
                             break;
                         default:
-                            ////////////////////////
+                            System.out.println("Вы ввели неверную команду");
                     }
                     break;
                 case "POST":
-                    getBody(httpExchange);
-
-                    // извлеките заголовок
-                    boolean flag = false;
-                    Headers requestHeaders = httpExchange.getRequestHeaders();
-                    if (requestHeaders.keySet().contains("X-Wish-Good-Day=true")) {
-                        flag = true;
+                    JsonElement jsonElement = JsonParser.parseString(httpExchange.getResponseBody().toString());
+                    if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
+                        System.out.println("Ответ от сервера не соответствует ожидаемому.");
+                        return;
                     }
-                    for (List<String> l : requestHeaders.values()) {
-                        if (l.stream().anyMatch(o -> o.equals("X-Wish-Good-Day=true"))) {
-                            flag = true;
-                        }
-                        //List<String> wishGoodDay = ...
-                    }
-                    // соберите ответ
-                    if (flag) {
-                        response = body + ", " + profession + " " + name + "!" + " Хорошего дня!";
-                    } else {
-                        response = body + ", " + profession + " " + name + "!";
-                    }
+                    // преобразуем результат разбора текста в JSON-объект
+                    JsonObject jsonObject = jsonElement.getAsJsonObject();
+                    managerToFile.putTask(jsonObject);
                     break;
                 case "DELETE":
-                    response = "Здравствуйте!";
+                    switch(getBodyFromDeleteRequest(httpExchange)) {
+                        case "getSingleTasks":
+                            managerToFile.getSingleTasks();
+                            break;
+                        case "getEpicTasks":
+                            managerToFile.getEpicTasks();
+                            break;
+                        case "getHistory":
+                            managerToFile.getHistory();
+                            break;
+                        case "getTaskById":
+                            String path = httpExchange.getRequestURI().getPath();
+                            String [] parameters = path.split("/");
+                            try {
+                                managerToFile.getTaskById(Integer.parseInt(parameters[3]));
+                            } catch (ManagerSaveException | NumberFormatException e) {
+                                System.out.println(e.getMessage() + " " + e.getStackTrace());
+                            }
+                            break;
+                        case "getSubTasksByEpic":
+                            path = httpExchange.getRequestURI().getPath();
+                            parameters = path.split("/");
+                            try {
+                                managerToFile.getSubTasksByEpic(managerToFile
+                                        .getTaskById(Integer.parseInt(parameters[4])));
+                            } catch (ManagerSaveException | NumberFormatException e) {
+                                System.out.println(e.getMessage() + " " + e.getStackTrace());
+                            }
+                            break;
+                        default:
+                            System.out.println("Вы ввели неверную команду");
+                    }
                     break;
                 default:
                     response = "Некорректный метод!";
@@ -119,8 +142,6 @@ public class HttpTaskServer {
 
         private String getBodyFromGetRequest(HttpExchange httpExchange) throws IOException {
             String command = null;
-            InputStream input = httpExchange.getRequestBody();
-            String body = new String(input.readAllBytes());
             String path = httpExchange.getRequestURI().getPath();
             String [] parameters = path.split("/");
             if (parameters.length == 3 && parameters[2].equals("task")) {
