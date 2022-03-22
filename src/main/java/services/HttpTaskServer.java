@@ -1,5 +1,6 @@
 package services;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -7,9 +8,11 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import repository.IntersectionException;
 import repository.ManagerSaveException;
 import repository.Managers;
 import repository.TaskManager;
+import tasks.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +71,9 @@ public class HttpTaskServer {
                             try {
                                 managerToFile.getTaskById(Integer.parseInt(parameters[3]));
                             } catch (ManagerSaveException | NumberFormatException e) {
-                                System.out.println(e.getMessage() + " " + e.getStackTrace());
+                                System.out.println("Во время выполнения запроса по адресу:"
+                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
+                                        + e.getMessage() + "\n" + e.getStackTrace()););
                             }
                             break;
                         case "getSubTasksByEpic":
@@ -78,7 +83,9 @@ public class HttpTaskServer {
                                 managerToFile.getSubTasksByEpic(managerToFile
                                         .getTaskById(Integer.parseInt(parameters[4])));
                             } catch (ManagerSaveException | NumberFormatException e) {
-                                System.out.println(e.getMessage() + " " + e.getStackTrace());
+                                System.out.println("Во время выполнения запроса по адресу:"
+                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
+                                        + e.getMessage() + "\n" + e.getStackTrace());
                             }
                             break;
                         default:
@@ -93,7 +100,20 @@ public class HttpTaskServer {
                     }
                     // преобразуем результат разбора текста в JSON-объект
                     JsonObject jsonObject = jsonElement.getAsJsonObject();
-                    managerToFile.putTask(jsonObject);
+                    String jsonString;
+                    Gson gson = new Gson();
+                    Task task = gson.fromJson(jsonString, Task.class);
+                    try {
+                        managerToFile.putTask(task);
+                    } catch (IntersectionException e) {
+                        System.out.println("Во время выполнения запроса по адресу:"
+                                + httpExchange.getRequestURI() + " произошла ошибка\n"
+                                + e.getMessage() + "\n" + e.getStackTrace());
+                    } catch (ManagerSaveException e) {
+                        System.out.println("Во время выполнения запроса по адресу:"
+                                + httpExchange.getRequestURI() + " произошла ошибка\n"
+                                + e.getMessage() + "\n" + e.getStackTrace());
+                    }
                     break;
                 case "DELETE":
                     switch(getBodyFromDeleteRequest(httpExchange)) {
@@ -101,7 +121,9 @@ public class HttpTaskServer {
                             try {
                                 managerToFile.removeAllTasks();
                             } catch (ManagerSaveException e) {
-                                e.printStackTrace();
+                                System.out.println("Во время выполнения запроса по адресу:"
+                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
+                                        + e.getMessage() + "\n" + e.getStackTrace());
                             }
                             break;
                         case "removeTaskById":
@@ -110,7 +132,9 @@ public class HttpTaskServer {
                             try {
                                 managerToFile.removeTaskById(Integer.parseInt(parameters[3]));
                             } catch (ManagerSaveException e) {
-                                e.printStackTrace();
+                                System.out.println("Во время выполнения запроса по адресу:"
+                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
+                                        + e.getMessage() + "\n" + e.getStackTrace());
                             }
                             break;
                         default:
