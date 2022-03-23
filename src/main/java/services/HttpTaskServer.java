@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -18,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+
+import static jdk.internal.util.xml.XMLStreamWriter.DEFAULT_CHARSET;
 
 public class HttpTaskServer {
 
@@ -50,12 +51,12 @@ public class HttpTaskServer {
     static class TaskHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-            String response;
+            String response = null;
             String method = httpExchange.getRequestMethod();
 
             switch(method) {
                 case "GET":
-                    switch(getBodyFromGetRequest(httpExchange)) {
+                    switch(getPathFromGetRequest(httpExchange)) {
                         case "getSingleTasks":
                             managerToFile.getSingleTasks();
                             break;
@@ -69,11 +70,12 @@ public class HttpTaskServer {
                             String path = httpExchange.getRequestURI().getPath();
                             String [] parameters = path.split("/");
                             try {
-                                managerToFile.getTaskById(Integer.parseInt(parameters[3]));
+                                managerToFile.getTaskById(Integer.parseInt(parameters[3].split(
+                                        "==")[1]));
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
-                                        + e.getMessage() + "\n" + e.getStackTrace()););
+                                        + e.getMessage() + "\n" + e.getStackTrace());
                             }
                             break;
                         case "getSubTasksByEpic":
@@ -81,7 +83,8 @@ public class HttpTaskServer {
                             parameters = path.split("/");
                             try {
                                 managerToFile.getSubTasksByEpic(managerToFile
-                                        .getTaskById(Integer.parseInt(parameters[4])));
+                                        .getTaskById(Integer.parseInt(parameters[4]
+                                                .split("==")[1])));
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -93,7 +96,10 @@ public class HttpTaskServer {
                     }
                     break;
                 case "POST":
-                    JsonElement jsonElement = JsonParser.parseString(httpExchange.getResponseBody().toString());
+                    InputStream inputStream = httpExchange.getRequestBody();
+                    String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
+                    JsonElement jsonElement = JsonParser
+                            .parseString(body);
                     if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
                         System.out.println("Ответ от сервера не соответствует ожидаемому.");
                         return;
@@ -102,7 +108,7 @@ public class HttpTaskServer {
                     JsonObject jsonObject = jsonElement.getAsJsonObject();
                     String jsonString;
                     Gson gson = new Gson();
-                    Task task = gson.fromJson(jsonString, Task.class);
+                    Task task = gson.fromJson(jsonObject, Task.class);
                     try {
                         managerToFile.putTask(task);
                     } catch (IntersectionException e) {
@@ -116,7 +122,7 @@ public class HttpTaskServer {
                     }
                     break;
                 case "DELETE":
-                    switch(getBodyFromDeleteRequest(httpExchange)) {
+                    switch(getPathFromDeleteRequest(httpExchange)) {
                         case "removeAllTasks":
                             try {
                                 managerToFile.removeAllTasks();
@@ -152,7 +158,7 @@ public class HttpTaskServer {
             }
         }
 
-        private String getBodyFromGetRequest(HttpExchange httpExchange) throws IOException {
+        private String getPathFromGetRequest(HttpExchange httpExchange) throws IOException {
             String command = null;
             String path = httpExchange.getRequestURI().getPath();
             String [] parameters = path.split("/");
@@ -170,13 +176,14 @@ public class HttpTaskServer {
             if (parameters.length == 4) {
                 command = "getTaskById";
             }
-            if (parameters.length == 5 && parameters[2].equals("subtask") && parameters[3].equals("epic")) {
+            if (parameters.length == 5 && parameters[2]
+                    .equals("subtask") && parameters[3].equals("epic")) {
                 command = "getSubTasksByEpic";
             }
             return command;
         }
 
-        private String getBodyFromDeleteRequest(HttpExchange httpExchange) throws IOException {
+        private String getPathFromDeleteRequest(HttpExchange httpExchange) throws IOException {
             String command = null;
             String path = httpExchange.getRequestURI().getPath();
             String [] parameters = path.split("/");
