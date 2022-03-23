@@ -44,12 +44,16 @@ public class HttpTaskServer {
 
     private static final TaskManager managerToFile = managers.getTaskManagerToFile();
 
-    public void run() throws IOException {
+    public void run() throws IOException, ManagerSaveException {
         httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-
+        Gson gson = new Gson();
+        String str = gson.toJson(managerToFile.getTaskById(291));
+        System.out.println(str);
+        Task task = gson.fromJson(str, Task.class);
+        System.out.println(task.toString());
         //httpServer.stop(1);
     }
 
@@ -124,7 +128,6 @@ public class HttpTaskServer {
                     }
                     // преобразуем результат разбора текста в JSON-объект
                     JsonObject jsonObject = jsonElement.getAsJsonObject();
-                    String jsonString;
                     Gson gson = new Gson();
                     Task task = gson.fromJson(jsonObject, Task.class);
                     try {
