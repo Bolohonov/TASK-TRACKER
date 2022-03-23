@@ -49,6 +49,7 @@ public class HttpTaskServer {
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+
         //httpServer.stop(1);
     }
 
@@ -143,6 +144,7 @@ public class HttpTaskServer {
                         case "removeAllTasks":
                             try {
                                 managerToFile.removeAllTasks();
+                                response = "Все задачи, эпики и подзадачи успешно удалены!";
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -150,10 +152,12 @@ public class HttpTaskServer {
                             }
                             break;
                         case "removeTaskById":
-                            String path = httpExchange.getRequestURI().getPath();
-                            String [] parameters = path.split("/");
+                            String [] query = httpExchange.getRequestURI()
+                                    .getQuery().split("=");
                             try {
-                                managerToFile.removeTaskById(Integer.parseInt(parameters[3]));
+                                managerToFile.removeTaskById(Integer.parseInt(query[1]));
+                                response = "Задача с id " + Integer.parseInt(query[1]) + " " +
+                                        "удалена!";
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -175,12 +179,11 @@ public class HttpTaskServer {
             }
         }
 
-        private String getPathFromGetRequest(HttpExchange httpExchange) throws IOException {
+        private String getPathFromGetRequest(HttpExchange httpExchange) {
             String command = null;
             String path = httpExchange.getRequestURI().getPath();
             String [] parameters = path.split("/");
-            httpExchange.getRequestURI().getQuery();
-            if (httpExchange.getRequestURI().getQuery().isEmpty()) {
+            if (httpExchange.getRequestURI().getQuery() == null) {
                 switch (parameters[2]) {
                     case "task":
                         command = "getSingleTasks";
@@ -205,16 +208,12 @@ public class HttpTaskServer {
             return command;
         }
 
-        private String getPathFromDeleteRequest(HttpExchange httpExchange) throws IOException {
-            String command = null;
-            String path = httpExchange.getRequestURI().getPath();
-            String [] parameters = path.split("/");
-            if(parameters.length == 3) {
+        private String getPathFromDeleteRequest(HttpExchange httpExchange) {
+            String command;
+            if (httpExchange.getRequestURI().getQuery() == null) {
                 command = "removeAllTasks";
             } else {
-                if (parameters.length == 4) {
-                    command = "removeTaskById";
-                }
+                command = "removeTaskById";
             }
             return command;
         }
