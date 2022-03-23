@@ -11,12 +11,16 @@ import repository.IntersectionException;
 import repository.ManagerSaveException;
 import repository.Managers;
 import repository.TaskManager;
+import tasks.EpicTask;
+import tasks.SingleTask;
+import tasks.SubTask;
 import tasks.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.http.HttpRequest;
 
 import static jdk.internal.util.xml.XMLStreamWriter.DEFAULT_CHARSET;
 
@@ -51,27 +55,41 @@ public class HttpTaskServer {
     static class TaskHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-            String response = null;
+            String response = "Ответ на запрос: ";
             String method = httpExchange.getRequestMethod();
 
             switch(method) {
                 case "GET":
                     switch(getPathFromGetRequest(httpExchange)) {
                         case "getSingleTasks":
-                            managerToFile.getSingleTasks();
+                            for (SingleTask task : managerToFile.getSingleTasks().values()) {
+                                response = response + "\n" + task.toString();
+                            }
                             break;
                         case "getEpicTasks":
-                            managerToFile.getEpicTasks();
+                            for (EpicTask task : managerToFile.getEpicTasks().values()) {
+                                response = response + "\n" + task.toString();
+                            }
                             break;
                         case "getHistory":
-                            managerToFile.getHistory();
+                            for (Task task : managerToFile.getHistory()) {
+                                response = response + "\n" + task.toString();
+                            }
+                            break;
+                        case "getSubTasks":
+                            for (EpicTask task : managerToFile.getEpicTasks().values()) {
+                                for (SubTask sub : task.getSubTasks().values()) {
+                                    response = response + "\n" + sub.toString();
+                                }
+                            }
                             break;
                         case "getTaskById":
-                            String path = httpExchange.getRequestURI().getPath();
-                            String [] parameters = path.split("/");
+                            String [] query = httpExchange.getRequestURI()
+                                    .getQuery().split("=");
                             try {
-                                managerToFile.getTaskById(Integer.parseInt(parameters[3].split(
-                                        "==")[1]));
+                                response =
+                                        managerToFile.getTaskById(Integer.parseInt(query[1]))
+                                                .toString();
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -79,12 +97,11 @@ public class HttpTaskServer {
                             }
                             break;
                         case "getSubTasksByEpic":
-                            path = httpExchange.getRequestURI().getPath();
-                            parameters = path.split("/");
+                            query = httpExchange.getRequestURI()
+                                    .getQuery().split("=");
                             try {
                                 managerToFile.getSubTasksByEpic(managerToFile
-                                        .getTaskById(Integer.parseInt(parameters[4]
-                                                .split("==")[1])));
+                                        .getTaskById(Integer.parseInt(query[1])));
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -162,23 +179,28 @@ public class HttpTaskServer {
             String command = null;
             String path = httpExchange.getRequestURI().getPath();
             String [] parameters = path.split("/");
-            if (parameters.length == 3 && parameters[2].equals("task")) {
-                command = "getSingleTasks";
-            } else {
-                if (parameters.length == 3 && parameters[2].equals("epic")) {
-                    command = "getEpicTasks";
-                } else {
-                    if (parameters.length == 3 && parameters[2].equals("history")) {
+            httpExchange.getRequestURI().getQuery();
+            if (httpExchange.getRequestURI().getQuery().isEmpty()) {
+                switch (parameters[2]) {
+                    case "task":
+                        command = "getSingleTasks";
+                        break;
+                    case "epic":
+                        command = "getEpicTasks";
+                        break;
+                    case "subtask":
+                        command = "getSubTasks";
+                        break;
+                    case "history":
                         command = "getHistory";
-                    }
+                        break;
                 }
-            }
-            if (parameters.length == 4) {
-                command = "getTaskById";
-            }
-            if (parameters.length == 5 && parameters[2]
-                    .equals("subtask") && parameters[3].equals("epic")) {
-                command = "getSubTasksByEpic";
+            } else {
+                if (parameters.length == 4 && parameters[3].equals("epic")) {
+                    command = "getSubTasksByEpic";
+                } else {
+                    command = "getTaskById";
+                }
             }
             return command;
         }
