@@ -40,12 +40,12 @@ public class HttpTaskServer {
 
     private static final TaskManager managerToFile = managers.getTaskManagerToFile();
 
-    private void run() throws IOException {
+    public void run() throws IOException {
         httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-        httpServer.stop(1);
+        //httpServer.stop(1);
     }
 
     static class TaskHandler implements HttpHandler {

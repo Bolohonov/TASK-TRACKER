@@ -4,6 +4,7 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -16,8 +17,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     private static final String TABLE_HEADER
             = "id,type,name,status,description,duration,startTime,epic";
 
-    public FileBackedTasksManager(File file) throws ManagerSaveException {
-        this.file = file;
+    public FileBackedTasksManager(Path path) throws ManagerSaveException {
+        this.file = path.toFile();
         loadFromFile(file);
     }
 

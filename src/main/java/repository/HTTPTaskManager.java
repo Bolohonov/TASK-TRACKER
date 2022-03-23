@@ -1,9 +1,10 @@
 package repository;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class HTTPTaskManager extends FileBackedTasksManager {
-    public HTTPTaskManager(File file) throws ManagerSaveException {
-        super(file);
+    public HTTPTaskManager(Path path) throws ManagerSaveException {
+        super(path);
     }
 }

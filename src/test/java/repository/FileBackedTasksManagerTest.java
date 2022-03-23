@@ -98,7 +98,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     @Test
     public void putTaskEmptyFile() throws ManagerSaveException {
         TaskManager emptyToFile =
-                new FileBackedTasksManager(EMPTY_FILE.toFile());
+                new FileBackedTasksManager(EMPTY_FILE);
         managerToFile.removeAllTasks();
         assertEquals(emptyToFile.getSingleTasks(), managerToFile.getSingleTasks());
         assertEquals(emptyToFile.getEpicTasks(), managerToFile.getEpicTasks());
@@ -268,7 +268,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     public void shouldFillRepositoryFromFile() throws ManagerSaveException {
         FileBackedTasksManager testManager
                 = new FileBackedTasksManager(Paths
-                .get("./resources/shouldFillRepositoryFromFile.csv").toFile());
+                .get("./resources/shouldFillRepositoryFromFile.csv"));
         Repository<Task> testRep = new Repository();
 
         EpicTask epicTask1 = new EpicTask("TestEpicName",
@@ -318,7 +318,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     public void shouldFillHistoryFromFile() throws ManagerSaveException {
         FileBackedTasksManager testManager
                 = new FileBackedTasksManager(Paths
-                .get("./resources/shouldFillHistoryFromFile.csv").toFile());
+                .get("./resources/shouldFillHistoryFromFile.csv"));
         List<Task> actualList = new LinkedList<>();
         for (int i=5; i>0; i--) {
             actualList.add(testManager.getHistory().get(testManager.getHistory().size()-i));
