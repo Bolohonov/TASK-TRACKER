@@ -99,6 +99,7 @@ public class HttpTaskServer {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(400, 0);
                             }
                             break;
                         case "getSubTasksByEpic":
@@ -111,10 +112,12 @@ public class HttpTaskServer {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(400, 0);
                             }
                             break;
                         default:
                             System.out.println("Вы ввели неверную команду");
+                            httpExchange.sendResponseHeaders(405, 0);
                     }
                     break;
                 case "POST":
@@ -124,6 +127,7 @@ public class HttpTaskServer {
                             .parseString(body);
                     if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
                         System.out.println("Ответ от сервера не соответствует ожидаемому.");
+                        httpExchange.sendResponseHeaders(400, 0);
                         return;
                     }
                     // преобразуем результат разбора текста в JSON-объект
@@ -136,10 +140,12 @@ public class HttpTaskServer {
                         System.out.println("Во время выполнения запроса по адресу:"
                                 + httpExchange.getRequestURI() + " произошла ошибка\n"
                                 + e.getMessage() + "\n" + e.getStackTrace());
+                        httpExchange.sendResponseHeaders(400, 0);
                     } catch (ManagerSaveException e) {
                         System.out.println("Во время выполнения запроса по адресу:"
                                 + httpExchange.getRequestURI() + " произошла ошибка\n"
                                 + e.getMessage() + "\n" + e.getStackTrace());
+                        httpExchange.sendResponseHeaders(400, 0);
                     }
                     break;
                 case "DELETE":
@@ -152,6 +158,7 @@ public class HttpTaskServer {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(400, 0);
                             }
                             break;
                         case "removeTaskById":
@@ -165,6 +172,7 @@ public class HttpTaskServer {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(400, 0);
                             }
                             break;
                         default:
@@ -173,6 +181,7 @@ public class HttpTaskServer {
                     break;
                 default:
                     response = "Некорректный метод!";
+                    httpExchange.sendResponseHeaders(400, 0);
                     break;
             }
 
