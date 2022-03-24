@@ -30,7 +30,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         }
     }
 
-    protected static final TaskManager manager = managers.getTaskManager();
+    protected static final TaskManager manager = managers.getInMemoryTasksManager();
     protected static final TaskManager managerToFile = managers.getTaskManagerToFile();
     protected static final TaskCreator creator = managers.getFactory();
     protected static final Path REPOSITORY = Paths.get("./resources/data.csv");
@@ -128,21 +128,21 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     @Test
     public void getTaskByIdStandardBehavior() throws IntersectionException, ManagerSaveException {
         fillRepository();
-        assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
-        assertEquals(epicTask2, managers.getTaskManager().getTaskById(epicTask2.getId()));
-        assertEquals(epicTask3, managers.getTaskManager().getTaskById(epicTask3.getId()));
-        assertEquals(subTask1, managers.getTaskManager().getTaskById(subTask1.getId()));
-        assertEquals(subTask2, managers.getTaskManager().getTaskById(subTask2.getId()));
-        assertEquals(subTask3, managers.getTaskManager().getTaskById(subTask3.getId()));
-        assertEquals(task1, managers.getTaskManager().getTaskById(task1.getId()));
-        assertEquals(task2, managers.getTaskManager().getTaskById(task2.getId()));
+        assertEquals(epicTask1, managers.getInMemoryTasksManager().getTaskById(epicTask1.getId()));
+        assertEquals(epicTask2, managers.getInMemoryTasksManager().getTaskById(epicTask2.getId()));
+        assertEquals(epicTask3, managers.getInMemoryTasksManager().getTaskById(epicTask3.getId()));
+        assertEquals(subTask1, managers.getInMemoryTasksManager().getTaskById(subTask1.getId()));
+        assertEquals(subTask2, managers.getInMemoryTasksManager().getTaskById(subTask2.getId()));
+        assertEquals(subTask3, managers.getInMemoryTasksManager().getTaskById(subTask3.getId()));
+        assertEquals(task1, managers.getInMemoryTasksManager().getTaskById(task1.getId()));
+        assertEquals(task2, managers.getInMemoryTasksManager().getTaskById(task2.getId()));
     }
 
     @Override
     @Test
     public void getTaskByIdEmptyRepository() throws ManagerSaveException {
         int id = 1;
-        assertEquals(null, managers.getTaskManager().getTaskById(id));
+        assertEquals(null, managers.getInMemoryTasksManager().getTaskById(id));
     }
 
     @Override
@@ -150,9 +150,9 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
     public void getTaskByIdWrongId() throws IntersectionException, ManagerSaveException {
         manager.putTask(epicTask1);
         manager.putTask(task1);
-        assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
-        assertEquals(task1, managers.getTaskManager().getTaskById(task1.getId()));
-        assertEquals(null, managers.getTaskManager().getTaskById(0));
+        assertEquals(epicTask1, managers.getInMemoryTasksManager().getTaskById(epicTask1.getId()));
+        assertEquals(task1, managers.getInMemoryTasksManager().getTaskById(task1.getId()));
+        assertEquals(null, managers.getInMemoryTasksManager().getTaskById(0));
     }
 
     @Test
@@ -279,7 +279,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
         prioritizedTasksTest.add(subTask2);
         prioritizedTasksTest.add(task1);
         prioritizedTasksTest.add(task2);
-        assertEquals(prioritizedTasksTest, managers.getTaskManager().getPrioritizedTasks());
+        assertEquals(prioritizedTasksTest, managers.getInMemoryTasksManager().getPrioritizedTasks());
     }
 
     @Test

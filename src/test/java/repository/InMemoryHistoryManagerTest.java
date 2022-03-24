@@ -26,7 +26,7 @@ class InMemoryHistoryManagerTest {
     }
 
     private static final TaskCreator creator = managers.getFactory();
-    private static final TaskManager manager = managers.getTaskManager();
+    private static final TaskManager manager = managers.getInMemoryTasksManager();
     private HistoryManager historyManager = new InMemoryHistoryManager();
     private static final List<Task> list = new LinkedList<>();
 

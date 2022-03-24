@@ -161,9 +161,9 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     public void getTaskByIdWrongId() throws IntersectionException, ManagerSaveException {
         managerToFile.putTask(epicTask1);
         managerToFile.putTask(task1);
-        assertEquals(epicTask1, managers.getTaskManager().getTaskById(epicTask1.getId()));
-        assertEquals(task1, managers.getTaskManager().getTaskById(task1.getId()));
-        assertEquals(null, managers.getTaskManager().getTaskById(1000));
+        assertEquals(epicTask1, managers.getInMemoryTasksManager().getTaskById(epicTask1.getId()));
+        assertEquals(task1, managers.getInMemoryTasksManager().getTaskById(task1.getId()));
+        assertEquals(null, managers.getInMemoryTasksManager().getTaskById(1000));
     }
 
     @Test

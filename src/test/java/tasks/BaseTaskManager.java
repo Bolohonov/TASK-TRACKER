@@ -23,7 +23,7 @@ public class BaseTaskManager {
     }
 
     protected static final TaskCreator creator = managers.getFactory();
-    protected static final TaskManager manager = managers.getTaskManager();
+    protected static final TaskManager manager = managers.getInMemoryTasksManager();
 
     protected EpicTask createEpicTask() {
         return creator.createEpicTask(new String[]{"TestEpicName", "TestEpicDescription"});

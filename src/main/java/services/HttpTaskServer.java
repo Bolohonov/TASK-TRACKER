@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.http.HttpRequest;
 
 import static jdk.internal.util.xml.XMLStreamWriter.DEFAULT_CHARSET;
 
@@ -29,7 +27,6 @@ public class HttpTaskServer {
 
     private static final int PORT = 8079;
     HttpServer httpServer = HttpServer.create();
-    KVTaskClient kvTaskClient = new KVTaskClient(URI.create("https://localhost:"+PORT));
 
     public HttpTaskServer() throws IOException {
     }
@@ -44,19 +41,14 @@ public class HttpTaskServer {
         }
     }
 
-    private static final TaskManager managerToFile = managers.getTaskManagerToFile();
+    private static final TaskManager manager = managers.getTaskManagerToFile();
 
-    public void run() throws IOException, ManagerSaveException {
+    public void run() throws IOException {
         httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-        Gson gson = new Gson();
-        String str = gson.toJson(managerToFile.getTaskById(291));
-        System.out.println(str);
-        Task task = gson.fromJson(str, Task.class);
-        System.out.println(task.toString());
-        //httpServer.stop(1);
+        httpServer.stop(1);
     }
 
     static class TaskHandler implements HttpHandler {
@@ -69,22 +61,22 @@ public class HttpTaskServer {
                 case "GET":
                     switch(getPathFromGetRequest(httpExchange)) {
                         case "getSingleTasks":
-//                            for (SingleTask task : managerToFile.getSingleTasks().values()) {
-//                                response = response + "\n" + task.toString();
-//                            }
+                            for (SingleTask task : manager.getSingleTasks().values()) {
+                                response = response + "\n" + task.toString();
+                            }
                             break;
                         case "getEpicTasks":
-                            for (EpicTask task : managerToFile.getEpicTasks().values()) {
+                            for (EpicTask task : manager.getEpicTasks().values()) {
                                 response = response + "\n" + task.toString();
                             }
                             break;
                         case "getHistory":
-                            for (Task task : managerToFile.getHistory()) {
+                            for (Task task : manager.getHistory()) {
                                 response = response + "\n" + task.toString();
                             }
                             break;
                         case "getSubTasks":
-                            for (EpicTask task : managerToFile.getEpicTasks().values()) {
+                            for (EpicTask task : manager.getEpicTasks().values()) {
                                 for (SubTask sub : task.getSubTasks().values()) {
                                     response = response + "\n" + sub.toString();
                                 }
@@ -95,7 +87,7 @@ public class HttpTaskServer {
                                     .getQuery().split("=");
                             try {
                                 response =
-                                        managerToFile.getTaskById(Integer.parseInt(query[1]))
+                                        manager.getTaskById(Integer.parseInt(query[1]))
                                                 .toString();
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
@@ -108,7 +100,7 @@ public class HttpTaskServer {
                             query = httpExchange.getRequestURI()
                                     .getQuery().split("=");
                             try {
-                                managerToFile.getSubTasksByEpic(managerToFile
+                                manager.getSubTasksByEpic(manager
                                         .getTaskById(Integer.parseInt(query[1])));
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
@@ -137,7 +129,7 @@ public class HttpTaskServer {
                     Gson gson = new Gson();
                     Task task = gson.fromJson(jsonObject, Task.class);
                     try {
-                        managerToFile.putTask(task);
+                        manager.putTask(task);
                     } catch (IntersectionException e) {
                         System.out.println("Во время выполнения запроса по адресу:"
                                 + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -154,7 +146,7 @@ public class HttpTaskServer {
                     switch(getPathFromDeleteRequest(httpExchange)) {
                         case "removeAllTasks":
                             try {
-                                managerToFile.removeAllTasks();
+                                manager.removeAllTasks();
                                 response = "Все задачи, эпики и подзадачи успешно удалены!";
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
@@ -167,7 +159,7 @@ public class HttpTaskServer {
                             String [] query = httpExchange.getRequestURI()
                                     .getQuery().split("=");
                             try {
-                                managerToFile.removeTaskById(Integer.parseInt(query[1]));
+                                manager.removeTaskById(Integer.parseInt(query[1]));
                                 response = "Задача с id " + Integer.parseInt(query[1]) + " " +
                                         "удалена!";
                             } catch (ManagerSaveException e) {
