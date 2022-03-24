@@ -76,16 +76,19 @@ public class HttpTaskServer {
                             for (SingleTask task : manager.getSingleTasks().values()) {
                                 response = response + "\n" + task.toString();
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getEpicTasks":
                             for (EpicTask task : manager.getEpicTasks().values()) {
                                 response = response + "\n" + task.toString();
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getHistory":
                             for (Task task : manager.getHistory()) {
                                 response = response + "\n" + task.toString();
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getSubTasks":
                             for (EpicTask task : manager.getEpicTasks().values()) {
@@ -93,6 +96,7 @@ public class HttpTaskServer {
                                     response = response + "\n" + sub.toString();
                                 }
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getTaskById":
                             String[] query = httpExchange.getRequestURI()
@@ -101,11 +105,12 @@ public class HttpTaskServer {
                                 response =
                                         manager.getTaskById(Integer.parseInt(query[1]))
                                                 .toString();
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
-                                httpExchange.sendResponseHeaders(400, 0);
+                                httpExchange.sendResponseHeaders(500, 0);
                             }
                             break;
                         case "getSubTasksByEpic":
@@ -114,11 +119,12 @@ public class HttpTaskServer {
                             try {
                                 manager.getSubTasksByEpic(manager
                                         .getTaskById(Integer.parseInt(query[1])));
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
-                                httpExchange.sendResponseHeaders(400, 0);
+                                httpExchange.sendResponseHeaders(500, 0);
                             }
                             break;
                         default:
@@ -140,14 +146,17 @@ public class HttpTaskServer {
                             try {
                                 manager.putTask(task);
                                 response = "Задача сохранена: " + "\n" + task.toString();
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (IntersectionException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(500, 0);
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(500, 0);
                             }
                             break;
                         case "epic":
@@ -155,14 +164,17 @@ public class HttpTaskServer {
                             try {
                                 manager.putTask(epic);
                                 response = "Задача сохранена: " + "\n" + epic.toString();
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (IntersectionException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(500, 0);
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(500, 0);
                             }
                             break;
                         case "subTask":
@@ -170,14 +182,17 @@ public class HttpTaskServer {
                             try {
                                 manager.putTask(subTask);
                                 response = "Задача сохранена: " + "\n" + subTask.toString();
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (IntersectionException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(500, 0);
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
+                                httpExchange.sendResponseHeaders(500, 0);
                             }
                             break;
                         default:
@@ -191,11 +206,12 @@ public class HttpTaskServer {
                             try {
                                 manager.removeAllTasks();
                                 response = "Все задачи, эпики и подзадачи успешно удалены!";
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
-                                httpExchange.sendResponseHeaders(400, 0);
+                                httpExchange.sendResponseHeaders(500, 0);
                             }
                             break;
                         case "removeTaskById":
@@ -205,15 +221,17 @@ public class HttpTaskServer {
                                 manager.removeTaskById(Integer.parseInt(query[1]));
                                 response = "Задача с id " + Integer.parseInt(query[1]) + " " +
                                         "удалена!";
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
-                                httpExchange.sendResponseHeaders(400, 0);
+                                httpExchange.sendResponseHeaders(500, 0);
                             }
                             break;
                         default:
                             System.out.println("Вы ввели неверную команду");
+                            httpExchange.sendResponseHeaders(400, 0);
                     }
                     break;
                 default:
@@ -221,8 +239,6 @@ public class HttpTaskServer {
                     httpExchange.sendResponseHeaders(400, 0);
                     break;
             }
-
-            httpExchange.sendResponseHeaders(200, 0);
             try (OutputStream os = httpExchange.getResponseBody()) {
                 os.write(response.getBytes());
             }

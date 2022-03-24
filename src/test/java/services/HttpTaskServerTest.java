@@ -49,12 +49,12 @@ class HttpTaskServerTest {
         Task task = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1018, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2021, 05, 13, 7, 00, 10)));
+                        .of(2021, 06, 13, 7, 00, 10)));
         String json = gson.toJson(task);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        String responseExpected = "(POST http://localhost:8079/tasks/task/) 200";
-        assertEquals(responseExpected, response);
+        int expectedStatusCode = 200;
+        assertEquals(expectedStatusCode, response.statusCode());
     }
 }
