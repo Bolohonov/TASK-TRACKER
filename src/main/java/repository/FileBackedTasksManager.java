@@ -19,7 +19,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     public FileBackedTasksManager(Path path) throws ManagerSaveException {
         this.file = path.toFile();
-        loadFromFile(file);
+        load(file);
     }
 
     public void save() throws ManagerSaveException {
@@ -53,7 +53,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
     }
 
-    public void loadFromFile(File file) throws ManagerSaveException {
+    public void load(File file) throws ManagerSaveException {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file,
                 StandardCharsets.UTF_8))) {
             while (fileReader.ready()) {

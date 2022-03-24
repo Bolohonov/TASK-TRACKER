@@ -74,40 +74,40 @@ public class KVServer {
                 h.close();
             }
         });
-        // TODO Вот эту часть сами
-//        server.createContext("/load", (h) -> {
-//            try {
-//                System.out.println("\n/load");
-//                if (!hasAuth(h)) {
-//                    System.out.println("Запрос неавторизован, нужен параметр в query API_KEY со значением апи-ключа");
-//                    h.sendResponseHeaders(403, 0);
-//                    return;
-//                }
-//                switch (h.getRequestMethod()) {
-//                    case "GET":
-//                        String key = h.getRequestURI().getPath().substring("/save/".length());
-//                        if (key.isEmpty()) {
-//                            System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
-//                            h.sendResponseHeaders(400, 0);
-//                            return;
-//                        }
-//                        if (!data.containsKey(key)) {
-//                            System.out.println("Не могу достать данные для ключа '" + key + "', данные отсутствуют");
-//                            h.sendResponseHeaders(404, 0);
-//                            return;
-//                        }
-//                        sendText(h, data.get(key));
-//                        System.out.println("Значение для ключа " + key + " успешно отправлено в ответ на запрос!");
-//                        h.sendResponseHeaders(200, 0);
-//                        break;
-//                    default:
-//                        System.out.println("/save ждёт GET-запрос, а получил: " + h.getRequestMethod());
-//                        h.sendResponseHeaders(405, 0);
-//                }
-//            } finally {
-//                h.close();
-//            }
-//        });
+
+        server.createContext("/load", (h) -> {
+            try {
+                System.out.println("\n/load");
+                if (!hasAuth(h)) {
+                    System.out.println("Запрос неавторизован, нужен параметр в query API_KEY со значением апи-ключа");
+                    h.sendResponseHeaders(403, 0);
+                    return;
+                }
+                switch (h.getRequestMethod()) {
+                    case "GET":
+                        String key = h.getRequestURI().getPath().substring("/save/".length());
+                        if (key.isEmpty()) {
+                            System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
+                            h.sendResponseHeaders(400, 0);
+                            return;
+                        }
+                        if (!data.containsKey(key)) {
+                            System.out.println("Не могу достать данные для ключа '" + key + "', данные отсутствуют");
+                            h.sendResponseHeaders(404, 0);
+                            return;
+                        }
+                        sendText(h, data.get(key));
+                        System.out.println("Значение для ключа " + key + " успешно отправлено в ответ на запрос!");
+                        h.sendResponseHeaders(200, 0);
+                        break;
+                    default:
+                        System.out.println("/save ждёт GET-запрос, а получил: " + h.getRequestMethod());
+                        h.sendResponseHeaders(405, 0);
+                }
+            } finally {
+                h.close();
+            }
+        });
     }
 
     public void start() {
