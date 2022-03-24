@@ -46,26 +46,26 @@ public class KVTaskClient {
 
     public void put(String key, String json) {
         //POST /save/<ключ>?API_KEY=
-        JsonElement jsonElement = JsonParser
-                .parseString(body);
-        if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
-            System.out.println("Ответ от сервера не соответствует ожидаемому.");
-            httpExchange.sendResponseHeaders(400, 0);
-            return;
-        }
-        // преобразуем результат разбора текста в JSON-объект
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        Gson gson = new Gson();
-        Task task = gson.fromJson(jsonObject, Task.class);
-        Gson gson = new Gson();
-        gson.
-        String key;
-        String value;
-        HttpRequest requestToSave = HttpRequest
-                .newBuilder()
-                .uri(URI.create(url.toString() + "/save"))
-                .POST()
-                .build();
+//        JsonElement jsonElement = JsonParser
+//                .parseString(body);
+//        if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
+//            System.out.println("Ответ от сервера не соответствует ожидаемому.");
+//            httpExchange.sendResponseHeaders(400, 0);
+//            return;
+//        }
+//        // преобразуем результат разбора текста в JSON-объект
+//        JsonObject jsonObject = jsonElement.getAsJsonObject();
+//        Gson gson = new Gson();
+//        Task task = gson.fromJson(jsonObject, Task.class);
+//        Gson gson = new Gson();
+//        gson.
+//        String key;
+//        String value;
+//        HttpRequest requestToSave = HttpRequest
+//                .newBuilder()
+//                .uri(URI.create(url.toString() + "/save"))
+//                .POST()
+//                .build();
     }
 
     public String load(String key) {

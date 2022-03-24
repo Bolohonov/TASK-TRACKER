@@ -7,8 +7,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws ManagerSaveException, IOException {
-//        HttpTaskServer server = new HttpTaskServer();
-//        server.run();
+        new HttpTaskServer().run();
         new KVServer().start();
     }
 }

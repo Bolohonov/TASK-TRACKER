@@ -1,9 +1,6 @@
 package services;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -48,7 +45,7 @@ public class HttpTaskServer {
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-        httpServer.stop(1);
+        //httpServer.stop(1);
     }
 
     static class TaskHandler implements HttpHandler {
@@ -117,6 +114,9 @@ public class HttpTaskServer {
                 case "POST":
                     InputStream inputStream = httpExchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
+                    System.out.println(body);
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(Task.class, body);
                     JsonElement jsonElement = JsonParser
                             .parseString(body);
                     if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
@@ -124,7 +124,6 @@ public class HttpTaskServer {
                         httpExchange.sendResponseHeaders(400, 0);
                         return;
                     }
-                    // преобразуем результат разбора текста в JSON-объект
                     JsonObject jsonObject = jsonElement.getAsJsonObject();
                     Gson gson = new Gson();
                     Task task = gson.fromJson(jsonObject, Task.class);
