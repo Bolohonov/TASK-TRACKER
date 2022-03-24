@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.net.http.HttpRequest;
 
 import static jdk.internal.util.xml.XMLStreamWriter.DEFAULT_CHARSET;
@@ -28,6 +29,7 @@ public class HttpTaskServer {
 
     private static final int PORT = 8079;
     HttpServer httpServer = HttpServer.create();
+    KVTaskClient kvTaskClient = new KVTaskClient(URI.create("https://localhost:"+PORT));
 
     public HttpTaskServer() throws IOException {
     }
@@ -67,9 +69,9 @@ public class HttpTaskServer {
                 case "GET":
                     switch(getPathFromGetRequest(httpExchange)) {
                         case "getSingleTasks":
-                            for (SingleTask task : managerToFile.getSingleTasks().values()) {
-                                response = response + "\n" + task.toString();
-                            }
+//                            for (SingleTask task : managerToFile.getSingleTasks().values()) {
+//                                response = response + "\n" + task.toString();
+//                            }
                             break;
                         case "getEpicTasks":
                             for (EpicTask task : managerToFile.getEpicTasks().values()) {
