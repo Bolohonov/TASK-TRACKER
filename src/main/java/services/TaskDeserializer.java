@@ -53,6 +53,7 @@ public class TaskDeserializer implements JsonDeserializer<Task> {
         LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
         jsonObject = json.getAsJsonObject();
 
+
         Task task = new SingleTask(
                 jsonObject.get("name").getAsString(),
                 jsonObject.get("description").getAsString(),
