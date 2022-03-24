@@ -165,4 +165,24 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         super.removeTaskById(id);
         save();
     }
+
+//    @Override
+//    public Map<Integer, SingleTask> getSingleTasks() {
+//        return super.getSingleTasks();
+//    }
+//
+//    @Override
+//    public Map<Integer, EpicTask> getEpicTasks() {
+//        return super.getEpicTasks();
+//    }
+//
+//    @Override
+//    public Map<Integer, SubTask> getSubTasksByEpic(Task task) {
+//        return super.getSubTasksByEpic(task);
+//    }
+//
+//    @Override
+//    public List<Task> getHistory() {
+//        return super.getHistory();
+//    }
 }

@@ -15,18 +15,23 @@ import java.util.Optional;
 public class TaskDeserializer implements JsonDeserializer<Task> {
 
     @Override
-    public Task deserialize(JsonElement json, Type typeOfT,
+    public Task deserialize(JsonElement json, Type typeOfTask,
                             JsonDeserializationContext context) throws JsonParseException
     {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonElement jsonElementDurationValue = jsonObject.get("duration");
         JsonObject jsonObjectDuration = jsonElementDurationValue.getAsJsonObject();
 
-        Duration durationOfDays = Duration.ofDays(jsonObjectDuration.get("days").getAsLong());
-        Duration durationOfHours = Duration.ofHours(jsonObjectDuration.get("hours").getAsLong());
-        Duration durationOfMinutes = Duration.ofMinutes(jsonObjectDuration.get("minutes").getAsLong());
-        Duration durationOfSeconds = Duration.ofSeconds(jsonObjectDuration.get("seconds").getAsLong());
-        Duration durationOfNanos = Duration.ofNanos(jsonObjectDuration.get("nanos").getAsLong());
+        Duration durationOfDays = Duration
+                .ofDays(jsonObjectDuration.get("days").getAsLong());
+        Duration durationOfHours = Duration
+                .ofHours(jsonObjectDuration.get("hours").getAsLong());
+        Duration durationOfMinutes = Duration
+                .ofMinutes(jsonObjectDuration.get("minutes").getAsLong());
+        Duration durationOfSeconds = Duration
+                .ofSeconds(jsonObjectDuration.get("seconds").getAsLong());
+        Duration durationOfNanos = Duration
+                .ofNanos(jsonObjectDuration.get("nanos").getAsLong());
         Duration duration = durationOfDays
                 .plus(durationOfHours)
                 .plus(durationOfMinutes)

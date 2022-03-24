@@ -46,15 +46,13 @@ public class HttpTaskServer {
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
         Gson gson = new Gson();
-        String task = gson.toJson(manager.getTaskById(1007));
-        System.out.println(task);
-        JsonElement jsonElement = JsonParser
-                .parseString(task);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonElement jsonElementDurationValue = jsonObject.get("duration");
-        JsonElement jsonElementDuration = JsonParser
-                .parseString(jsonElementDurationValue.toString());
-        System.out.println(jsonElementDuration.toString());
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Task.class, new TaskDeserializer());
+        String taskStr = gson.toJson(manager.getTaskById(1007));
+        System.out.println(taskStr);
+        SingleTask task = gson.fromJson(taskStr, SingleTask.class);
+        System.out.println(task.toString());
+
         //httpServer.stop(1);
     }
 
