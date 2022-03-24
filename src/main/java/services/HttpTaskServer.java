@@ -40,11 +40,21 @@ public class HttpTaskServer {
 
     private static final TaskManager manager = managers.getTaskManagerToFile();
 
-    public void run() throws IOException {
+    public void run() throws IOException, ManagerSaveException {
         httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+        Gson gson = new Gson();
+        String task = gson.toJson(manager.getTaskById(1007));
+        System.out.println(task);
+        JsonElement jsonElement = JsonParser
+                .parseString(task);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        JsonElement jsonElementDurationValue = jsonObject.get("duration");
+        JsonElement jsonElementDuration = JsonParser
+                .parseString(jsonElementDurationValue.toString());
+        System.out.println(jsonElementDuration.toString());
         //httpServer.stop(1);
     }
 
