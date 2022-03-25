@@ -48,13 +48,9 @@ public class HttpTaskServer {
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-        Gson gson = new Gson();
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.registerTypeAdapter(Task.class, new TaskDeserializer());
-        JsonElement jsonElement = gson.toJsonTree(manager.getTaskById(1007));
-        jsonElement.getAsJsonObject().addProperty("type", manager.getTaskById(1007).getType().toString());
-        String taskStr = gson.toJson(jsonElement);
-        System.out.println(taskStr);
+        Gson gson = new GsonBuilder().registerTypeAdapter(SingleTask.class, new TaskSerializer()).create();
+        Task task = manager.getTaskById(1007);
+        System.out.println(gson.toJson(task));
 //        SubTask task = gson.fromJson(taskStr, SubTask.class);
 //        System.out.println(task.toString());
 
