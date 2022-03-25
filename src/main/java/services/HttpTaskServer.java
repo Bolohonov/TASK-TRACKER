@@ -25,7 +25,7 @@ import static jdk.internal.util.xml.XMLStreamWriter.DEFAULT_CHARSET;
 
 public class HttpTaskServer {
 
-    private static final int PORT = 8079;
+    private static final int PORT = 8077;
     HttpServer httpServer = HttpServer.create();
 
     public HttpTaskServer() throws IOException {

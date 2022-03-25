@@ -7,5 +7,6 @@ id,type,name,status,description,duration,startTime,epic
 1008,TASK,TestSingleName,NEW,TestSingleDescription,PT2H,2022-03-13T10:00:10,
 1017,TASK,TestSingleName,NEW,TestSingleDescription,PT2H,2021-04-13T07:00:10,
 1018,TASK,TestSingleName,NEW,TestSingleDescription,PT2H,2021-06-13T07:00:10,
+1022,EPIC,TestEpicName,NEW,TestEpicDescription,null,null,
 
 1008,1001,1005,1003,1004,1007,

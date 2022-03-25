@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import repository.ManagerSaveException;
 import tasks.EpicTask;
 import tasks.SingleTask;
+import tasks.SubTask;
 import tasks.Task;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ class HttpTaskServerTest {
     @Test
     public void shouldPutTaskByPostRequest() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8079/tasks/task/");
+        URI url = URI.create("http://localhost:8077/tasks/task/");
         Gson gson = new Gson();
         Task task = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1018, Optional.of(Duration.ofHours(2)),
@@ -59,18 +60,28 @@ class HttpTaskServerTest {
         assertEquals(expectedStatusCode, response.statusCode());
     }
 
-//    @Test
-//    public void shouldPutEpicTaskByPostRequest() throws IOException, InterruptedException {
-//        HttpClient client = HttpClient.newHttpClient();
-//        URI url = URI.create("http://localhost:8079/tasks/epic/");
-//        Gson gson = new Gson();
-//        EpicTask epic = new EpicTask("TestEpicName",
-//                "TestEpicDescription", 1001);
-//        String json = gson.toJson(epic);
-//        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
-//        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-//        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//        int expectedStatusCode = 200;
-//        assertEquals(expectedStatusCode, response.statusCode());
-//    }
+    @Test
+    public void shouldPutSubTaskTaskByPostRequest() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8077/tasks/epic/");
+        Gson gson = new Gson();
+        EpicTask epic = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1022);
+        String json = gson.toJson(epic);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        SubTask subTask = new SubTask(epic, "TestNameSub1",
+                "TestDescriptionSub1", 1026, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2020, 03, 10, 8, 00, 10)));
+        json = gson.toJson(subTask);
+        final HttpRequest.BodyPublisher body2 = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request2 = HttpRequest.newBuilder().uri(url).POST(body2).build();
+        HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response2.body());
+        int expectedStatusCode = 200;
+        assertEquals(expectedStatusCode, response.statusCode());
+    }
 }
