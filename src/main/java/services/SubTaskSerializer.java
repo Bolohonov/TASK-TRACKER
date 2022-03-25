@@ -24,7 +24,7 @@ public class SubTaskSerializer implements JsonSerializer<SubTask> {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(task);
         jsonElement.getAsJsonObject().addProperty("type", task.getType().toString());
-
+        jsonElement.getAsJsonObject().addProperty("epic", task.getEpicTask().getId());
 //        if (task instanceof SingleTask) {
 //            String str = gson.toJson(task);
 //            json = gson.fromJson(str, JsonElement.class);
