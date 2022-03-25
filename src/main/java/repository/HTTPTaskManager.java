@@ -2,7 +2,9 @@ package repository;
 
 import com.google.gson.Gson;
 import services.KVTaskClient;
+import tasks.EpicTask;
 import tasks.SingleTask;
+import tasks.SubTask;
 import tasks.Task;
 
 import java.io.File;
@@ -22,10 +24,22 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public void putTask(Task task) throws IntersectionException, ManagerSaveException {
+    public void putTask(Task task) throws ManagerSaveException {
         Gson gson = new Gson();
         String json = gson.toJson(task);
-        kvTaskClient.put("put", json );
+        if (task instanceof SingleTask) {
+            kvTaskClient.put("putSingleTask", json);
+        } else {
+            if (task instanceof EpicTask) {
+                kvTaskClient.put("putEpicTask", json);
+            } else {
+                if (task instanceof SubTask) {
+                    kvTaskClient.put("putSubTask", json);
+                } else {
+                    throw new ManagerSaveException("Неизвестный тип задачи!");
+                }
+            }
+        }
     }
 
     @Override

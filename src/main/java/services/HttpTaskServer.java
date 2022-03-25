@@ -49,18 +49,22 @@ public class HttpTaskServer {
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
         Gson gson = new Gson();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Task.class, new TaskDeserializer());
-        String taskStr = gson.toJson(manager.getTaskById(1007));
-        System.out.println(taskStr);
-        SingleTask task = gson.fromJson(taskStr, SingleTask.class);
-        System.out.println(task.toString());
-        String json = gson.toJson(new SingleTask("TestSingleName",
-                "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
-                Optional.of(LocalDateTime
-                        .of(2021, 03, 13, 7, 00, 10))));
+        //GsonBuilder gsonBuilder = new GsonBuilder();
+        //gsonBuilder.registerTypeAdapter(Task.class, new TaskDeserializer());
+        //String taskStr = gson.toJson(manager.getTaskById(1001));
+        System.out.println(manager.getTaskById(1004));
+        Task task = manager.getTaskById(1004);
+        //gsonBuilder.registerTypeAdapter(Task.class, new TaskSerializer());
+        //gson.toJson(task);
+        //System.out.println(gson.toJson(task));
+//        SingleTask task = gson.fromJson(taskStr, SingleTask.class);
+//        System.out.println(task.toString());
+//        String json = gson.toJson(new SingleTask("TestSingleName",
+//                "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
+//                Optional.of(LocalDateTime
+//                        .of(2021, 03, 13, 7, 00, 10))));
 
-        //httpServer.stop(1);
+        httpServer.stop(1);
     }
 
     static class TaskHandler implements HttpHandler {

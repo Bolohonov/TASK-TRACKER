@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.ManagerSaveException;
+import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.Task;
 
@@ -57,4 +58,19 @@ class HttpTaskServerTest {
         int expectedStatusCode = 200;
         assertEquals(expectedStatusCode, response.statusCode());
     }
+
+//    @Test
+//    public void shouldPutEpicTaskByPostRequest() throws IOException, InterruptedException {
+//        HttpClient client = HttpClient.newHttpClient();
+//        URI url = URI.create("http://localhost:8079/tasks/epic/");
+//        Gson gson = new Gson();
+//        EpicTask epic = new EpicTask("TestEpicName",
+//                "TestEpicDescription", 1001);
+//        String json = gson.toJson(epic);
+//        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+//        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
+//        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//        int expectedStatusCode = 200;
+//        assertEquals(expectedStatusCode, response.statusCode());
+//    }
 }
