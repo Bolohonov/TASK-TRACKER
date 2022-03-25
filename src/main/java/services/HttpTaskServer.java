@@ -50,6 +50,7 @@ public class HttpTaskServer {
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
         Gson gson = new GsonBuilder().registerTypeAdapter(SubTask.class, new SubTaskSerializer()).create();
         Task task = manager.getTaskById(1004);
+        System.out.println(task);
         System.out.println(gson.toJson(task));
 //        SubTask task = gson.fromJson(taskStr, SubTask.class);
 //        System.out.println(task.toString());
