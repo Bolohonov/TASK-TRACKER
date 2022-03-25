@@ -15,7 +15,7 @@ import java.util.Optional;
 public class TaskDeserializer implements JsonDeserializer<Task> {
 
     @Override
-    public Task deserialize(JsonElement json, Type typeOfTask,
+    public Task deserialize(JsonElement json, Type type,
                             JsonDeserializationContext context) throws JsonParseException
     {
         JsonObject jsonObject = json.getAsJsonObject();
