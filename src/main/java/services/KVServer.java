@@ -65,8 +65,6 @@ public class KVServer {
                         System.out.println("Значение для ключа " + key + " успешно обновлено!");
                         h.sendResponseHeaders(200, 0);
                         break;
-                    case "DELETE":
-
                     default:
                         System.out.println("/save ждёт POST-запрос или DELETE-запрос, а получил: "
                                 + h.getRequestMethod());
@@ -88,12 +86,84 @@ public class KVServer {
                 }
                 switch (h.getRequestMethod()) {
                     case "GET":
-                        String key = h.getRequestURI().getPath().substring("/save/".length());
+                        String key = h.getRequestURI().getPath().substring("/load/".length());
                         if (key.isEmpty()) {
                             System.out.println("Key для загрузки пустой. " +
                                     "key указывается в пути: /load/{key}");
                             h.sendResponseHeaders(400, 0);
                             return;
+                        }
+                        if (!data.containsKey(key)
+                                && !key.equals("getSingleTasks")
+                                && !key.equals("getEpicTasks")
+                            && !key.contains("getSubTasksByEpic=")) {
+                            System.out.println("Не могу достать данные для ключа '" + key + "', " +
+                                    "данные отсутствуют");
+                            h.sendResponseHeaders(404, 0);
+                            return;
+                        }
+                        if(key.equals("getSingleTasks")) {
+                            String responseData = null;
+                            for(String task : data.values()) {
+                                if(task.contains("type:TASK")) {
+                                    responseData = responseData + "\n" + task;
+                                }
+                            }
+                        }
+                        if(key.equals("getEpicTasks")) {
+                            String responseData = null;
+                            for(String task : data.values()) {
+                                if(task.contains("type:EPIC")) {
+                                    responseData = responseData + "\n" + task;
+                                }
+                            }
+                        }
+                        if(key.contains("getSubTasksByEpic=")) {
+                            String id = key.split("=")[1];
+                            sendText(h, data.get(id));
+                            System.out.println("Значение для ключа " + key + " успешно отправлено " +
+                                    "в ответ на запрос!");
+                            h.sendResponseHeaders(200, 0);
+                            return;
+                        }
+                        if(data.containsKey(key)) {
+                            sendText(h, data.get(key));
+                            System.out.println("Значение для ключа " + key + " успешно отправлено " +
+                                    "в ответ на запрос!");
+                            h.sendResponseHeaders(200, 0);
+                            return;
+                        }
+                        break;
+                    default:
+                        System.out.println("/load ждёт GET-запрос, а получил: " +
+                                h.getRequestMethod());
+                        h.sendResponseHeaders(405, 0);
+                }
+            } finally {
+                h.close();
+            }
+        });
+
+        server.createContext("/delete", (h) -> {
+            try {
+                System.out.println("\n/delete");
+                if (!hasAuth(h)) {
+                    System.out.println("Запрос неавторизован, нужен параметр в query API_KEY " +
+                            "со значением апи-ключа");
+                    h.sendResponseHeaders(403, 0);
+                    return;
+                }
+                switch (h.getRequestMethod()) {
+                    case "DELETE":
+                        String key = h.getRequestURI().getPath().substring("/load/".length());
+                        if (key.isEmpty()) {
+                            System.out.println("Key для загрузки пустой. " +
+                                    "key указывается в пути: /load/{key}");
+                            h.sendResponseHeaders(400, 0);
+                            return;
+                        }
+                        if(key.equals("ALL")) {
+                            data.clear();
                         }
                         if (!data.containsKey(key)) {
                             System.out.println("Не могу достать данные для ключа '" + key + "', " +
@@ -101,13 +171,13 @@ public class KVServer {
                             h.sendResponseHeaders(404, 0);
                             return;
                         }
-                        sendText(h, data.get(key));
-                        System.out.println("Значение для ключа " + key + " успешно отправлено " +
+                        data.remove(key);
+                        System.out.println("Значение для ключа " + key + " успешно удалено " +
                                 "в ответ на запрос!");
                         h.sendResponseHeaders(200, 0);
                         break;
                     default:
-                        System.out.println("/save ждёт GET-запрос, а получил: " +
+                        System.out.println("/delete ждёт DELETE-запрос, а получил: " +
                                 h.getRequestMethod());
                         h.sendResponseHeaders(405, 0);
                 }
