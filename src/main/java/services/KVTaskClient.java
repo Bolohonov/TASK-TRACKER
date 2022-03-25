@@ -46,30 +46,77 @@ public class KVTaskClient {
 
     public void put(String key, String json) {
         //POST /save/<ключ>?API_KEY=
-//        JsonElement jsonElement = JsonParser
-//                .parseString(body);
-//        if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
-//            System.out.println("Ответ от сервера не соответствует ожидаемому.");
-//            httpExchange.sendResponseHeaders(400, 0);
-//            return;
-//        }
-//        // преобразуем результат разбора текста в JSON-объект
-//        JsonObject jsonObject = jsonElement.getAsJsonObject();
-//        Gson gson = new Gson();
-//        Task task = gson.fromJson(jsonObject, Task.class);
-//        Gson gson = new Gson();
-//        gson.
-//        String key;
-//        String value;
-//        HttpRequest requestToSave = HttpRequest
-//                .newBuilder()
-//                .uri(URI.create(url.toString() + "/save"))
-//                .POST()
-//                .build();
+        URI uri = URI.create(url.toString() + "/save" + "?API_KEY=" + API_KEY);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(uri)
+                .POST(body)
+                .build();
+        try {
+            HttpResponse<String> response = client.
+                    send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Во время выполнения запроса по адресу:"
+                    + uri + " произошла ошибка\n"
+                    + e.getMessage() + "\n" + e.getStackTrace());
+        }
+
     }
 
     public String load(String key) {
-        //GET /load/<ключ>?API_KEY=
-        return new String();
+        HttpResponse<String> response = null;
+        URI uri = URI.create(url.toString() + "/load" + "/?id=" + key + "&API_KEY=" + API_KEY);
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(url)
+                .GET()
+                .header("Accept", "application/json")
+                .build();
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Во время выполнения запроса ресурса по URL-адресу: '"
+                    + uri + "' возникла ошибка.\n" +
+                    "Проверьте, пожалуйста, адрес и повторите попытку.");
+        }
+        return response.body();
+    }
+
+    public void delete(String key, String json) {
+        switch(key) {
+            case "removeAllTasks":
+            URI uri = URI.create(url.toString() + "/save" + "?API_KEY=" + API_KEY);
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(uri)
+                    .DELETE()
+                    .build();
+            try {
+                HttpResponse<String> response = client.
+                        send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (InterruptedException | IOException e) {
+                System.out.println("Во время выполнения запроса по адресу:"
+                        + uri + " произошла ошибка\n"
+                        + e.getMessage() + "\n" + e.getStackTrace());
+            }
+            break;
+            case "removeTaskById=":
+                uri = URI.create(url.toString() + "/save" + "/?id=" + key + "&API_KEY=" + API_KEY);
+                request = HttpRequest
+                        .newBuilder()
+                        .uri(uri)
+                        .DELETE()
+                        .build();
+                try {
+                    HttpResponse<String> response = client.
+                            send(request, HttpResponse.BodyHandlers.ofString());
+                } catch (InterruptedException | IOException e) {
+                    System.out.println("Во время выполнения запроса по адресу:"
+                            + uri + " произошла ошибка\n"
+                            + e.getMessage() + "\n" + e.getStackTrace());
+                }
+            break;
+        }
     }
 }

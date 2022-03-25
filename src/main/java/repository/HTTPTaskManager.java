@@ -24,22 +24,10 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public void putTask(Task task) throws ManagerSaveException {
+    public void putTask(Task task) {
         Gson gson = new Gson();
         String json = gson.toJson(task);
-        if (task instanceof SingleTask) {
-            kvTaskClient.put("putSingleTask", json);
-        } else {
-            if (task instanceof EpicTask) {
-                kvTaskClient.put("putEpicTask", json);
-            } else {
-                if (task instanceof SubTask) {
-                    kvTaskClient.put("putSubTask", json);
-                } else {
-                    throw new ManagerSaveException("Неизвестный тип задачи!");
-                }
-            }
-        }
+        kvTaskClient.put("put", json);
     }
 
     @Override
@@ -53,19 +41,19 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     @Override
     public Task getTaskById(int id) throws ManagerSaveException {
         Gson gson = new Gson();
-        String json = kvTaskClient.load("getTaskById=" + id);
+        String json = kvTaskClient.load(String.valueOf(id));
         Task task = gson.fromJson(json, Task.class);
         return task;
     }
 
     @Override
     public void removeAllTasks() throws ManagerSaveException {
-        kvTaskClient.put("removeAllTasks", null);
+        kvTaskClient.delete("removeAllTasks", null);
     }
 
     @Override
     public void removeTaskById(int id) throws ManagerSaveException {
         Gson gson = new Gson();
-        String json = kvTaskClient.load("removeTaskById=" + id);
+        kvTaskClient.delete("removeTaskById=", String.valueOf(id));
     }
 }

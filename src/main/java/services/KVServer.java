@@ -65,8 +65,10 @@ public class KVServer {
                         System.out.println("Значение для ключа " + key + " успешно обновлено!");
                         h.sendResponseHeaders(200, 0);
                         break;
+                    case "DELETE":
+
                     default:
-                        System.out.println("/save ждёт POST-запрос, а получил: "
+                        System.out.println("/save ждёт POST-запрос или DELETE-запрос, а получил: "
                                 + h.getRequestMethod());
                         h.sendResponseHeaders(405, 0);
                 }
