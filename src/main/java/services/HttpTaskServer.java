@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -38,10 +39,12 @@ public class HttpTaskServer {
             managers = new Managers();
         } catch (ManagerSaveException e) {
             e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 
-    private static final TaskManager manager = managers.getTaskManagerToFile();
+    private static final TaskManager manager = managers.getInMemoryTasksManager();
 
     public void run() throws IOException, ManagerSaveException {
         httpServer.bind(new InetSocketAddress(PORT), 0);

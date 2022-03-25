@@ -3,6 +3,7 @@ package tasks;
 import org.junit.jupiter.api.Test;
 import repository.*;
 
+import java.net.MalformedURLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,6 +19,8 @@ public class BaseTaskManager {
         try {
             managers = new Managers();
         } catch (ManagerSaveException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }

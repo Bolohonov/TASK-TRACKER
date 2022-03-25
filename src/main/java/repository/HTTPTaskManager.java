@@ -15,11 +15,13 @@ import java.util.Map;
 public class HTTPTaskManager extends FileBackedTasksManager {
 
     private Path path;
-    private KVTaskClient kvTaskClient = new KVTaskClient(URI.create(path.toString()));
+    private KVTaskClient kvTaskClient;
     protected static final HistoryManager history = new InMemoryHistoryManager();
 
     public HTTPTaskManager(Path path) throws ManagerSaveException {
         super(path);
+        System.out.println(path.toString());
+        kvTaskClient = new KVTaskClient(URI.create(path.toString()));
         this.path = path;
     }
 

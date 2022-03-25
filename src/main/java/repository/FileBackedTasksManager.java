@@ -19,7 +19,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     public FileBackedTasksManager(Path path) throws ManagerSaveException {
         this.file = path.toFile();
-        load(file);
+        //load(file);
     }
 
     public void save() throws ManagerSaveException {

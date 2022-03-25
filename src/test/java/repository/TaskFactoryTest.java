@@ -5,6 +5,7 @@ import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.SubTask;
 
+import java.net.MalformedURLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -19,6 +20,8 @@ class TaskFactoryTest implements TaskCreatorTest{
         try {
             managers = new Managers();
         } catch (ManagerSaveException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }

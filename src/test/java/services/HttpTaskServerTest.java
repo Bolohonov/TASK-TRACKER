@@ -49,9 +49,9 @@ class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8077/tasks/task/");
         Gson gson = new Gson();
         Task task = new SingleTask("TestSingleName",
-                "TestSingleDescription", 1018, Optional.of(Duration.ofHours(2)),
+                "TestSingleDescription", 1023, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2021, 06, 13, 7, 00, 10)));
+                        .of(2021, 06, 19, 7, 00, 10)));
         String json = gson.toJson(task);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();

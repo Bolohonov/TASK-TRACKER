@@ -7,6 +7,7 @@ import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.net.MalformedURLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,6 +22,8 @@ class InMemoryHistoryManagerTest {
         try {
             managers = new Managers();
         } catch (ManagerSaveException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
