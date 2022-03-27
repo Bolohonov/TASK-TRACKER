@@ -22,7 +22,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     protected static final HistoryManager history = new InMemoryHistoryManager();
 
     public HTTPTaskManager(Path path) throws ManagerSaveException, URISyntaxException {
-        super(path);
+        super(Paths.get("resources/data.csv"));
         this.path = path;
         URI url = new URI("http://" + path.toString().substring(1) + ":8078");
         kvTaskClient = new KVTaskClient(url);
