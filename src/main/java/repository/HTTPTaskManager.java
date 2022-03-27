@@ -8,7 +8,10 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +21,11 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     private KVTaskClient kvTaskClient;
     protected static final HistoryManager history = new InMemoryHistoryManager();
 
-    public HTTPTaskManager(Path path) throws ManagerSaveException {
+    public HTTPTaskManager(Path path) throws ManagerSaveException, URISyntaxException {
         super(path);
-        System.out.println(path.toString());
-        kvTaskClient = new KVTaskClient(URI.create(path.toString()));
         this.path = path;
+        URI url = new URI("http://" + path.toString().substring(1) + ":8078");
+        kvTaskClient = new KVTaskClient(url);
     }
 
     @Override

@@ -9,7 +9,7 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -28,7 +28,7 @@ class InMemoryTasksManagerTest implements TaskManagerTest {
             managers = new Managers();
         } catch (ManagerSaveException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        }  catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
