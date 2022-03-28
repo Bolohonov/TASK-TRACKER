@@ -97,8 +97,8 @@ public class KVServer {
                                 && !key.equals("getSingleTasks")
                                 && !key.equals("getEpicTasks")
                             && !key.contains("getSubTasksByEpic=")) {
-                            System.out.println("Не могу достать данные для ключа '" + key + "', " +
-                                    "данные отсутствуют");
+                            System.out.println("Не могу достать данные для ключа '" +
+                                    key + "', " + "данные отсутствуют");
                             h.sendResponseHeaders(404, 0);
                             return;
                         }
@@ -121,15 +121,15 @@ public class KVServer {
                         if(key.contains("getSubTasksByEpic=")) {
                             String id = key.split("=")[1];
                             sendText(h, data.get(id));
-                            System.out.println("Значение для ключа " + key + " успешно отправлено " +
-                                    "в ответ на запрос!");
+                            System.out.println("Значение для ключа " +
+                                    key + " успешно отправлено в ответ на запрос!");
                             h.sendResponseHeaders(200, 0);
                             return;
                         }
                         if(data.containsKey(key)) {
                             sendText(h, data.get(key));
-                            System.out.println("Значение для ключа " + key + " успешно отправлено " +
-                                    "в ответ на запрос!");
+                            System.out.println("Значение для ключа " +
+                                    key + " успешно отправлено в ответ на запрос!");
                             h.sendResponseHeaders(200, 0);
                             return;
                         }
