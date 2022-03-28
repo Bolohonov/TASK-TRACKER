@@ -1,7 +1,10 @@
 package repository;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import services.ConfigTaskJsonAdapter;
 import services.KVTaskClient;
+import services.TaskJsonAdapter;
 import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.SubTask;
@@ -29,14 +32,14 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public void putTask(Task task) {
-        Gson gson = new Gson();
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = gson.toJson(task);
         kvTaskClient.put(String.valueOf(task.getId()), json);
     }
 
     @Override
-    public boolean updateTask(Task task) throws ManagerSaveException {
-        Gson gson = new Gson();
+    public boolean updateTask(Task task) {
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = gson.toJson(task);
         kvTaskClient.put(String.valueOf(task.getId()), json );
         history.add(task);
@@ -45,7 +48,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public Task getTaskById(int id) throws ManagerSaveException {
-        Gson gson = new Gson();
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load(String.valueOf(id));
         Task task = gson.fromJson(json, Task.class);
         history.add(task);

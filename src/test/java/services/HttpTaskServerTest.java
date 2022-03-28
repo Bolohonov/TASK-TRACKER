@@ -47,7 +47,7 @@ class HttpTaskServerTest {
     public void shouldPutTaskByPostRequest() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8077/tasks/task/");
-        Gson gson = new Gson();
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         Task task = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1023, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
@@ -58,6 +58,7 @@ class HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         int expectedStatusCode = 200;
         assertEquals(expectedStatusCode, response.statusCode());
+        System.out.println(response.body());
     }
 
     @Test

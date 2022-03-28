@@ -44,21 +44,13 @@ public class HttpTaskServer {
         }
     }
 
-    private static final TaskManager manager = managers.getTaskManagerToFile();
+    private static final TaskManager manager = managers.getDefault();
 
     public void run() throws IOException, ManagerSaveException {
         httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-        Gson gson =
-                new GsonBuilder()
-                        .registerTypeAdapter(SubTask.class, new TaskSerializer())
-                        .create();
-
-        Task task = manager.getTaskById(1004);
-        System.out.println(task);
-        System.out.println(gson.toJson(task));
         //httpServer.stop(1);
     }
 
@@ -137,7 +129,7 @@ public class HttpTaskServer {
                     System.out.println(body);
                     Gson gson = new Gson();
                     GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeAdapter(Task.class, new TaskDeserializer());
+                    gsonBuilder.registerTypeAdapter(Task.class, new TaskJsonAdapter());
 
                     switch (getPathFromPostRequest(httpExchange)) {
                         case "task":
