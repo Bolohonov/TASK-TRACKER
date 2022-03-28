@@ -36,12 +36,11 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                             JsonDeserializationContext jsonDeserializationContext)
             throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        JsonElement jsonElementDurationValue = jsonObject.get("duration");
+        JsonObject jsonElementDuration = jsonObject.get("duration").getAsJsonObject();
+        JsonElement jsonElementDurationValue = jsonElementDuration.get("value");
         JsonObject jsonObjectDuration = jsonElementDurationValue.getAsJsonObject();
         Duration duration = Duration.ZERO;
         if(jsonObjectDuration.has("days")) {
-            Duration durationOfDays = Duration
-                    .ofDays(jsonObjectDuration.get("days").getAsLong());
             duration = duration.plus(Duration
                     .ofDays(jsonObjectDuration.get("days").getAsLong()));
         }
@@ -61,42 +60,47 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
             duration.plus(Duration
                     .ofNanos(jsonObjectDuration.get("nanos").getAsLong()));
         }
-        jsonObject = json.getAsJsonObject();
-        JsonElement jsonElementLocalDateTime = jsonObject.get("startTime");
-        JsonObject jsonObjectLocalDateTime = jsonElementLocalDateTime.getAsJsonObject();
+        JsonObject jsonObjectStartTime = jsonObject.get("startTime").getAsJsonObject();
+        JsonElement jsonElementLocalDateTimeValue = jsonObjectStartTime .get("value");
+        JsonObject jsonElementLocalDateTime = jsonElementLocalDateTimeValue.getAsJsonObject();
+        JsonElement jsonLocalDateDate = jsonElementLocalDateTime.get("date");
+        JsonObject jsonLocalDate = jsonLocalDateDate.getAsJsonObject();
         LocalDate localDate = null;
         LocalTime localTime = LocalTime.MIDNIGHT;
-        if(jsonObjectLocalDateTime.has("year")
-                && jsonObjectLocalDateTime.has("month")
-                && jsonObjectLocalDateTime.has("day") ) {
+        if(jsonLocalDate.has("year")
+                && jsonLocalDate.has("month")
+                && jsonLocalDate.has("day") ) {
             localDate = LocalDate.of(
-                    jsonObjectLocalDateTime.get("year").getAsInt(),
-                    jsonObjectLocalDateTime.get("month").getAsInt(),
-                    jsonObjectLocalDateTime.get("day").getAsInt());
+                    jsonLocalDate.get("year").getAsInt(),
+                    jsonLocalDate.get("month").getAsInt(),
+                    jsonLocalDate.get("day").getAsInt());
         }
-        if(jsonObjectLocalDateTime.has("hour")
-                && jsonObjectLocalDateTime.has("minute")) {
+        JsonElement jsonLocalTimeTime = jsonObjectStartTime.get("time");
+        JsonObject jsonLocalTime = jsonLocalTimeTime.getAsJsonObject();
+
+        if(jsonLocalTime.has("hour")
+                && jsonLocalTime.has("minute")) {
              localTime = LocalTime.of(
-                    jsonObjectLocalDateTime.get("hour").getAsInt(),
-                    jsonObjectLocalDateTime.get("minute").getAsInt());
+                     jsonLocalTime.get("hour").getAsInt(),
+                     jsonLocalTime.get("minute").getAsInt());
         }
-        if(jsonObjectLocalDateTime.has("hour")
-                && jsonObjectLocalDateTime.has("minute")
-        && jsonObjectLocalDateTime.has("second")) {
+        if(jsonLocalTime.has("hour")
+                && jsonLocalTime.has("minute")
+        && jsonLocalTime.has("second")) {
             localTime = LocalTime.of(
-                    jsonObjectLocalDateTime.get("hour").getAsInt(),
-                    jsonObjectLocalDateTime.get("minute").getAsInt(),
-                    jsonObjectLocalDateTime.get("second").getAsInt());
+                    jsonLocalTime.get("hour").getAsInt(),
+                    jsonLocalTime.get("minute").getAsInt(),
+                    jsonLocalTime.get("second").getAsInt());
         }
-        if(jsonObjectLocalDateTime.has("hour")
-                && jsonObjectLocalDateTime.has("minute")
-                && jsonObjectLocalDateTime.has("second")
-                && jsonObjectLocalDateTime.has("nano")) {
+        if(jsonLocalTime.has("hour")
+                && jsonLocalTime.has("minute")
+                && jsonLocalTime.has("second")
+                && jsonLocalTime.has("nano")) {
             localTime = LocalTime.of(
-                    jsonObjectLocalDateTime.get("hour").getAsInt(),
-                    jsonObjectLocalDateTime.get("minute").getAsInt(),
-                    jsonObjectLocalDateTime.get("second").getAsInt(),
-                    jsonObjectLocalDateTime.get("nano").getAsInt());
+                    jsonLocalTime.get("hour").getAsInt(),
+                    jsonLocalTime.get("minute").getAsInt(),
+                    jsonLocalTime.get("second").getAsInt(),
+                    jsonLocalTime.get("nano").getAsInt());
         }
         LocalDateTime localDateTime = null;
         if(localDate != null) {

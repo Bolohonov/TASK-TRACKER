@@ -48,6 +48,7 @@ class HTTPTaskManagerTest {
         //kvServer.getData().entrySet().forEach(System.out::println);
         SingleTask taskFrom = (SingleTask) manager.getTaskById(task.getId());
         System.out.println(taskFrom.toString());
+        assertEquals(task, manager.getTaskById(task.getId()));
     }
 
     @Test
