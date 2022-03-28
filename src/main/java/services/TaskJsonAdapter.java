@@ -65,7 +65,7 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
         JsonElement jsonElementLocalDateTime = jsonObject.get("startTime");
         JsonObject jsonObjectLocalDateTime = jsonElementLocalDateTime.getAsJsonObject();
         LocalDate localDate = null;
-        LocalTime localTime = null;
+        LocalTime localTime = LocalTime.MIDNIGHT;
         if(jsonObjectLocalDateTime.has("year")
                 && jsonObjectLocalDateTime.has("month")
                 && jsonObjectLocalDateTime.has("day") ) {
@@ -98,17 +98,32 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                     jsonObjectLocalDateTime.get("second").getAsInt(),
                     jsonObjectLocalDateTime.get("nano").getAsInt());
         }
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+        LocalDateTime localDateTime = null;
+        if(localDate != null) {
+            localDateTime = LocalDateTime.of(localDate, localTime);
+        } 
         jsonObject = json.getAsJsonObject();
         Task task = null;
+        Optional<Duration> durationOrZero;
+        if(duration.isZero()) {
+            durationOrZero = Optional.empty();
+        } else {
+            durationOrZero = Optional.of(duration);
+        }
+        Optional<LocalDateTime> timeOrZero;
+        if(localDateTime == null) {
+            timeOrZero = Optional.empty();
+        } else {
+            timeOrZero = Optional.of(localDateTime);
+        }
         String taskTypeFromJson = jsonObject.get("type").getAsString();
         if (taskTypeFromJson.equals(TaskType.TASK.toString())) {
             task = new SingleTask(
                     jsonObject.get("name").getAsString(),
                     jsonObject.get("description").getAsString(),
                     jsonObject.get("id").getAsInt(),
-                    Optional.of(duration),
-                    Optional.of(localDateTime));
+                    durationOrZero,
+                    timeOrZero);
             task.setStatus(TaskStatus.valueOf(jsonObject.get("status")
                     .getAsString()));
         } else {
@@ -127,8 +142,8 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                                 jsonObject.get("name").getAsString(),
                                 jsonObject.get("description").getAsString(),
                                 jsonObject.get("id").getAsInt(),
-                                Optional.of(duration),
-                                Optional.of(localDateTime));
+                                durationOrZero,
+                                timeOrZero);
                     } catch (ManagerSaveException | URISyntaxException e) {
                         e.printStackTrace();
                     }
