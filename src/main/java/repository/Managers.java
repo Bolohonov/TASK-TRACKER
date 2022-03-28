@@ -4,8 +4,8 @@ import java.net.*;
 import java.nio.file.Paths;
 
 public class Managers {
+    private final TaskManager httpTaskManager = new HTTPTaskManager(Paths.get("/localhost"));
     private final TaskManager manager = new InMemoryTasksManager();
-    final TaskManager httpTaskManager = new HTTPTaskManager(Paths.get("/localhost"));
     private final TaskManager managerToFile =
             new FileBackedTasksManager(Paths.get("resources/data.csv"));
     private final TaskCreator factory = new TaskFactory();

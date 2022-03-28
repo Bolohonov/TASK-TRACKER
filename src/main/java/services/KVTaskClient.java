@@ -14,20 +14,22 @@ import java.net.http.HttpResponse;
 
 public class KVTaskClient {
 
-    HttpClient client = HttpClient.newHttpClient();
-    URI url;
-    String API_KEY;
+    private final HttpClient client =
+            HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+    private final URI url;
+    private String API_KEY;
 
     public KVTaskClient(URI url) {
         this.url = url;
-        API_KEY = register(url);
+        this.API_KEY = register(url);
     }
 
     public String register(URI url) {
         String API_KEY = null;
+        URI uri = URI.create(url.toString() + "/register");
         HttpRequest requestRegistration = HttpRequest
                 .newBuilder()
-                .uri(URI.create(url.toString() + "/register"))
+                .uri(uri)
                 .GET()
                 .build();
         try {
@@ -47,14 +49,15 @@ public class KVTaskClient {
     public void put(String key, String json) {
         URI uri = URI.create(url.toString() + "/save" + "?API_KEY=" + API_KEY);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
-        HttpRequest request = HttpRequest
+        HttpRequest requestPost = HttpRequest
                 .newBuilder()
                 .uri(uri)
                 .POST(body)
+                .header("content-type", "application/json")
                 .build();
         try {
             HttpResponse<String> response = client.
-                    send(request, HttpResponse.BodyHandlers.ofString());
+                    send(requestPost, HttpResponse.BodyHandlers.ofString());
         } catch (InterruptedException | IOException e) {
             System.out.println("Во время выполнения запроса по адресу:"
                     + uri + " произошла ошибка\n"
@@ -70,7 +73,7 @@ public class KVTaskClient {
                 .newBuilder()
                 .uri(url)
                 .GET()
-                .header("Accept", "application/json")
+                .header("content-type", "application/json")
                 .build();
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -91,7 +94,7 @@ public class KVTaskClient {
             HttpRequest request = HttpRequest
                     .newBuilder()
                     .uri(uri)
-                    .DELETE()
+                    .header("content-type", "application/json")
                     .build();
             try {
                 HttpResponse<String> response = client.
@@ -108,6 +111,7 @@ public class KVTaskClient {
                         .newBuilder()
                         .uri(uri)
                         .DELETE()
+                        .header("content-type", "application/json")
                         .build();
                 try {
                     HttpResponse<String> response = client.

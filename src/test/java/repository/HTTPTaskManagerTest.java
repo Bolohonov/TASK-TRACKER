@@ -1,14 +1,13 @@
 package repository;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.HttpTaskServer;
 import services.KVServer;
 import tasks.SingleTask;
 import tasks.Task;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -17,35 +16,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HTTPTaskManagerTest {
 
-    private final HttpTaskServer httpTaskServer = new HttpTaskServer();
-    private final KVServer kvServer = new KVServer();
-    Managers managers;
-    TaskManager manager = managers.getDefault();
+//    KVServer kvServer = new KVServer();
+//    HttpTaskServer httpTaskServer = new HttpTaskServer();
+//    Managers managers = new Managers();
+//    TaskManager manager = managers.getDefault();
 
-    HTTPTaskManagerTest() throws IOException {
+    HTTPTaskManagerTest() throws IOException, ManagerSaveException, URISyntaxException {
     }
 
 
-    @BeforeEach
-    void run() throws IOException, ManagerSaveException {
-        httpTaskServer.run();
-        kvServer.start();
-    }
-
-    @AfterEach
-    void stop() {
-        httpTaskServer.stop();
-        kvServer.stop();
+    @BeforeAll
+    static void run() throws IOException, ManagerSaveException {
+        new KVServer().start();
+        new HttpTaskServer().run();
     }
 
     @Test
-    void putTask() throws IntersectionException, ManagerSaveException {
+    void putTask() throws IntersectionException, ManagerSaveException, URISyntaxException {
+        Managers managers = new Managers();
+        TaskManager manager = managers.getDefault();
         Task task = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1023, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2021, 06, 19, 7, 00, 10)));
         manager.putTask(task);
-        assertEquals(task, manager.getTaskById(task.getId()));
     }
 
     @Test

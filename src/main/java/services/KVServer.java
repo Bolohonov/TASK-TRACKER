@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,9 @@ public class KVServer {
         server.createContext("/save", (h) -> {
             try {
                 System.out.println("\n/save");
+                String response = "Задача сохранена";
+                System.out.println(response);
+                sendText(h, "Задача сохранена");
                 if (!hasAuth(h)) {
                     System.out.println("Запрос неавторизован, " +
                             "нужен параметр в query API_KEY со значением апи-ключа");
