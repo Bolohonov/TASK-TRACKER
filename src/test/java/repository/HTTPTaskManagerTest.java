@@ -25,14 +25,18 @@ class HTTPTaskManagerTest {
     }
 
 
-    @BeforeAll
-    static void run() throws IOException, ManagerSaveException {
-        new KVServer().start();
-        new HttpTaskServer().run();
-    }
+//    @BeforeAll
+//    static void run() throws IOException, ManagerSaveException {
+//        new KVServer().start();
+//        new HttpTaskServer().run();
+//    }
 
     @Test
-    void putTask() throws IntersectionException, ManagerSaveException, URISyntaxException {
+    void putTask() throws IntersectionException, ManagerSaveException, URISyntaxException, IOException {
+        KVServer kvServer = new KVServer();
+        kvServer.start();
+        HttpTaskServer httpTaskServer = new HttpTaskServer();
+        httpTaskServer.run();
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         Task task = new SingleTask("TestSingleName",
@@ -40,6 +44,10 @@ class HTTPTaskManagerTest {
                 Optional.of(LocalDateTime
                         .of(2021, 06, 19, 7, 00, 10)));
         manager.putTask(task);
+        System.out.println(kvServer.getData().get(task.getId()));
+        //kvServer.getData().entrySet().forEach(System.out::println);
+        SingleTask taskFrom = (SingleTask) manager.getTaskById(task.getId());
+        System.out.println(taskFrom.toString());
     }
 
     @Test

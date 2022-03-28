@@ -47,7 +47,7 @@ public class KVTaskClient {
     }
 
     public void put(String key, String json) {
-        URI uri = URI.create(url.toString() + "/save" + "?API_KEY=" + API_KEY);
+        URI uri = URI.create(url.toString() + "/save" + "/" + key + "?API_KEY=" + API_KEY);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest requestPost = HttpRequest
                 .newBuilder()
@@ -68,15 +68,15 @@ public class KVTaskClient {
 
     public String load(String key) {
         HttpResponse<String> response = null;
-        URI uri = URI.create(url.toString() + "/load" + "/?id=" + key + "&API_KEY=" + API_KEY);
-        HttpRequest request = HttpRequest
+        URI uri = URI.create(url.toString() + "/load" + "/" + key + "?API_KEY=" + API_KEY);
+        HttpRequest requestGet = HttpRequest
                 .newBuilder()
-                .uri(url)
+                .uri(uri)
                 .GET()
                 .header("content-type", "application/json")
                 .build();
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = client.send(requestGet, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             System.out.println("Во время выполнения запроса ресурса по URL-адресу: '"
                     + uri + "' возникла ошибка.\n" +

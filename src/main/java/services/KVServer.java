@@ -1,5 +1,6 @@
 package services;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -40,9 +41,6 @@ public class KVServer {
         server.createContext("/save", (h) -> {
             try {
                 System.out.println("\n/save");
-                String response = "Задача сохранена";
-                System.out.println(response);
-                sendText(h, "Задача сохранена");
                 if (!hasAuth(h)) {
                     System.out.println("Запрос неавторизован, " +
                             "нужен параметр в query API_KEY со значением апи-ключа");
@@ -91,6 +89,7 @@ public class KVServer {
                 switch (h.getRequestMethod()) {
                     case "GET":
                         String key = h.getRequestURI().getPath().substring("/load/".length());
+                        System.out.println();
                         if (key.isEmpty()) {
                             System.out.println("Key для загрузки пустой. " +
                                     "key указывается в пути: /load/{key}");
@@ -131,10 +130,14 @@ public class KVServer {
                             return;
                         }
                         if(data.containsKey(key)) {
-                            sendText(h, data.get(key));
+                            System.out.println(data.get(key));
+                            h.getResponseHeaders().add("Content-Type", "application/json");
+                            h.sendResponseHeaders(200, 0);
+                            try (OutputStream os = h.getResponseBody()) {
+                                os.write(data.get(key).getBytes());
+                            }
                             System.out.println("Значение для ключа " +
                                     key + " успешно отправлено в ответ на запрос!");
-                            h.sendResponseHeaders(200, 0);
                             return;
                         }
                         break;
@@ -218,6 +221,10 @@ public class KVServer {
         h.getResponseHeaders().add("Content-Type", "application/json");
         h.sendResponseHeaders(200, resp.length);
         h.getResponseBody().write(resp);
+    }
+
+    public Map<String, String> getData() {
+        return data;
     }
 
     public void stop() {
