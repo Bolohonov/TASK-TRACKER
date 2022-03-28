@@ -33,42 +33,6 @@ public class SubTaskSerializer implements JsonSerializer<SubTask> {
                 task.getDuration().get().toString());
         jsonElement.getAsJsonObject().addProperty("startTime",
                 task.getStartTime().get().toString());
-//        if (task instanceof SingleTask) {
-//            String str = gson.toJson(task);
-//            json = gson.fromJson(str, JsonElement.class);
-//        } else {
-//            if (task instanceof EpicTask) {
-//                String str = task.getName() + " " + task.getDescription();
-//                JsonWriter writer = null;
-//                try {
-//                    writer.jsonValue(task.getName()).jsonValue(task.getDescription());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                try {
-//                    writer.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                if (task instanceof SubTask) {
-//                    String str = task.getName() + " " + task.getDescription();
-//                    JsonWriter writer = null;
-//                    try {
-//                        writer.jsonValue(task.getName()).jsonValue(task.getDescription());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    json = gson.fromJson(str, JsonElement.class);
-//                } else {
-//                    try {
-//                        throw new ManagerSaveException("Неизвестный тип задачи!");
-//                    } catch (ManagerSaveException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
         return jsonElement;
     }
 }

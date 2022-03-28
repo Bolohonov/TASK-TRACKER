@@ -1,6 +1,7 @@
 package tasks;
 
 
+import com.google.gson.annotations.Expose;
 import repository.TaskStatus;
 
 import java.time.Duration;

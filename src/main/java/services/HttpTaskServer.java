@@ -52,11 +52,12 @@ public class HttpTaskServer {
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
         Gson gson =
-                new GsonBuilder().registerTypeAdapter(SubTask.class,
-                        new SubTaskSerializer()).create();
-        SubTask task = (SubTask)manager.getTaskById(1004);
+                new GsonBuilder()
+                        .registerTypeAdapter(SubTask.class, new TaskSerializer())
+                        .create();
+
+        Task task = manager.getTaskById(1004);
         System.out.println(task);
-        System.out.println(task.getEpicTask());
         System.out.println(gson.toJson(task));
 
 //        SubTask task = gson.fromJson(taskStr, SubTask.class);
