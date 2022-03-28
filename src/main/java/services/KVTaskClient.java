@@ -45,7 +45,6 @@ public class KVTaskClient {
     }
 
     public void put(String key, String json) {
-        //POST /save/<ключ>?API_KEY=
         URI uri = URI.create(url.toString() + "/save" + "?API_KEY=" + API_KEY);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest

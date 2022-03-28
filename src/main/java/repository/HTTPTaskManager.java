@@ -9,7 +9,6 @@ import tasks.Task;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -61,7 +60,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public void removeTaskById(int id) throws ManagerSaveException {
-        Gson gson = new Gson();
         kvTaskClient.delete("removeTaskById=", String.valueOf(id));
         history.remove(id);
     }

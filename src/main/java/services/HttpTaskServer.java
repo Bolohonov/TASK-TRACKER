@@ -59,10 +59,6 @@ public class HttpTaskServer {
         Task task = manager.getTaskById(1004);
         System.out.println(task);
         System.out.println(gson.toJson(task));
-
-//        SubTask task = gson.fromJson(taskStr, SubTask.class);
-//        System.out.println(task.toString());
-
         //httpServer.stop(1);
     }
 

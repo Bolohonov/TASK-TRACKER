@@ -23,7 +23,6 @@ public class TaskDeserializer implements JsonDeserializer<Task> {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonElement jsonElementDurationValue = jsonObject.get("duration");
         JsonObject jsonObjectDuration = jsonElementDurationValue.getAsJsonObject();
-
         Duration durationOfDays = Duration
                 .ofDays(jsonObjectDuration.get("days").getAsLong());
         Duration durationOfHours = Duration
@@ -41,61 +40,55 @@ public class TaskDeserializer implements JsonDeserializer<Task> {
                 .plus(durationOfNanos);
         jsonObject = json.getAsJsonObject();
         JsonElement jsonElementLocalDateTime = jsonObject.get("startTime");
+        JsonObject jsonObjectLocalDateTime = jsonElementLocalDateTime.getAsJsonObject();
         LocalDate localDate = LocalDate.of(
-                jsonObject.get("year").getAsInt(),
-                jsonObject.get("month").getAsInt(),
-                jsonObject.get("day").getAsInt()
+                jsonObjectLocalDateTime.get("year").getAsInt(),
+                jsonObjectLocalDateTime.get("month").getAsInt(),
+                jsonObjectLocalDateTime.get("day").getAsInt()
         );
         LocalTime localTime = LocalTime.of(
-                jsonObject.get("hour").getAsInt(),
-                jsonObject.get("minute").getAsInt(),
-                jsonObject.get("second").getAsInt(),
-                jsonObject.get("nano").getAsInt()
+                jsonObjectLocalDateTime.get("hour").getAsInt(),
+                jsonObjectLocalDateTime.get("minute").getAsInt(),
+                jsonObjectLocalDateTime.get("second").getAsInt(),
+                jsonObjectLocalDateTime.get("nano").getAsInt()
         );
         LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
         jsonObject = json.getAsJsonObject();
-        Task task;
-        String taskType = jsonObject.get("type").getAsString();
-        if (taskType.equals(TaskType.TASK)) {
-
-    }
-        switch (taskType) {
-            case TaskType.TASK:
-                task = new SingleTask(
-                        jsonObject.get("name").getAsString(),
-                        jsonObject.get("description").getAsString(),
-                        jsonObject.get("id").getAsInt(),
-                        Optional.of(duration),
-                        Optional.of(localDateTime));
-                        task.setStatus(TaskStatus.valueOf(jsonObject.get("status")
-                                .getAsString()));
-                        break;
-            case TaskType.EPIC:
+        Task task = null;
+        String taskTypeFromJson = jsonObject.get("type").getAsString();
+        if (taskTypeFromJson.equals(TaskType.TASK.toString())) {
+            task = new SingleTask(
+                    jsonObject.get("name").getAsString(),
+                    jsonObject.get("description").getAsString(),
+                    jsonObject.get("id").getAsInt(),
+                    Optional.of(duration),
+                    Optional.of(localDateTime));
+            task.setStatus(TaskStatus.valueOf(jsonObject.get("status")
+                    .getAsString()));
+        } else {
+            if (taskTypeFromJson.equals(TaskType.EPIC.toString())) {
                 task = new EpicTask(
                         jsonObject.get("name").getAsString(),
                         jsonObject.get("description").getAsString(),
-                        jsonObject.get("id").getAsInt();
-                break;
-            case TaskType.SUBTASK:
-                int epicId = jsonObject.get("epic").getAsInt();
-                try {
-                    EpicTask epic = (EpicTask) new Managers()
-                            .getDefault().getTaskById(epicId);
-                    task = new SubTask(epic,
-                            jsonObject.get("name").getAsString(),
-                            jsonObject.get("description").getAsString(),
-                            jsonObject.get("id").getAsInt(),
-                            Optional.of(duration),
-                            Optional.of(localDateTime));
-                } catch (ManagerSaveException | URISyntaxException e) {
-                    e.printStackTrace();
+                        jsonObject.get("id").getAsInt());
+            } else {
+                if (taskTypeFromJson.equals(TaskType.SUBTASK.toString())) {
+                    int epicId = jsonObject.get("epic").getAsInt();
+                    try {
+                        EpicTask epic = (EpicTask) new Managers()
+                                .getDefault().getTaskById(epicId);
+                        task = new SubTask(epic,
+                                jsonObject.get("name").getAsString(),
+                                jsonObject.get("description").getAsString(),
+                                jsonObject.get("id").getAsInt(),
+                                Optional.of(duration),
+                                Optional.of(localDateTime));
+                    } catch (ManagerSaveException | URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
-                break;
+            }
         }
-
-
-
-
         return task;
     }
 }
