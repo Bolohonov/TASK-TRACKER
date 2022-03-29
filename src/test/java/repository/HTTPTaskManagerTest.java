@@ -149,7 +149,6 @@ class HTTPTaskManagerTest {
                 "TestEpicDescription", 1101);
         EpicTask epicTask2 = new EpicTask("TestEpicName2",
                 "TestEpicDescription2", 1102);
-        ;
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1103);
         SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",

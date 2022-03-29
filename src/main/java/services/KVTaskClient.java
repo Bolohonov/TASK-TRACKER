@@ -86,6 +86,7 @@ public class KVTaskClient {
                             + "?API_KEY=" + API_KEY);
             HttpRequest request = HttpRequest
                     .newBuilder()
+                    .DELETE()
                     .uri(uri)
                     .header("content-type", "application/json")
                     .build();

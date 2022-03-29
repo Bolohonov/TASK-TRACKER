@@ -68,7 +68,7 @@ public class KVServer {
                         h.sendResponseHeaders(200, 0);
                         break;
                     default:
-                        System.out.println("/save ждёт POST-запрос или DELETE-запрос, а получил: "
+                        System.out.println("/save ждёт POST-запрос, а получил: "
                                 + h.getRequestMethod());
                         h.sendResponseHeaders(405, 0);
                 }
@@ -107,6 +107,7 @@ public class KVServer {
                         if(key.equals("getSingleTasks")) {
                             String responseData = null;
                             for(String task : data.values()) {
+                                System.out.println(task);
                                 if(task.contains("type:TASK")) {
                                     responseData = responseData + "\n" + task;
                                 }
