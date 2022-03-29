@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<Task> {
@@ -29,17 +28,17 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
         JsonElement jsonElement = gson.toJsonTree(task);
         jsonElement.getAsJsonObject().addProperty("type", task.getType().toString());
         if (task instanceof EpicTask) {
-            List<String> list = new ArrayList<>();
+            List<Integer> list = new ArrayList<>();
             ((EpicTask) task)
                     .getSubTasks().values()
-                    .forEach((o) -> list.add(String.valueOf(o.getId())));
-            String ids = list.get(0);
-            list.remove(0);
-            for (String s : list) {
-                ids = ids + "," + s;
+                    .forEach((o) -> list.add(o.getId()));
+            if (!list.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                for (Integer id : list) {
+                    sb.append(id + ",");
+                }
+                jsonElement.getAsJsonObject().addProperty("subTasksOfEpic", sb.toString());
             }
-            jsonElement.getAsJsonObject().addProperty("subTasksOfEpic",
-                    ((SubTask) task).getEpicTask().getId());
         }
         if (task instanceof SubTask) {
             jsonElement.getAsJsonObject().addProperty("epic",
@@ -136,7 +135,7 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
     private LocalDateTime deserializeLocalDateTime(JsonObject jsonObject) {
         LocalDateTime localDateTime = null;
         JsonObject jsonObjectStartTime = jsonObject.get("startTime").getAsJsonObject();
-        JsonElement jsonElementLocalDateTimeValue = jsonObjectStartTime .get("value");
+        JsonElement jsonElementLocalDateTimeValue = jsonObjectStartTime.get("value");
         if (jsonElementLocalDateTimeValue!= null) {
             JsonObject jsonElementLocalDateTime = jsonElementLocalDateTimeValue.getAsJsonObject();
             JsonElement jsonLocalDateDate = jsonElementLocalDateTime.get("date");
@@ -187,21 +186,24 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
 
     private EpicTask deserializeSubTasksFromEpic(EpicTask epic, JsonElement json) {
         JsonObject jsonObject = json.getAsJsonObject();
-        JsonElement jsonElementSubTasks = jsonObject.get("subTasksOfEpic").getAsJsonObject();
-        String[] subTasksIDs = jsonElementSubTasks.toString().split(",");
-        try {
-            for (int i = 0; i < subTasksIDs.length; i++) {
-                int id = Integer.parseInt(subTasksIDs[i]);
-                epic.addSubTask((SubTask)new Managers()
-                        .getDefault().getTaskById(id));
+        if (jsonObject.has("subTasksOfEpic")) {
+            JsonElement jsonElementSubTasks = jsonObject.get("subTasksOfEpic");
+                String s = jsonElementSubTasks.getAsString();
+                String[] subTasksIDs = s.split(",");
+                try {
+                    for (int i = 0; i < subTasksIDs.length; i++) {
+                        int id = Integer.parseInt(subTasksIDs[i]);
+                        epic.addSubTask((SubTask) new Managers()
+                                .getDefault().getTaskById(id));
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                } catch (ManagerSaveException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ManagerSaveException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
         return epic;
     }
 }

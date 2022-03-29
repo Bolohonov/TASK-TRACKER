@@ -50,12 +50,42 @@ class HTTPTaskManagerTest {
     }
 
     @Test
-    void putEpicTaskStandardBehavior() throws ManagerSaveException, URISyntaxException, IntersectionException {
+    void putEpicTaskWithoutSubTasksStandardBehavior() throws ManagerSaveException,
+            URISyntaxException,
+            IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1051);
         manager.putTask(expectedEpicTask);
+        Task actualEpicTask = manager.getTaskById(expectedEpicTask.getId());
+        assertEquals(expectedEpicTask, actualEpicTask);
+    }
+
+    @Test
+    void putEpicTaskWithSubTasksStandardBehavior() throws ManagerSaveException,
+            URISyntaxException,
+            IntersectionException {
+        Managers managers = new Managers();
+        TaskManager manager = managers.getDefault();
+        EpicTask expectedEpicTask = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1061);
+        SubTask expectedSubTask1 = new SubTask(expectedEpicTask, "TestNameSub1",
+                "TestDescriptionSub1", 1062, Optional.of(Duration.ofHours(1)),
+                Optional.of(LocalDateTime
+                        .of(2022, 03, 10, 1, 00, 10)));
+        SubTask expectedSubTask2 = new SubTask(expectedEpicTask, "TestNameSub2",
+                "TestDescriptionSub2", 1063, Optional.of(Duration.ofHours(1)),
+                Optional.of(LocalDateTime
+                        .of(2022, 03, 10, 3, 00, 10)));
+        SubTask expectedSubTask3 = new SubTask(expectedEpicTask, "TestNameSub3",
+                "TestDescriptionSub3", 1064, Optional.of(Duration.ofHours(1)),
+                Optional.of(LocalDateTime
+                        .of(2022, 03, 10, 5, 00, 10)));
+        manager.putTask(expectedEpicTask);
+        manager.putTask(expectedSubTask1);
+        manager.putTask(expectedSubTask2);
+        manager.putTask(expectedSubTask3);
         Task actualEpicTask = manager.getTaskById(expectedEpicTask.getId());
         assertEquals(expectedEpicTask, actualEpicTask);
     }
