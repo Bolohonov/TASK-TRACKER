@@ -45,7 +45,7 @@ public class InMemoryTasksManager implements TaskManager {
             LocalDateTime finishTime = startTime.plus(duration);
             for (Task task : prioritizedTasks) {
                 if (taskToCheck instanceof SubTask && task instanceof EpicTask) {
-                    if (!((SubTask) taskToCheck).getEpicTask().equals(task)
+                    if ((((SubTask) taskToCheck).getEpicId() != task.getId())
                             && task.getStartTime().isPresent() && task.getDuration().isPresent()) {
                         LocalDateTime taskStart = task.getStartTime().get();
                         LocalDateTime taskFinish = taskStart.plus(task.getDuration().get());
@@ -276,7 +276,7 @@ public class InMemoryTasksManager implements TaskManager {
             }
             SubTask subTask = (SubTask) getSubTaskOrNullById(id);
             prioritizedTasks.remove(subTask);
-            subTask.getEpicTask().removeSubTask(subTask);
+            epicTaskRepository.getTasks().get(subTask.getEpicId()).removeSubTask(subTask);
         }
     }
 

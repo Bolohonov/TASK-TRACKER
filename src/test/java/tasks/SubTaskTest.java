@@ -24,7 +24,7 @@ public class SubTaskTest extends BaseTaskManager {
         SubTask subTask = creator.createSubTask(epic,
                 new String[]{"TestEpicName", "TestEpicDescription"},
                 Duration.ofHours(1), LocalDateTime.now(ZoneId.of("Europe/Moscow")).plusHours(2));
-        assertEquals(epic, subTask.getEpicTask());
+        assertEquals(epic, subTask.getEpicId());
 
     }
 

@@ -97,14 +97,13 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
                 } else if (values[1].equals(TaskType.EPIC.toString())) {
                     task = new EpicTask(values[2], values[4], Integer.parseInt(values[0]));
                 } else if (values[1].equals(TaskType.SUBTASK.toString())) {
-                    task = new SubTask((EpicTask) super
-                            .getTaskById(Integer.parseInt(values[7])),
+                    task = new SubTask(Integer.parseInt(values[7]),
                             values[2], values[4], Integer.parseInt(values[0]),
                             Optional.of(Duration.parse(values[5])),
                             Optional.of(LocalDateTime.parse(values[6])));
                     task.setStatus(TaskStatus.valueOf(values[3]));
                 }
-            } catch (DateTimeParseException | ManagerSaveException exp) {
+            } catch (DateTimeParseException exp) {
                 System.out.println(exp.getMessage());
             }
         }

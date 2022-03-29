@@ -40,10 +40,6 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                 jsonElement.getAsJsonObject().addProperty("subTasksOfEpic", sb.toString());
             }
         }
-        if (task instanceof SubTask) {
-            jsonElement.getAsJsonObject().addProperty("epic",
-                    ((SubTask) task).getEpicTask().getId());
-        }
         return jsonElement;
     }
 
@@ -86,11 +82,11 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                 task = deserializeSubTasksFromEpic((EpicTask)task, json);
             } else {
                 if (taskTypeFromJson.equals(TaskType.SUBTASK.toString())) {
-                    int epicId = jsonObject.get("epic").getAsInt();
+                    int epicId = jsonObject.get("epicId").getAsInt();
                     try {
                         EpicTask epic = (EpicTask) new Managers()
                                 .getDefault().getTaskById(epicId);
-                        task = new SubTask(epic,
+                        task = new SubTask(epicId,
                                 jsonObject.get("name").getAsString(),
                                 jsonObject.get("description").getAsString(),
                                 jsonObject.get("id").getAsInt(),

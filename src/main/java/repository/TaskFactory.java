@@ -27,7 +27,7 @@ public class TaskFactory implements TaskCreator {
     public SubTask createSubTask(Task epicTask, String[] userTask,
                                  Duration duration, LocalDateTime startTime) {
         if (epicTask != null && epicTask.getClass().equals(EpicTask.class)) {
-            return new SubTask((EpicTask) epicTask, userTask[0], userTask[1],
+            return new SubTask(epicTask.getId(), userTask[0], userTask[1],
                     InMemoryTasksManager.getId(), Optional.ofNullable(duration),
                     Optional.ofNullable(startTime));
         } else {

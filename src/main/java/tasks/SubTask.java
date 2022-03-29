@@ -9,27 +9,26 @@ import java.util.Optional;
 
 public class SubTask extends Task {
 
-    private EpicTask epicTask;
+    private int epicId;
 
-    public SubTask(EpicTask epicTask, String name, String description,
+    public SubTask(int epicId, String name, String description,
                    int id, Optional<Duration> duration, Optional<LocalDateTime> startTime) {
         super(name, description, id, duration, startTime);
-        setEpicTask(epicTask);
-        epicTask.addSubTask(this);
+        setEpicId(epicId);
     }
 
-    public void setEpicTask(EpicTask epicTask) {
-        this.epicTask = epicTask;
+    public void setEpicId(int epicId) {
+        this.epicId = epicId;
     }
 
-    public EpicTask getEpicTask() {
-        return epicTask;
+    public int getEpicId() {
+        return epicId;
     }
 
     @Override
     public String toString() {
         return "Подзадача{" +
-                "Имя эпика=" + epicTask.getName() +
+                "ID эпика=" + epicId +
                 ", Имя подзадачи='" + super.getName() + '\'' +
                 ", Описание='" + super.getDescription() + '\'' +
                 ", ID=" + super.getId() +
@@ -48,7 +47,7 @@ public class SubTask extends Task {
                 Objects.equals(super.getName(), subtask.getName()) &&
                 Objects.equals(super.getDescription(), subtask.getDescription()) &&
                 Objects.equals(super.getStatus(), subtask.getStatus()) &&
-                (epicTask.equals(subtask.epicTask)) &&
+                (epicId == subtask.getEpicId()) &&
                 Objects.equals(super.getDuration(), subtask.getDuration()) &&
                 Objects.equals(super.getStartTime(), subtask.getStartTime());
     }
@@ -57,7 +56,7 @@ public class SubTask extends Task {
     public int hashCode() {
         int result = Objects.hash(super.getName(), super.getDescription(),
                 super.getId(), super.getStatus(), super.getDuration(), super.getStartTime());
-        result = 41 * result + epicTask.hashCode() + super.getId();
+        result = 41 * result + epicId + super.getId();
         return result;
     }
 
@@ -73,6 +72,6 @@ public class SubTask extends Task {
 
     @Override
     public String toString(Task task) {
-        return super.toString(task) + epicTask.getId();
+        return super.toString(task) + epicId;
     }
 }
