@@ -12,18 +12,35 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<Task> {
 
     @Override
-    public JsonElement serialize(Task task, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(Task task, Type type,
+                                 JsonSerializationContext jsonSerializationContext) {
         Gson gson =
                 new GsonBuilder()
                         .setExclusionStrategies(new ExclusionStrategyOfTask())
                         .create();
         JsonElement jsonElement = gson.toJsonTree(task);
         jsonElement.getAsJsonObject().addProperty("type", task.getType().toString());
+        if (task instanceof EpicTask) {
+            List<String> list = new ArrayList<>();
+            ((EpicTask) task)
+                    .getSubTasks().values()
+                    .forEach((o) -> list.add(String.valueOf(o.getId())));
+            String ids = list.get(0);
+            list.remove(0);
+            for (String s : list) {
+                ids = ids + "," + s;
+            }
+            jsonElement.getAsJsonObject().addProperty("subTasksOfEpic",
+                    ((SubTask) task).getEpicTask().getId());
+        }
         if (task instanceof SubTask) {
             jsonElement.getAsJsonObject().addProperty("epic",
                     ((SubTask) task).getEpicTask().getId());
@@ -67,6 +84,7 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                         jsonObject.get("name").getAsString(),
                         jsonObject.get("description").getAsString(),
                         jsonObject.get("id").getAsInt());
+                task = deserializeSubTasksFromEpic((EpicTask)task, json);
             } else {
                 if (taskTypeFromJson.equals(TaskType.SUBTASK.toString())) {
                     int epicId = jsonObject.get("epic").getAsInt();
@@ -165,5 +183,25 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
             }
         }
         return localDateTime;
+    }
+
+    private EpicTask deserializeSubTasksFromEpic(EpicTask epic, JsonElement json) {
+        JsonObject jsonObject = json.getAsJsonObject();
+        JsonElement jsonElementSubTasks = jsonObject.get("subTasksOfEpic").getAsJsonObject();
+        String[] subTasksIDs = jsonElementSubTasks.toString().split(",");
+        try {
+            for (int i = 0; i < subTasksIDs.length; i++) {
+                int id = Integer.parseInt(subTasksIDs[i]);
+                epic.addSubTask((SubTask)new Managers()
+                        .getDefault().getTaskById(id));
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (ManagerSaveException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return epic;
     }
 }

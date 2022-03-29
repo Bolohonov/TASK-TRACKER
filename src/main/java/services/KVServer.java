@@ -116,6 +116,7 @@ public class KVServer {
                         if(key.equals("getEpicTasks")) {
                             String responseData = null;
                             for(String task : data.values()) {
+                                System.out.println(task);
                                 if(task.contains("type:EPIC")) {
                                     responseData = responseData + "\n" + task;
                                 }
