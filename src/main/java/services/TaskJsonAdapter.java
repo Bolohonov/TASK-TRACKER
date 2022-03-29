@@ -28,31 +28,6 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
             jsonElement.getAsJsonObject().addProperty("epic",
                     ((SubTask) task).getEpicTask().getId());
         }
-//        if(task.getDuration().isPresent()) {
-//            JsonObject jsonObject = jsonElement.getAsJsonObject();
-//            JsonObject jsonElementDuration = jsonObject.get("duration").getAsJsonObject();
-//            JsonElement jsonElementDurationValue = jsonElementDuration.get("value");
-//            JsonObject jsonObjectDuration = jsonElementDurationValue.getAsJsonObject();
-//            if(jsonObjectDuration.has("days")) {
-//                jsonObjectDuration.addProperty("days", task.getDuration().toString());
-//            }
-//            if(jsonObjectDuration.has("hours")) {
-//                duration.plus(Duration
-//                        .ofHours(jsonObjectDuration.get("hours").getAsLong()));
-//            }
-//            if(jsonObjectDuration.has("minutes")) {
-//                duration.plus(Duration
-//                        .ofMinutes(jsonObjectDuration.get("minutes").getAsLong()));
-//            }
-//            if(jsonObjectDuration.has("seconds")) {
-//                duration.plus(Duration
-//                        .ofSeconds(jsonObjectDuration.get("seconds").getAsLong()));
-//            }
-//            if(jsonObjectDuration.has("nanos")) {
-//                duration.plus(Duration
-//                        .ofNanos(jsonObjectDuration.get("nanos").getAsLong()));
-//            }
-//       }
         return jsonElement;
     }
 
@@ -64,18 +39,6 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
         JsonObject jsonElementDuration = jsonObject.get("duration").getAsJsonObject();
         JsonElement jsonElementDurationValue = jsonElementDuration.get("value");
         JsonObject jsonObjectDuration = jsonElementDurationValue.getAsJsonObject();
-//        if(jsonObjectDuration.has("days")) {
-//            duration = duration.plus(Duration
-//                    .ofDays(jsonObjectDuration.get("days").getAsLong()));
-//        }
-//        if(jsonObjectDuration.has("hours")) {
-//            duration.plus(Duration
-//                    .ofHours(jsonObjectDuration.get("hours").getAsLong()));
-//        }
-//        if(jsonObjectDuration.has("minutes")) {
-//            duration.plus(Duration
-//                    .ofMinutes(jsonObjectDuration.get("minutes").getAsLong()));
-//        }
         Duration duration = Duration.ZERO;
         if(jsonObjectDuration.has("seconds")) {
             if (jsonObjectDuration.get("seconds").getAsLong() >=3600) {
