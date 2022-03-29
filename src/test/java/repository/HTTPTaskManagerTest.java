@@ -75,6 +75,33 @@ class HTTPTaskManagerTest {
         assertEquals(expectedSubTask, actualSubTask);
     }
 
+//    @Test
+//    void putTwoSubTasksStandardBehavior() throws ManagerSaveException, URISyntaxException, IntersectionException {
+//        Managers managers = new Managers();
+//        TaskManager manager = managers.getDefault();
+//        EpicTask expectedEpicTask = new EpicTask("TestEpicName",
+//                "TestEpicDescription", 1001);
+//        manager.putTask(expectedEpicTask);
+//        SubTask expectedSubTask1 = new SubTask(expectedEpicTask, "TestNameSub1",
+//                "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
+//                Optional.of(LocalDateTime
+//                        .of(2022, 03, 10, 1, 00, 10)));
+//        SubTask expectedSubTask2 = new SubTask(expectedEpicTask, "TestNameSub2",
+//                "TestDescriptionSub2", 1005, Optional.of(Duration.ofHours(1)),
+//                Optional.of(LocalDateTime
+//                        .of(2022, 03, 11, 1, 00, 10)));
+//        manager.putTask(expectedSubTask1);
+//        Task actualSubTask = manager.getTaskById(expectedSubTask1.getId());
+//        System.out.println(expectedSubTask1);
+//        System.out.println(actualSubTask);
+//        System.out.printf("!!!!!!!!!!!!!!!!!!!!!");
+//        manager.getSubTasksByEpic(expectedEpicTask).values().forEach(System.out::println);
+//        assertEquals(expectedSubTask1, actualSubTask);
+//        manager.putTask(expectedSubTask2);
+//        Task actualSubTask2 = manager.getTaskById(expectedSubTask2.getId());
+//        assertEquals(expectedSubTask2, actualSubTask2);
+//    }
+
     @Test
     void updateTask() {
     }
