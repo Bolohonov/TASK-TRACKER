@@ -36,7 +36,8 @@ class HTTPTaskManagerTest {
     }
 
     @Test
-    void putSingleTaskStandardBehavior() throws ManagerSaveException, URISyntaxException, IntersectionException {
+    void putAndGetSingleTaskStandardBehavior() throws ManagerSaveException, URISyntaxException,
+            IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         Task expectedTask = new SingleTask("TestSingleName",
@@ -49,7 +50,7 @@ class HTTPTaskManagerTest {
     }
 
     @Test
-    void putEpicTaskStandardBehavior() throws ManagerSaveException, URISyntaxException, IntersectionException {
+    void putAndGetEpicTaskStandardBehavior() throws ManagerSaveException, URISyntaxException, IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
@@ -60,7 +61,8 @@ class HTTPTaskManagerTest {
     }
 
     @Test
-    void putSubTaskStandardBehavior() throws ManagerSaveException, URISyntaxException, IntersectionException {
+    void putAndGetSubTaskStandardBehavior() throws ManagerSaveException, URISyntaxException,
+            IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
@@ -73,6 +75,20 @@ class HTTPTaskManagerTest {
         manager.putTask(expectedSubTask);
         Task actualSubTask = manager.getTaskById(expectedSubTask.getId());
         assertEquals(expectedSubTask, actualSubTask);
+    }
+
+    @Test
+    void putTaskIntersectionException() throws ManagerSaveException, URISyntaxException,
+            IntersectionException {
+        Managers managers = new Managers();
+        TaskManager manager = managers.getDefault();
+        Task expectedTask = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1023, Optional.of(Duration.ofDays(2)),
+                Optional.of(LocalDateTime
+                        .of(2021, 06, 19, 7, 00, 10)));
+        manager.putTask(expectedTask);
+        Task actualTask = manager.getTaskById(expectedTask.getId());
+        assert;
     }
 
 //    @Test

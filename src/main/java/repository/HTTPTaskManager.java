@@ -21,7 +21,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     private Path path;
     private KVTaskClient kvTaskClient;
-    protected static final HistoryManager history = new InMemoryHistoryManager();
 
     public HTTPTaskManager(Path path) throws ManagerSaveException, URISyntaxException {
         super(Paths.get("resources/data.csv"));
@@ -31,40 +30,41 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public void putTask(Task task) {
+    public void putTask(Task task) throws IntersectionException, ManagerSaveException {
+        super.putTask(task);
         Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = gson.toJson(task);
         kvTaskClient.put(String.valueOf(task.getId()), json);
     }
 
     @Override
-    public boolean updateTask(Task task) {
+    public boolean updateTask(Task task) throws ManagerSaveException {
+        super.updateTask(task);
         Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = gson.toJson(task);
-        kvTaskClient.put(String.valueOf(task.getId()), json );
-        history.add(task);
+        kvTaskClient.put(String.valueOf(task.getId()), json);
         return true;
     }
 
     @Override
     public Task getTaskById(int id) throws ManagerSaveException {
+        super.getTaskById(id);
         Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load(String.valueOf(id));
         Task task = gson.fromJson(json, Task.class);
-        history.add(task);
         return task;
     }
 
     @Override
     public void removeAllTasks() throws ManagerSaveException {
+        super.removeAllTasks();
         kvTaskClient.delete("removeAllTasks", null);
-        history.clearHistory();
     }
 
     @Override
-    public void removeTaskById(int id) {
+    public void removeTaskById(int id) throws ManagerSaveException {
+        super.removeTaskById(id);
         kvTaskClient.delete("removeTaskById=", String.valueOf(id));
-        history.remove(id);
     }
 
     @Override
@@ -95,6 +95,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public Map<Integer, SubTask> getSubTasksByEpic(Task task) {
+        super.getSubTasksByEpic(task);
         Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSubTasksByEpic=" + task.getId());
         EpicTask epic = gson.fromJson(json, EpicTask.class);
@@ -103,6 +104,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public List<Task> getHistory() {
-        return history.getHistory();
+        return super.getHistory();
     }
 }
