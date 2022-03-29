@@ -30,20 +30,30 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public void putTask(Task task) throws IntersectionException, ManagerSaveException {
-        super.putTask(task);
-        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
-        String json = gson.toJson(task);
-        kvTaskClient.put(String.valueOf(task.getId()), json);
+    public void putTask(Task task) {
+        try {
+            super.putTask(task);
+            Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+            String json = gson.toJson(task);
+            kvTaskClient.put(String.valueOf(task.getId()), json);
+        } catch (IntersectionException | ManagerSaveException e) {
+            System.out.println(e.getMessage() + " " + e.getStackTrace());
+        }
     }
 
     @Override
-    public boolean updateTask(Task task) throws ManagerSaveException {
-        super.updateTask(task);
-        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
-        String json = gson.toJson(task);
-        kvTaskClient.put(String.valueOf(task.getId()), json);
-        return true;
+    public boolean updateTask(Task task) {
+        boolean isUpdate = false;
+        try {
+            super.updateTask(task);
+            Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+            String json = gson.toJson(task);
+            kvTaskClient.put(String.valueOf(task.getId()), json);
+            isUpdate = true;
+        } catch (ManagerSaveException e) {
+            System.out.println(e.getMessage() + " " + e.getStackTrace());
+        }
+        return isUpdate;
     }
 
     @Override
