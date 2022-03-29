@@ -1,11 +1,5 @@
 package services;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import tasks.Task;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;

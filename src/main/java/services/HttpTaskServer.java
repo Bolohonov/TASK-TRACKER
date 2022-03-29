@@ -18,16 +18,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static jdk.internal.util.xml.XMLStreamWriter.DEFAULT_CHARSET;
 
 public class HttpTaskServer {
 
     private static final int PORT = 8077;
-    HttpServer httpServer = HttpServer.create();
+    private HttpServer httpServer = HttpServer.create();
 
     public HttpTaskServer() throws IOException {
     }
@@ -46,12 +43,11 @@ public class HttpTaskServer {
 
     private static final TaskManager manager = managers.getDefault();
 
-    public void run() throws IOException, ManagerSaveException {
+    public void run() throws IOException {
         httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-        //httpServer.stop(1);
     }
 
     static class TaskHandler implements HttpHandler {
@@ -144,65 +140,6 @@ public class HttpTaskServer {
                                         + e.getMessage() + "\n" + e.getStackTrace());
                                 httpExchange.sendResponseHeaders(500, 0);
                             }
-//                    switch (getPathFromPostRequest(httpExchange)) {
-//                        case "task":
-//                            SingleTask task = gson.fromJson(body, SingleTask.class);
-//                            try {
-//                                manager.putTask(task);
-////                                response = "Задача сохранена: " + "\n" + task.toString();
-////                                httpExchange.sendResponseHeaders(200, 0);
-//                            } catch (IntersectionException e) {
-//                                System.out.println("Во время выполнения запроса по адресу:"
-//                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
-//                                        + e.getMessage() + "\n" + e.getStackTrace());
-//                                httpExchange.sendResponseHeaders(500, 0);
-//                            } catch (ManagerSaveException e) {
-//                                System.out.println("Во время выполнения запроса по адресу:"
-//                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
-//                                        + e.getMessage() + "\n" + e.getStackTrace());
-//                                httpExchange.sendResponseHeaders(500, 0);
-//                            }
-//                            break;
-//                        case "epic":
-//                            EpicTask epic = gson.fromJson(body, EpicTask.class);
-//                            try {
-//                                manager.putTask(epic);
-//                                response = "Задача сохранена: " + "\n" + epic.toString();
-//                                httpExchange.sendResponseHeaders(200, 0);
-//                            } catch (IntersectionException e) {
-//                                System.out.println("Во время выполнения запроса по адресу:"
-//                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
-//                                        + e.getMessage() + "\n" + e.getStackTrace());
-//                                httpExchange.sendResponseHeaders(500, 0);
-//                            } catch (ManagerSaveException e) {
-//                                System.out.println("Во время выполнения запроса по адресу:"
-//                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
-//                                        + e.getMessage() + "\n" + e.getStackTrace());
-//                                httpExchange.sendResponseHeaders(500, 0);
-//                            }
-//                            break;
-//                        case "subTask":
-//                            SubTask subTask = gson.fromJson(body, SubTask.class);
-//                            try {
-//                                manager.putTask(subTask);
-//                                response = "Задача сохранена: " + "\n" + subTask.toString();
-//                                httpExchange.sendResponseHeaders(200, 0);
-//                            } catch (IntersectionException e) {
-//                                System.out.println("Во время выполнения запроса по адресу:"
-//                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
-//                                        + e.getMessage() + "\n" + e.getStackTrace());
-//                                httpExchange.sendResponseHeaders(500, 0);
-//                            } catch (ManagerSaveException e) {
-//                                System.out.println("Во время выполнения запроса по адресу:"
-//                                        + httpExchange.getRequestURI() + " произошла ошибка\n"
-//                                        + e.getMessage() + "\n" + e.getStackTrace());
-//                                httpExchange.sendResponseHeaders(500, 0);
-//                            }
-//                            break;
-//                        default:
-//                            System.out.println("Вы ввели неверную команду");
-//                            httpExchange.sendResponseHeaders(405, 0);
-//                    }
                             break;
                 case "DELETE":
                     switch (getPathFromDeleteRequest(httpExchange)) {
@@ -277,26 +214,6 @@ public class HttpTaskServer {
             return command;
         }
 
-//        private String getPathFromPostRequest(HttpExchange httpExchange) {
-//            String command = null;
-//            String path = httpExchange.getRequestURI().getPath();
-//            String[] parameters = path.split("/");
-//            if (httpExchange.getRequestURI().getQuery() == null) {
-//                switch (parameters[2]) {
-//                    case "task":
-//                        command = "task";
-//                        break;
-//                    case "epic":
-//                        command = "epic";
-//                        break;
-//                    case "subtask":
-//                        command = "subtask";
-//                        break;
-//                }
-//            }
-//            return command;
-//        }
-
         private String getPathFromDeleteRequest(HttpExchange httpExchange) {
             String command;
             if (httpExchange.getRequestURI().getQuery() == null) {
@@ -308,8 +225,8 @@ public class HttpTaskServer {
         }
     }
 
-    public void stop() {
-        httpServer.stop(1);
+    public void stop(int delay) {
+        httpServer.stop(delay);
     }
 }
 

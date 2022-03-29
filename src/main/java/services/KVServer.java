@@ -89,7 +89,6 @@ public class KVServer {
                 switch (h.getRequestMethod()) {
                     case "GET":
                         String key = h.getRequestURI().getPath().substring("/load/".length());
-                        System.out.println();
                         if (key.isEmpty()) {
                             System.out.println("Key для загрузки пустой. " +
                                     "key указывается в пути: /load/{key}");
@@ -130,7 +129,6 @@ public class KVServer {
                             return;
                         }
                         if(data.containsKey(key)) {
-                            System.out.println(data.get(key));
                             h.getResponseHeaders().add("Content-Type", "application/json");
                             h.sendResponseHeaders(200, 0);
                             try (OutputStream os = h.getResponseBody()) {
@@ -219,18 +217,13 @@ public class KVServer {
     }
 
     protected void sendText(HttpExchange h, String text) throws IOException {
-        //byte[] resp = jackson.writeValueAsBytes(obj);
         byte[] resp = text.getBytes("UTF-8");
         h.getResponseHeaders().add("Content-Type", "application/json");
         h.sendResponseHeaders(200, resp.length);
         h.getResponseBody().write(resp);
     }
 
-    public Map<String, String> getData() {
-        return data;
-    }
-
-    public void stop() {
-        server.stop(1);
+    public void stop(int delay) {
+        server.stop(delay);
     }
 }

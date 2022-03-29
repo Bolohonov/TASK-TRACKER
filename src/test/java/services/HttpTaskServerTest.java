@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.ManagerSaveException;
 import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.SubTask;
@@ -32,15 +31,15 @@ class HttpTaskServerTest {
 
 
     @BeforeEach
-    void run() throws IOException, ManagerSaveException {
+    void run() throws IOException {
         httpTaskServer.run();
         kvServer.start();
     }
 
     @AfterEach
     void stop() {
-        httpTaskServer.stop();
-        kvServer.stop();
+        httpTaskServer.stop(1);
+        kvServer.stop(1);
     }
 
     @Test
