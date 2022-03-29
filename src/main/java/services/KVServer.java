@@ -1,6 +1,8 @@
 package services;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -107,24 +109,47 @@ public class KVServer {
                         if(key.equals("getSingleTasks")) {
                             String responseData = null;
                             for(String task : data.values()) {
-                                System.out.println(task);
-                                if(task.contains("type:TASK")) {
+                                JsonObject jo = JsonParser.parseString(task).getAsJsonObject();
+                                if(jo.has("type")
+                                        && jo.get("type").toString().contains("TASK")) {
                                     responseData = responseData + "\n" + task;
                                 }
+                            }
+                            h.getResponseHeaders().add("Content-Type", "application/json");
+                            h.sendResponseHeaders(200, 0);
+                            try (OutputStream os = h.getResponseBody()) {
+                                os.write(responseData.getBytes());
                             }
                         }
                         if(key.equals("getEpicTasks")) {
                             String responseData = null;
                             for(String task : data.values()) {
-                                System.out.println(task);
-                                if(task.contains("type:EPIC")) {
+                                JsonObject jo = JsonParser.parseString(task).getAsJsonObject();
+                                if(jo.has("type")
+                                        && jo.get("type").toString().contains("EPIC")) {
                                     responseData = responseData + "\n" + task;
                                 }
+                            }
+                            h.getResponseHeaders().add("Content-Type", "application/json");
+                            h.sendResponseHeaders(200, 0);
+                            try (OutputStream os = h.getResponseBody()) {
+                                os.write(responseData.getBytes());
                             }
                         }
                         if(key.contains("getSubTasksByEpic=")) {
                             String id = key.split("=")[1];
-                            sendText(h, data.get(id));
+                            String responseData = null;
+                            String epic = data.get(id);
+                            JsonObject jo = JsonParser.parseString(epic).getAsJsonObject();
+                            if (jo.has("subTasksOfEpic")) {
+                                responseData = jo.get("subTasksOfEpic").toString();
+                            }
+                            h.getResponseHeaders().add("Content-Type", "application/json");
+                            h.sendResponseHeaders(200, 0);
+                            try (OutputStream os = h.getResponseBody()) {
+                                os.write(responseData.getBytes());
+                            }
+                            //sendText(h, data.get(id));
                             System.out.println("Значение для ключа " +
                                     key + " успешно отправлено в ответ на запрос!");
                             h.sendResponseHeaders(200, 0);

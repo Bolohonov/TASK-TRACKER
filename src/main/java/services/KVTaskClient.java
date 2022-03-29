@@ -82,7 +82,7 @@ public class KVTaskClient {
         switch(key) {
             case "removeAllTasks":
             URI uri =
-                    URI.create(url.toString() + "/save" + "/removeAllTasks"
+                    URI.create(url.toString() + "/delete" + "/removeAllTasks"
                             + "?API_KEY=" + API_KEY);
             HttpRequest request = HttpRequest
                     .newBuilder()
@@ -100,7 +100,7 @@ public class KVTaskClient {
             }
             break;
             case "removeTaskById=":
-                uri = URI.create(url.toString() + "/save" + "/?id=" + key + "&API_KEY=" + API_KEY);
+                uri = URI.create(url.toString() + "/delete" + "/?id=" + key + "&API_KEY=" + API_KEY);
                 request = HttpRequest
                         .newBuilder()
                         .uri(uri)

@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -135,6 +137,27 @@ class HTTPTaskManagerTest {
         assertEquals(expectedTask, actualTask);
     }
 
+//    @Test
+//    void updateEpicTaskStandardBehavior() throws ManagerSaveException, URISyntaxException,
+//            IntersectionException {
+//        Managers managers = new Managers();
+//        TaskManager manager = managers.getDefault();
+//        manager.removeAllTasks();
+//        Task expectedTask = new SingleTask("TestSingleName",
+//                "TestSingleDescription", 1030, Optional.of(Duration.ofDays(2)),
+//                Optional.of(LocalDateTime
+//                        .of(2021, 06, 19, 7, 00, 10)));
+//        manager.putTask(expectedTask);
+//        expectedTask.setName("SingleName");
+//        expectedTask.setDescription("SingleDescription");
+//        expectedTask.setDuration(Duration.ofHours(10));
+//        expectedTask.setStartTime(LocalDateTime
+//                .of(2021, 01, 27, 7, 15, 10));
+//        manager.updateTask(expectedTask);
+//        Task actualTask = manager.getTaskById(expectedTask.getId());
+//        assertEquals(expectedTask, actualTask);
+//    }
+
     @Test
     void getSingleTaskStandardBehavior() throws ManagerSaveException, URISyntaxException,
             IntersectionException {
@@ -249,7 +272,6 @@ class HTTPTaskManagerTest {
                 "TestEpicDescription", 1201);
         EpicTask epicTask2 = new EpicTask("TestEpicName2",
                 "TestEpicDescription2", 1202);
-        ;
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1203);
         SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
@@ -289,7 +311,31 @@ class HTTPTaskManagerTest {
     }
 
     @Test
-    void getSingleTasks() {
+    void getSingleTasks() throws ManagerSaveException, URISyntaxException, IntersectionException {
+        Managers managers = new Managers();
+        TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
+        Map<Integer, SingleTask> testRep = new HashMap<>();
+        SingleTask task1 = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2018, 03, 13, 7, 00, 10)));
+        SingleTask task2 = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1008, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2018, 03, 13, 10, 00, 10)));
+        SingleTask task3 = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1009, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2018, 03, 14, 10, 00, 10)));
+        testRep.put(1007, task1);
+        testRep.put(1008, task2);
+        testRep.put(1009, task3);
+        manager.putTask(task1);
+        manager.putTask(task2);
+        manager.putTask(task3);
+        manager.getSingleTasks().values().forEach(System.out::println);
+        assertEquals(testRep, manager.getSingleTasks());
     }
 
     @Test

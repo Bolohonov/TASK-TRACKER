@@ -1,9 +1,6 @@
 package repository;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import services.ConfigTaskJsonAdapter;
 import services.KVTaskClient;
 import services.TaskJsonAdapter;
@@ -17,6 +14,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,12 +85,12 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public Map<Integer, SingleTask> getSingleTasks() {
-        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        Map<Integer, SingleTask> map = new HashMap<>();
+        Gson gsonOfTask = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSingleTasks");
         String[] array = json.split("\n");
-        Map<Integer, SingleTask> map = null;
-        for(int i = 0; i < array.length; i++) {
-            SingleTask task = gson.fromJson(array[i], SingleTask.class);
+        for(int i = 1; i < array.length; i++) {
+            SingleTask task = gsonOfTask.fromJson(array[i], SingleTask.class);
             map.put(task.getId(), task);
         }
         return map;
@@ -100,12 +98,12 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public Map<Integer, EpicTask> getEpicTasks() {
-        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        Map<Integer, EpicTask> map = new HashMap<>();
+        Gson gsonOfEpicTask = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getEpicTasks");
         String[] array = json.split("\n");
-        Map<Integer, EpicTask> map = null;
-        for(int i = 0; i < array.length; i++) {
-            EpicTask task = gson.fromJson(array[i], EpicTask.class);
+        for(int i = 1; i < array.length; i++) {
+            EpicTask task = gsonOfEpicTask.fromJson(array[i], EpicTask.class);
             map.put(task.getId(), task);
         }
         return map;
@@ -114,10 +112,15 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     @Override
     public Map<Integer, SubTask> getSubTasksByEpic(Task task) {
         super.getSubTasksByEpic(task);
-        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        Map<Integer, SubTask> map = new HashMap<>();
+        Gson gsonOfSubTasks = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSubTasksByEpic=" + task.getId());
-        EpicTask epic = gson.fromJson(json, EpicTask.class);
-        return epic.getSubTasks();
+        String[] array = json.split("\n");
+        for(int i = 1; i < array.length; i++) {
+            SubTask sub = gsonOfSubTasks.fromJson(array[i], SubTask.class);
+            map.put(sub.getId(), sub);
+        }
+        return map;
     }
 
     @Override
