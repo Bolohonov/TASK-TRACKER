@@ -40,9 +40,15 @@ class HTTPTaskManagerTest {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         Task task = new SingleTask("TestSingleName",
-                "TestSingleDescription", 1023, Optional.of(Duration.ofHours(2)),
+                "TestSingleDescription", 1023, Optional.of(Duration.ofDays(2)),
                 Optional.of(LocalDateTime
                         .of(2021, 06, 19, 7, 00, 10)));
+        System.out.println(task.getDuration());
+        Task task2 = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1028, Optional.of(Duration.ofSeconds(55)),
+                Optional.of(LocalDateTime
+                        .of(2021, 06, 19, 7, 00, 10)));
+        System.out.println(task2.getDuration());
         manager.putTask(task);
         System.out.println(kvServer.getData().get(task.getId()));
         //kvServer.getData().entrySet().forEach(System.out::println);

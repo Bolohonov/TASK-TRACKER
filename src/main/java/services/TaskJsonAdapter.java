@@ -28,6 +28,31 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
             jsonElement.getAsJsonObject().addProperty("epic",
                     ((SubTask) task).getEpicTask().getId());
         }
+//        if(task.getDuration().isPresent()) {
+//            JsonObject jsonObject = jsonElement.getAsJsonObject();
+//            JsonObject jsonElementDuration = jsonObject.get("duration").getAsJsonObject();
+//            JsonElement jsonElementDurationValue = jsonElementDuration.get("value");
+//            JsonObject jsonObjectDuration = jsonElementDurationValue.getAsJsonObject();
+//            if(jsonObjectDuration.has("days")) {
+//                jsonObjectDuration.addProperty("days", task.getDuration().toString());
+//            }
+//            if(jsonObjectDuration.has("hours")) {
+//                duration.plus(Duration
+//                        .ofHours(jsonObjectDuration.get("hours").getAsLong()));
+//            }
+//            if(jsonObjectDuration.has("minutes")) {
+//                duration.plus(Duration
+//                        .ofMinutes(jsonObjectDuration.get("minutes").getAsLong()));
+//            }
+//            if(jsonObjectDuration.has("seconds")) {
+//                duration.plus(Duration
+//                        .ofSeconds(jsonObjectDuration.get("seconds").getAsLong()));
+//            }
+//            if(jsonObjectDuration.has("nanos")) {
+//                duration.plus(Duration
+//                        .ofNanos(jsonObjectDuration.get("nanos").getAsLong()));
+//            }
+//       }
         return jsonElement;
     }
 
@@ -39,26 +64,35 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
         JsonObject jsonElementDuration = jsonObject.get("duration").getAsJsonObject();
         JsonElement jsonElementDurationValue = jsonElementDuration.get("value");
         JsonObject jsonObjectDuration = jsonElementDurationValue.getAsJsonObject();
+//        if(jsonObjectDuration.has("days")) {
+//            duration = duration.plus(Duration
+//                    .ofDays(jsonObjectDuration.get("days").getAsLong()));
+//        }
+//        if(jsonObjectDuration.has("hours")) {
+//            duration.plus(Duration
+//                    .ofHours(jsonObjectDuration.get("hours").getAsLong()));
+//        }
+//        if(jsonObjectDuration.has("minutes")) {
+//            duration.plus(Duration
+//                    .ofMinutes(jsonObjectDuration.get("minutes").getAsLong()));
+//        }
         Duration duration = Duration.ZERO;
-        if(jsonObjectDuration.has("days")) {
-            duration = duration.plus(Duration
-                    .ofDays(jsonObjectDuration.get("days").getAsLong()));
-        }
-        if(jsonObjectDuration.has("hours")) {
-            duration.plus(Duration
-                    .ofHours(jsonObjectDuration.get("hours").getAsLong()));
-        }
-        if(jsonObjectDuration.has("minutes")) {
-            duration.plus(Duration
-                    .ofMinutes(jsonObjectDuration.get("minutes").getAsLong()));
-        }
         if(jsonObjectDuration.has("seconds")) {
-            duration.plus(Duration
-                    .ofSeconds(jsonObjectDuration.get("seconds").getAsLong()));
+            if (jsonObjectDuration.get("seconds").getAsLong() >=3600) {
+                duration =  Duration
+                        .ofHours(jsonObjectDuration.get("seconds").getAsLong()/3600);
+            } else {
+                if (jsonObjectDuration.get("seconds").getAsLong() >=60) {
+                    duration = Duration
+                            .ofMinutes(jsonObjectDuration.get("seconds").getAsLong()/60);
+                } else {
+                    duration = Duration
+                            .ofSeconds(jsonObjectDuration.get("seconds").getAsLong());
+                }
+            }
         }
-        if(jsonObjectDuration.has("nanos")) {
-            duration.plus(Duration
-                    .ofNanos(jsonObjectDuration.get("nanos").getAsLong()));
+        if(jsonObjectDuration.has("nanos") && jsonObjectDuration.get("nanos").getAsLong() != 0L) {
+            duration = Duration.ofNanos(jsonObjectDuration.get("nanos").getAsLong());
         }
         JsonObject jsonObjectStartTime = jsonObject.get("startTime").getAsJsonObject();
         JsonElement jsonElementLocalDateTimeValue = jsonObjectStartTime .get("value");
@@ -75,7 +109,7 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                     jsonLocalDate.get("month").getAsInt(),
                     jsonLocalDate.get("day").getAsInt());
         }
-        JsonElement jsonLocalTimeTime = jsonObjectStartTime.get("time");
+        JsonElement jsonLocalTimeTime = jsonElementLocalDateTime.get("time");
         JsonObject jsonLocalTime = jsonLocalTimeTime.getAsJsonObject();
 
         if(jsonLocalTime.has("hour")
