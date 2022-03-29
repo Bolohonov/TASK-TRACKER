@@ -56,8 +56,7 @@ public class KVTaskClient {
                 .header("content-type", "application/json")
                 .build();
         try {
-            HttpResponse<String> response = client.
-                    send(requestPost, HttpResponse.BodyHandlers.ofString());
+            client.send(requestPost, HttpResponse.BodyHandlers.ofString());
         } catch (InterruptedException | IOException e) {
             System.out.println("Во время выполнения запроса по адресу:"
                     + uri + " произошла ошибка\n"

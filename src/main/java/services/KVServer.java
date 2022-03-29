@@ -171,6 +171,9 @@ public class KVServer {
                         }
                         if(key.equals("ALL")) {
                             data.clear();
+                            System.out.println("Значение для ключа DELETE " +
+                                    key + " успешно отправлено в ответ на запрос!");
+                            h.sendResponseHeaders(200, 0);
                         }
                         if (!data.containsKey(key)) {
                             System.out.println("Не могу достать данные для ключа '" + key + "', " +

@@ -62,14 +62,14 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public void removeTaskById(int id) throws ManagerSaveException {
+    public void removeTaskById(int id) {
         kvTaskClient.delete("removeTaskById=", String.valueOf(id));
         history.remove(id);
     }
 
     @Override
     public Map<Integer, SingleTask> getSingleTasks() {
-        Gson gson = new Gson();
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSingleTasks");
         String[] array = json.split("\n");
         Map<Integer, SingleTask> map = null;
@@ -82,7 +82,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public Map<Integer, EpicTask> getEpicTasks() {
-        Gson gson = new Gson();
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getEpicTasks");
         String[] array = json.split("\n");
         Map<Integer, EpicTask> map = null;
@@ -95,7 +95,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public Map<Integer, SubTask> getSubTasksByEpic(Task task) {
-        Gson gson = new Gson();
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSubTasksByEpic=" + task.getId());
         EpicTask epic = gson.fromJson(json, EpicTask.class);
         return epic.getSubTasks();
