@@ -198,8 +198,8 @@ public class InMemoryTasksManager implements TaskManager {
         boolean isUpdate = false;
         if (task != null) {
             try {
-                if (singleTaskRepository.getTasks().containsKey(task.getId())
-                        && singleTaskRepository.getTasks().get(task.getId()).equals(task)) {
+                if (singleTaskRepository.getTasks().containsKey(task.getId())) {
+                    singleTaskRepository.putTask((SingleTask) task);
                     isUpdate = true;
                     prioritizedTasks.add(task);
                     historyManager.add(task);
@@ -207,8 +207,8 @@ public class InMemoryTasksManager implements TaskManager {
             } catch (ClassCastException exp) {
             }
             try {
-                if (epicTaskRepository.getTasks().containsKey(task.getId())
-                        && epicTaskRepository.getTasks().get(task.getId()).equals(task)) {
+                if (epicTaskRepository.getTasks().containsKey(task.getId())) {
+                    epicTaskRepository.putTask((EpicTask) task);
                     isUpdate = true;
                     prioritizedTasks.add(task);
                     historyManager.add(task);
@@ -216,8 +216,10 @@ public class InMemoryTasksManager implements TaskManager {
             } catch (ClassCastException exp) {
             }
             try {
-                SubTask subTask = (SubTask) task;
-                if (getSubTaskOrNullById(subTask.getId()).equals(task)) {
+                EpicTask epic = epicTaskRepository.getTasks().get(((SubTask) task)
+                        .getEpicId());
+                if (epic.getSubTasks().containsKey(task.getId())) {
+                    epic.addSubTask((SubTask) task);
                     isUpdate = true;
                     prioritizedTasks.add(task);
                     historyManager.add(task);

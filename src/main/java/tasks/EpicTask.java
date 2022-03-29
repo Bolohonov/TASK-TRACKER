@@ -42,14 +42,14 @@ public class EpicTask extends Task {
 
     @Override
     public String toString() {
-        if (super.getDuration().isPresent() && super.getStartTime().isPresent()) {
+        if (getDuration().isPresent() && getStartTime().isPresent()) {
             return "Эпик{" +
                     "Имя='" + super.getName() + '\'' +
                     ", Описание='" + super.getDescription() + '\'' +
                     ", ID=" + super.getId() +
                     ", Статус=" + getStatus() +
-                    ", Продолжительность=" + super.getDuration().get() +
-                    ", Время начала=" + super.getStartTime().get() +
+                    ", Продолжительность=" + getDuration().get() +
+                    ", Время начала=" + getStartTime().get() +
                     '}';
         } else {
             return "Эпик{" +

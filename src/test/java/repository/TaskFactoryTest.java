@@ -57,7 +57,7 @@ class TaskFactoryTest implements TaskCreatorTest{
         EpicTask epicTask1 = creator.createEpicTask(new String[]{"TestEpicName","TestEpicDescription"});
         SubTask subTask1 = creator.createSubTask(epicTask1, new String[]{"TestNameSub1","TestDescriptionSub1"},
                 Duration.ofHours(1), LocalDateTime.of(2022, 02, 10, 1, 00, 10));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", subTask1.getId(), Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 02, 10, 1, 00, 10)));

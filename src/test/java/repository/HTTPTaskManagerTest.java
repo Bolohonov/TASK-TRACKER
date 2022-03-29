@@ -40,6 +40,7 @@ class HTTPTaskManagerTest {
             IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         Task expectedTask = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1023, Optional.of(Duration.ofDays(2)),
                 Optional.of(LocalDateTime
@@ -55,6 +56,7 @@ class HTTPTaskManagerTest {
             IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1051);
         manager.putTask(expectedEpicTask);
@@ -69,23 +71,24 @@ class HTTPTaskManagerTest {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
-                "TestEpicDescription", 1061);
-        SubTask expectedSubTask1 = new SubTask(expectedEpicTask, "TestNameSub1",
-                "TestDescriptionSub1", 1062, Optional.of(Duration.ofHours(1)),
+                "TestEpicDescription", 1071);
+        SubTask expectedSubTask1 = new SubTask(expectedEpicTask.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1073, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
-                        .of(2022, 03, 10, 1, 00, 10)));
-        SubTask expectedSubTask2 = new SubTask(expectedEpicTask, "TestNameSub2",
-                "TestDescriptionSub2", 1063, Optional.of(Duration.ofHours(1)),
+                        .of(2016, 03, 12, 1, 00, 10)));
+        SubTask expectedSubTask2 = new SubTask(expectedEpicTask.getId(), "TestNameSub2",
+                "TestDescriptionSub2", 1074, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
-                        .of(2022, 03, 10, 3, 00, 10)));
-        SubTask expectedSubTask3 = new SubTask(expectedEpicTask, "TestNameSub3",
-                "TestDescriptionSub3", 1064, Optional.of(Duration.ofHours(1)),
+                        .of(2016, 03, 12, 3, 00, 10)));
+        SubTask expectedSubTask3 = new SubTask(expectedEpicTask.getId(), "TestNameSub3",
+                "TestDescriptionSub3", 1075, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2022, 03, 10, 5, 00, 10)));
+                        .of(2016, 03, 12, 5, 00, 10)));
         manager.putTask(expectedEpicTask);
         manager.putTask(expectedSubTask1);
         manager.putTask(expectedSubTask2);
         manager.putTask(expectedSubTask3);
+        System.out.println(expectedEpicTask);
         Task actualEpicTask = manager.getTaskById(expectedEpicTask.getId());
         assertEquals(expectedEpicTask, actualEpicTask);
     }
@@ -95,10 +98,11 @@ class HTTPTaskManagerTest {
             IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1041);
         manager.putTask(expectedEpicTask);
-        SubTask expectedSubTask = new SubTask(expectedEpicTask, "TestNameSub1",
+        SubTask expectedSubTask = new SubTask(expectedEpicTask.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1044, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 10, 1, 00, 10)));
@@ -112,6 +116,7 @@ class HTTPTaskManagerTest {
             IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         Task expectedTask = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1030, Optional.of(Duration.ofDays(2)),
                 Optional.of(LocalDateTime
@@ -132,6 +137,7 @@ class HTTPTaskManagerTest {
             IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         Task expectedTask = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1035, Optional.of(Duration.ofDays(2)),
                 Optional.of(LocalDateTime
@@ -146,6 +152,7 @@ class HTTPTaskManagerTest {
             IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1031);
         manager.putTask(expectedEpicTask);
@@ -158,10 +165,11 @@ class HTTPTaskManagerTest {
             IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         EpicTask expectedEpicTask = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1032);
         manager.putTask(expectedEpicTask);
-        SubTask expectedSubTask = new SubTask(expectedEpicTask, "TestNameSub1",
+        SubTask expectedSubTask = new SubTask(expectedEpicTask.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1033, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2019, 03, 10, 1, 00, 10)));
@@ -174,6 +182,7 @@ class HTTPTaskManagerTest {
     public void removeAllTasks() throws ManagerSaveException, URISyntaxException, IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         Repository<Task> testRep = new Repository();
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1101);
@@ -181,15 +190,15 @@ class HTTPTaskManagerTest {
                 "TestEpicDescription2", 1102);
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1103);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1104, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2018, 03, 12, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2018, 03, 12, 3, 00, 10)));
-        SubTask subTask3 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask3 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1006, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2018, 03, 12, 8, 00, 10)));
@@ -232,6 +241,7 @@ class HTTPTaskManagerTest {
     void removeTaskById() throws ManagerSaveException, URISyntaxException, IntersectionException {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1201);
         EpicTask epicTask2 = new EpicTask("TestEpicName2",
@@ -239,15 +249,15 @@ class HTTPTaskManagerTest {
         ;
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1203);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1204, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2017, 03, 12, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1205, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2017, 03, 12, 3, 00, 10)));
-        SubTask subTask3 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask3 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1206, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2017, 03, 12, 8, 00, 10)));

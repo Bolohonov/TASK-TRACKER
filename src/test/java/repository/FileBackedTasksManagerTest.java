@@ -49,15 +49,15 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
                 "TestEpicDescription2", 1002);
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1003);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 10, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 10, 3, 00, 10)));
-        SubTask subTask3 = new SubTask(epicTask2, "TestNameSub1",
+        SubTask subTask3 = new SubTask(epicTask2.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1006, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 10, 8, 00, 10)));
@@ -109,7 +109,7 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
     public void putTaskIntersectionException() throws IntersectionException, ManagerSaveException {
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(5)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 13, 11, 00, 10)));
@@ -275,21 +275,23 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
                 "TestEpicDescription", 1001);
         EpicTask epicTask2 = new EpicTask("TestEpicName2",
                 "TestEpicDescription2", 1002);
-        ;
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1003);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 12, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        epicTask1.addSubTask(subTask1);
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 12, 3, 00, 10)));
-        SubTask subTask3 = new SubTask(epicTask1, "TestNameSub1",
+        epicTask1.addSubTask(subTask2);
+        SubTask subTask3 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1006, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 12, 8, 00, 10)));
+        epicTask1.addSubTask(subTask3);
         SingleTask task1 = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
@@ -328,14 +330,16 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
                 "TestEpicDescription", 1001);
         EpicTask epicTask3 = new EpicTask("TestEpicName3",
                 "TestEpicDescription3", 1003);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 12, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        epicTask1.addSubTask(subTask1);
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 03, 12, 3, 00, 10)));
+        epicTask1.addSubTask(subTask2);
         SingleTask task1 = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime

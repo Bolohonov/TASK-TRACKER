@@ -72,7 +72,7 @@ class HttpTaskServerTest {
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        SubTask subTask = new SubTask(epic, "TestNameSub1",
+        SubTask subTask = new SubTask(epic.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1026, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2020, 03, 10, 8, 00, 10)));

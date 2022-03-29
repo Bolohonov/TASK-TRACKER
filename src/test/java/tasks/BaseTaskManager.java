@@ -43,15 +43,15 @@ public class BaseTaskManager {
             "TestEpicDescription2", 1002);
     EpicTask epicTask3 = new EpicTask("TestEpicName3",
             "TestEpicDescription3", 1003);
-    SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+    SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
             "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
             Optional.of(LocalDateTime
                     .of(2022, 01, 10, 1, 00, 10)));
-    SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+    SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
             "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
             Optional.of(LocalDateTime
                     .of(2022, 01, 10, 3, 00, 10)));
-    SubTask subTask3 = new SubTask(epicTask2, "TestNameSub1",
+    SubTask subTask3 = new SubTask(epicTask2.getId(), "TestNameSub1",
             "TestDescriptionSub1", 1006, Optional.of(Duration.ofHours(2)),
             Optional.of(LocalDateTime
                     .of(2022, 01, 10, 8, 00, 10)));
@@ -72,11 +72,11 @@ public class BaseTaskManager {
     void setName() {
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 10, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 10, 3, 00, 10)));
@@ -96,11 +96,11 @@ public class BaseTaskManager {
     void setDescription() {
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 10, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 10, 3, 00, 10)));
@@ -141,11 +141,11 @@ public class BaseTaskManager {
     void setStatus() {
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);
-        SubTask subTask1 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask1 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1004, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 10, 1, 00, 10)));
-        SubTask subTask2 = new SubTask(epicTask1, "TestNameSub1",
+        SubTask subTask2 = new SubTask(epicTask1.getId(), "TestNameSub1",
                 "TestDescriptionSub1", 1005, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 10, 3, 00, 10)));
@@ -153,6 +153,8 @@ public class BaseTaskManager {
                 "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 13, 7, 00, 10)));
+        epicTask1.addSubTask(subTask1);
+        epicTask1.addSubTask(subTask2);
         epicTask1.setStatus(TaskStatus.DONE);
         subTask1.setStatus(TaskStatus.DONE);
         task1.setStatus(TaskStatus.DONE);
@@ -198,6 +200,8 @@ public class BaseTaskManager {
 
     @Test
     void getDuration() {
+        epicTask1.addSubTask(subTask1);
+        epicTask1.addSubTask(subTask2);
         assertEquals(Optional.of(Duration.ofHours(3)), epicTask1.getDuration());
         assertEquals(Optional.of(Duration.ofHours(2)), task1.getDuration());
         assertEquals(Optional.of(Duration.ofHours(1)), subTask1.getDuration());
@@ -222,6 +226,8 @@ public class BaseTaskManager {
                 new String[]{"TestNameSub1", "TestDescriptionSub1"},
                 Duration.ofHours(5), LocalDateTime
                         .of(2022, 01, 7, 13, 0, 00));
+        epic.addSubTask(sub);
+        epic.addSubTask(sub2);
         epic.setDuration(Duration.ofHours(2));
         sub.setDuration(Duration.ofHours(5));
         sub2.setDuration(Duration.ofHours(4));
@@ -232,6 +238,7 @@ public class BaseTaskManager {
 
     @Test
     void getStartTime() {
+        epicTask1.addSubTask(subTask1);
         assertEquals(LocalDateTime
                 .of(2022, 01, 10, 1, 00, 10),
                 epicTask1.getStartTime().get());
@@ -262,6 +269,8 @@ public class BaseTaskManager {
                 new String[]{"TestNameSub1", "TestDescriptionSub1"},
                 Duration.ofHours(5), LocalDateTime
                         .of(2022, 01, 7, 13, 0, 00));
+        epic.addSubTask(sub);
+        epic.addSubTask(sub2);
         epic.setStartTime(LocalDateTime
                 .of(2022, 01, 10, 10, 0, 00));
         sub.setStartTime(LocalDateTime

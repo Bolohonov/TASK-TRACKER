@@ -27,7 +27,7 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                         .create();
         JsonElement jsonElement = gson.toJsonTree(task);
         jsonElement.getAsJsonObject().addProperty("type", task.getType().toString());
-        if (task instanceof EpicTask) {
+        if (task instanceof EpicTask && !((EpicTask) task).getSubTasks().isEmpty()) {
             List<Integer> list = new ArrayList<>();
             ((EpicTask) task)
                     .getSubTasks().values()
@@ -37,7 +37,12 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                 for (Integer id : list) {
                     sb.append(id + ",");
                 }
+//                Gson gsonOfEpic = new Gson();
                 jsonElement.getAsJsonObject().addProperty("subTasksOfEpic", sb.toString());
+//                jsonElement.getAsJsonObject().addProperty("duration",
+//                        gsonOfEpic.toJson(task.getDuration().get()));
+//                jsonElement.getAsJsonObject().addProperty("startTime",
+//                        gsonOfEpic.toJson(task.getStartTime().get()));
             }
         }
         return jsonElement;
@@ -83,18 +88,12 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
             } else {
                 if (taskTypeFromJson.equals(TaskType.SUBTASK.toString())) {
                     int epicId = jsonObject.get("epicId").getAsInt();
-                    try {
-                        EpicTask epic = (EpicTask) new Managers()
-                                .getDefault().getTaskById(epicId);
-                        task = new SubTask(epicId,
-                                jsonObject.get("name").getAsString(),
-                                jsonObject.get("description").getAsString(),
-                                jsonObject.get("id").getAsInt(),
-                                durationOrZero,
-                                timeOrZero);
-                    } catch (ManagerSaveException | URISyntaxException e) {
-                        e.printStackTrace();
-                    }
+                    task = new SubTask(epicId,
+                            jsonObject.get("name").getAsString(),
+                            jsonObject.get("description").getAsString(),
+                            jsonObject.get("id").getAsInt(),
+                            durationOrZero,
+                            timeOrZero);
                 }
             }
         }
