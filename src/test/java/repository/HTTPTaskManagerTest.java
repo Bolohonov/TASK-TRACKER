@@ -79,7 +79,7 @@ class HTTPTaskManagerTest {
         SubTask expectedSubTask2 = new SubTask(expectedEpicTask.getId(), "TestNameSub2",
                 "TestDescriptionSub2", 1074, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
-                        .of(2016, 03, 12, 3, 00, 10)));
+                        .of(2016, 03, 11, 3, 00, 10)));
         SubTask expectedSubTask3 = new SubTask(expectedEpicTask.getId(), "TestNameSub3",
                 "TestDescriptionSub3", 1075, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
@@ -88,6 +88,9 @@ class HTTPTaskManagerTest {
         manager.putTask(expectedSubTask1);
         manager.putTask(expectedSubTask2);
         manager.putTask(expectedSubTask3);
+        expectedEpicTask.addSubTask(expectedSubTask1);
+        expectedEpicTask.addSubTask(expectedSubTask2);
+        expectedEpicTask.addSubTask(expectedSubTask3);
         System.out.println(expectedEpicTask);
         Task actualEpicTask = manager.getTaskById(expectedEpicTask.getId());
         assertEquals(expectedEpicTask, actualEpicTask);

@@ -38,12 +38,12 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             super.putTask(task);
             Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
             String json = gson.toJson(task);
-            kvTaskClient.put(String.valueOf(task.getId()), json);
             if (task instanceof SubTask) {
                 EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
                 epic.addSubTask((SubTask) task);
                 updateTask(epic);
             }
+            kvTaskClient.put(String.valueOf(task.getId()), json);
         } catch (IntersectionException | ManagerSaveException e) {
             System.out.println(e.getMessage() + " " + e.getStackTrace());
         }
