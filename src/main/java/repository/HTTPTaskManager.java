@@ -22,6 +22,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     private Path path;
     private KVTaskClient kvTaskClient;
+    //private final static InMemoryHistoryManager historyFromHttp = new InMemoryHistoryManager();
 
     public HTTPTaskManager(Path path) throws ManagerSaveException, URISyntaxException {
         super(Paths.get("resources/data.csv"));
@@ -43,6 +44,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
                 updateTask(epic);
             }
             kvTaskClient.put(String.valueOf(task.getId()), json);
+            //historyFromHttp.add(task);
         } catch (IntersectionException | ManagerSaveException e) {
             System.out.println(e.getMessage() + " " + e.getStackTrace());
         }
@@ -87,6 +89,12 @@ public class HTTPTaskManager extends FileBackedTasksManager {
                 EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
                 epic.removeSubTask((SubTask) task);
                 updateTask(epic);
+            }
+            if (task instanceof EpicTask) {
+                EpicTask epic = (EpicTask) getTaskById(id);
+                for (SubTask sub : epic.getSubTasks().values()) {
+                    removeTaskById(sub.getId());
+                }
             }
             kvTaskClient.delete("removeTaskById=" + id);
         } catch (ManagerSaveException e) {
