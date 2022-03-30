@@ -115,6 +115,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         Map<Integer, SubTask> map = new HashMap<>();
         Gson gsonOfSubTasks = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSubTasksByEpic=" + task.getId());
+        System.out.println(json.toString());
         String[] array = json.split("\n");
         for(int i = 1; i < array.length; i++) {
             SubTask sub = gsonOfSubTasks.fromJson(array[i], SubTask.class);

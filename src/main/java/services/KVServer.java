@@ -137,11 +137,15 @@ public class KVServer {
                             }
                         }
                         if(key.contains("getSubTasksByEpic=")) {
+                            System.out.println(key);
                             String id = key.split("=")[1];
+                            System.out.println(id);
                             String responseData = null;
                             String epic = data.get(id);
+                            System.out.println(epic);
                             JsonObject jo = JsonParser.parseString(epic).getAsJsonObject();
                             if (jo.has("subTasksOfEpic")) {
+                                System.out.println("!!!!!!!!!!!!!!");
                                 responseData = jo.get("subTasksOfEpic").toString();
                             }
                             h.getResponseHeaders().add("Content-Type", "application/json");

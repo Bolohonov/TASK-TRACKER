@@ -334,7 +334,6 @@ class HTTPTaskManagerTest {
         manager.putTask(task1);
         manager.putTask(task2);
         manager.putTask(task3);
-        manager.getSingleTasks().values().forEach(System.out::println);
         assertEquals(testRep, manager.getSingleTasks());
     }
 
@@ -366,6 +365,10 @@ class HTTPTaskManagerTest {
                 "TestDescriptionSub1", 1217, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2017, 05, 13, 8, 00, 10)));
+        task1.addSubTask(subTask1);
+        task1.addSubTask(subTask2);
+        task1.addSubTask(subTask3);
+        task2.addSubTask(subTask4);
         testRep.put(task1.getId(), task1);
         testRep.put(task2.getId(), task2);
         testRep.put(task3.getId(), task3);
@@ -376,12 +379,57 @@ class HTTPTaskManagerTest {
         manager.putTask(subTask2);
         manager.putTask(subTask3);
         manager.putTask(subTask4);
-        manager.getEpicTasks().values().forEach(System.out::println);
         assertEquals(testRep, manager.getEpicTasks());
     }
 
     @Test
-    void getSubTasksByEpic() {
+    void getSubTasksByEpic() throws ManagerSaveException, URISyntaxException, IntersectionException {
+        Managers managers = new Managers();
+        TaskManager manager = managers.getDefault();
+        Map<Integer, SubTask> testRep = new HashMap<>();
+        manager.removeAllTasks();
+        EpicTask task1 = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1211);
+        EpicTask task2 = new EpicTask("TestEpicName2",
+                "TestEpicDescription2", 1212);
+        EpicTask task3 = new EpicTask("TestEpicName3",
+                "TestEpicDescription3", 1213);
+        SubTask subTask1 = new SubTask(task1.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1214, Optional.of(Duration.ofHours(1)),
+                Optional.of(LocalDateTime
+                        .of(2017, 05, 12, 1, 00, 10)));
+        SubTask subTask2 = new SubTask(task1.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1215, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2017, 05, 12, 3, 00, 10)));
+        SubTask subTask3 = new SubTask(task1.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1216, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2017, 05, 12, 8, 00, 10)));
+        SubTask subTask4 = new SubTask(task2.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1217, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2017, 05, 13, 8, 00, 10)));
+        task1.addSubTask(subTask1);
+        task1.addSubTask(subTask2);
+        task1.addSubTask(subTask3);
+        task2.addSubTask(subTask4);
+        testRep.put(subTask1.getId(), subTask1);
+        testRep.put(subTask2.getId(), subTask2);
+        testRep.put(subTask3.getId(), subTask3);
+        manager.putTask(task1);
+        manager.putTask(task2);
+        manager.putTask(task3);
+        manager.putTask(subTask1);
+        manager.putTask(subTask2);
+        manager.putTask(subTask3);
+        manager.putTask(subTask4);
+        assertEquals(testRep, manager.getSubTasksByEpic(task1));
+        testRep.clear();
+        testRep.put(subTask4.getId(), subTask4);
+        assertEquals(testRep, manager.getSubTasksByEpic(task2));
+        testRep.clear();
+        assertEquals(testRep, manager.getSubTasksByEpic(task3));
     }
 
     @Test
