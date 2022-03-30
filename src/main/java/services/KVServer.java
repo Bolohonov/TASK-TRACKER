@@ -1,6 +1,5 @@
 package services;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -101,17 +100,17 @@ public class KVServer {
                         if (!data.containsKey(key)
                                 && !key.equals("getSingleTasks")
                                 && !key.equals("getEpicTasks")
-                            && !key.contains("getSubTasksByEpic=")) {
+                                && !key.contains("getSubTasksByEpic=")) {
                             System.out.println("Не могу достать данные для ключа '" +
                                     key + "', " + "данные отсутствуют");
                             h.sendResponseHeaders(404, 0);
                             return;
                         }
-                        if(key.equals("getSingleTasks")) {
+                        if (key.equals("getSingleTasks")) {
                             String responseData = null;
-                            for(String task : data.values()) {
+                            for (String task : data.values()) {
                                 JsonObject jo = JsonParser.parseString(task).getAsJsonObject();
-                                if(jo.has("type")
+                                if (jo.has("type")
                                         && jo.get("type").toString().contains("SINGLE")) {
                                     responseData = responseData + "\n" + task;
                                 }
@@ -122,11 +121,11 @@ public class KVServer {
                                 os.write(responseData.getBytes());
                             }
                         }
-                        if(key.equals("getEpicTasks")) {
+                        if (key.equals("getEpicTasks")) {
                             String responseData = null;
-                            for(String task : data.values()) {
+                            for (String task : data.values()) {
                                 JsonObject jo = JsonParser.parseString(task).getAsJsonObject();
-                                if(jo.has("type")
+                                if (jo.has("type")
                                         && jo.get("type").toString().contains("EPIC")) {
                                     responseData = responseData + "\n" + task;
                                 }
@@ -137,7 +136,7 @@ public class KVServer {
                                 os.write(responseData.getBytes());
                             }
                         }
-                        if(key.contains("getSubTasksByEpic=")) {
+                        if (key.contains("getSubTasksByEpic=")) {
                             String id = key.split("=")[1];
                             String responseData = null;
                             String epic = data.get(id);
@@ -157,7 +156,7 @@ public class KVServer {
                             h.sendResponseHeaders(200, 0);
                             return;
                         }
-                        if(data.containsKey(key)) {
+                        if (data.containsKey(key)) {
                             h.getResponseHeaders().add("Content-Type", "application/json");
                             h.sendResponseHeaders(200, 0);
                             try (OutputStream os = h.getResponseBody()) {
@@ -196,7 +195,7 @@ public class KVServer {
                             h.sendResponseHeaders(400, 0);
                             return;
                         }
-                        if(key.equals("ALL")) {
+                        if (key.equals("ALL")) {
                             data.clear();
                             System.out.println("Значение для ключа DELETE " +
                                     key + " успешно отправлено в ответ на запрос!");

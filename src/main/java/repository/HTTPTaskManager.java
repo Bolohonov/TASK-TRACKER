@@ -3,7 +3,6 @@ package repository;
 import com.google.gson.*;
 import services.ConfigTaskJsonAdapter;
 import services.KVTaskClient;
-import services.TaskJsonAdapter;
 import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.SubTask;
@@ -110,7 +109,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         Gson gsonOfTask = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSingleTasks");
         String[] array = json.split("\n");
-        for(int i = 1; i < array.length; i++) {
+        for (int i = 1; i < array.length; i++) {
             SingleTask task = gsonOfTask.fromJson(array[i], SingleTask.class);
             map.put(task.getId(), task);
         }
@@ -123,7 +122,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         Gson gsonOfEpicTask = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getEpicTasks");
         String[] array = json.split("\n");
-        for(int i = 1; i < array.length; i++) {
+        for (int i = 1; i < array.length; i++) {
             EpicTask task = gsonOfEpicTask.fromJson(array[i], EpicTask.class);
             map.put(task.getId(), task);
         }
@@ -136,8 +135,8 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         Map<Integer, SubTask> map = new HashMap<>();
         String json = kvTaskClient.load("getSubTasksByEpic=" + task.getId());
         String[] array = json.split(",");
-        for(int i = 0; i < array.length; i++) {
-            if(!array[i].isBlank()) {
+        for (int i = 0; i < array.length; i++) {
+            if (!array[i].isBlank()) {
                 SubTask sub = (SubTask) getTaskById(Integer.parseInt(array[i]));
                 map.put(sub.getId(), sub);
             }

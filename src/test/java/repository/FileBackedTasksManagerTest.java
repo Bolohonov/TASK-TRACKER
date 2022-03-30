@@ -322,8 +322,8 @@ public class FileBackedTasksManagerTest extends InMemoryTasksManagerTest
                 = new FileBackedTasksManager(Paths
                 .get("./resources/shouldFillHistoryFromFile.csv"));
         List<Task> actualList = new LinkedList<>();
-        for (int i=5; i>0; i--) {
-            actualList.add(testManager.getHistory().get(testManager.getHistory().size()-i));
+        for (int i = 5; i > 0; i--) {
+            actualList.add(testManager.getHistory().get(testManager.getHistory().size() - i));
         }
         EpicTask epicTask1 = new EpicTask("TestEpicName",
                 "TestEpicDescription", 1001);

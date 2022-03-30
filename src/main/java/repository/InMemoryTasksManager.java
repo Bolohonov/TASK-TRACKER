@@ -133,7 +133,7 @@ public class InMemoryTasksManager implements TaskManager {
             }
             if (task instanceof SubTask) {
                 epicTaskRepository.getTasks()
-                        .get(((SubTask) task).getEpicId()).addSubTask((SubTask)task);
+                        .get(((SubTask) task).getEpicId()).addSubTask((SubTask) task);
             }
         } else {
             if (!task.getDuration().isPresent()

@@ -78,7 +78,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             throw new ManagerSaveException("Произошла ошибка во время загрузки файла!");
         } catch (IntersectionException e) {
             System.out.println("Совпадение временного интервала во время загрузки из файла!"
-                    + e.getMessage());;
+                    + e.getMessage());
+            ;
         }
     }
 
@@ -121,7 +122,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         return historyToString.toString();
     }
 
-    private void fromStringToHistory(String value) throws ManagerSaveException{
+    private void fromStringToHistory(String value) throws ManagerSaveException {
         String[] values = value.split(",");
         if (values != null && values.length != 0) {
             for (int i = 0; i < values.length; i++) {

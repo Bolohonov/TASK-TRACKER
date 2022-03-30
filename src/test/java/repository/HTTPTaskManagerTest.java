@@ -18,15 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HTTPTaskManagerTest {
 
-//    KVServer kvServer = new KVServer();
-//    HttpTaskServer httpTaskServer = new HttpTaskServer();
-//    Managers managers = new Managers();
-//    TaskManager manager = managers.getDefault();
-
-//    HTTPTaskManagerTest() throws IOException, ManagerSaveException, URISyntaxException {
-//    }
-
-
     @BeforeAll
     static void run() throws IOException, ManagerSaveException {
         KVServer kvServer = new KVServer();
@@ -499,10 +490,10 @@ class HTTPTaskManagerTest {
         list.remove(subTask4);
         List<Task> actualList = new LinkedList<>();
         int length = manager.getHistory().size();
-        actualList.add(manager.getHistory().get(length-4));
-        actualList.add(manager.getHistory().get(length-3));
-        actualList.add(manager.getHistory().get(length-2));
-        actualList.add(manager.getHistory().get(length-1));
+        actualList.add(manager.getHistory().get(length - 4));
+        actualList.add(manager.getHistory().get(length - 3));
+        actualList.add(manager.getHistory().get(length - 2));
+        actualList.add(manager.getHistory().get(length - 1));
         assertEquals(list, actualList);
     }
 }

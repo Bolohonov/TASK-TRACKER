@@ -1,14 +1,10 @@
 package services;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.reflections.Reflections;
 import tasks.EpicTask;
 import tasks.SingleTask;
 import tasks.SubTask;
 import tasks.Task;
-
-import java.util.Set;
 
 public class ConfigTaskJsonAdapter {
 
