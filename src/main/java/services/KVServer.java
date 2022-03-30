@@ -1,6 +1,7 @@
 package services;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
@@ -111,7 +112,7 @@ public class KVServer {
                             for(String task : data.values()) {
                                 JsonObject jo = JsonParser.parseString(task).getAsJsonObject();
                                 if(jo.has("type")
-                                        && jo.get("type").toString().contains("TASK")) {
+                                        && jo.get("type").toString().contains("SINGLE")) {
                                     responseData = responseData + "\n" + task;
                                 }
                             }
@@ -137,16 +138,13 @@ public class KVServer {
                             }
                         }
                         if(key.contains("getSubTasksByEpic=")) {
-                            System.out.println(key);
                             String id = key.split("=")[1];
-                            System.out.println(id);
                             String responseData = null;
                             String epic = data.get(id);
-                            System.out.println(epic);
                             JsonObject jo = JsonParser.parseString(epic).getAsJsonObject();
                             if (jo.has("subTasksOfEpic")) {
-                                System.out.println("!!!!!!!!!!!!!!");
-                                responseData = jo.get("subTasksOfEpic").toString();
+                                JsonElement jsonElementSubTasks = jo.get("subTasksOfEpic");
+                                responseData = jsonElementSubTasks.getAsString();
                             }
                             h.getResponseHeaders().add("Content-Type", "application/json");
                             h.sendResponseHeaders(200, 0);
@@ -191,7 +189,7 @@ public class KVServer {
                 }
                 switch (h.getRequestMethod()) {
                     case "DELETE":
-                        String key = h.getRequestURI().getPath().substring("/load/".length());
+                        String key = h.getRequestURI().getPath().substring("/delete/".length());
                         if (key.isEmpty()) {
                             System.out.println("Key для загрузки пустой. " +
                                     "key указывается в пути: /load/{key}");
@@ -204,7 +202,7 @@ public class KVServer {
                                     key + " успешно отправлено в ответ на запрос!");
                             h.sendResponseHeaders(200, 0);
                         }
-                        if (!data.containsKey(key)) {
+                        if (!data.containsKey(key) && !key.equals("ALL")) {
                             System.out.println("Не могу достать данные для ключа '" + key + "', " +
                                     "данные отсутствуют");
                             h.sendResponseHeaders(404, 0);

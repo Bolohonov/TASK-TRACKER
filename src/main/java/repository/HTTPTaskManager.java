@@ -36,6 +36,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             super.putTask(task);
             Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
             String json = gson.toJson(task);
+            System.out.println(json);
             if (task instanceof SubTask) {
                 EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
                 epic.addSubTask((SubTask) task);
@@ -74,13 +75,23 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     @Override
     public void removeAllTasks() throws ManagerSaveException {
         super.removeAllTasks();
-        kvTaskClient.delete("removeAllTasks", null);
+        kvTaskClient.delete("removeAllTasks");
     }
 
     @Override
     public void removeTaskById(int id) throws ManagerSaveException {
-        super.removeTaskById(id);
-        kvTaskClient.delete("removeTaskById=", String.valueOf(id));
+        try {
+            super.removeTaskById(id);
+            Task task = getTaskById(id);
+            if (task instanceof SubTask) {
+                EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
+                epic.removeSubTask((SubTask) task);
+                updateTask(epic);
+            }
+            kvTaskClient.delete("removeTaskById=" + id);
+        } catch (ManagerSaveException e) {
+            System.out.println(e.getMessage() + " " + e.getStackTrace());
+        }
     }
 
     @Override
@@ -110,16 +121,16 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public Map<Integer, SubTask> getSubTasksByEpic(Task task) {
+    public Map<Integer, SubTask> getSubTasksByEpic(Task task) throws ManagerSaveException {
         super.getSubTasksByEpic(task);
         Map<Integer, SubTask> map = new HashMap<>();
-        Gson gsonOfSubTasks = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load("getSubTasksByEpic=" + task.getId());
-        System.out.println(json.toString());
-        String[] array = json.split("\n");
-        for(int i = 1; i < array.length; i++) {
-            SubTask sub = gsonOfSubTasks.fromJson(array[i], SubTask.class);
-            map.put(sub.getId(), sub);
+        String[] array = json.split(",");
+        for(int i = 0; i < array.length; i++) {
+            if(!array[i].isBlank()) {
+                SubTask sub = (SubTask) getTaskById(Integer.parseInt(array[i]));
+                map.put(sub.getId(), sub);
+            }
         }
         return map;
     }

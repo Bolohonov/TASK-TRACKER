@@ -90,7 +90,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
         if (values != null) {
             try {
-                if (values[1].equals(TaskType.TASK.toString())) {
+                if (values[1].equals(TaskType.SINGLE.toString())) {
                     task = new SingleTask(values[2], values[4], Integer.parseInt(values[0]),
                             Optional.of(Duration.parse(values[5])),
                             Optional.of(LocalDateTime.parse(values[6])));
@@ -177,7 +177,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     @Override
-    public Map<Integer, SubTask> getSubTasksByEpic(Task task) {
+    public Map<Integer, SubTask> getSubTasksByEpic(Task task) throws ManagerSaveException {
         return super.getSubTasksByEpic(task);
     }
 

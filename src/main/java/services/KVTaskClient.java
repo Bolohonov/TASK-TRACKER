@@ -78,11 +78,10 @@ public class KVTaskClient {
         return response.body();
     }
 
-    public void delete(String key, String json) {
-        switch(key) {
-            case "removeAllTasks":
+    public void delete(String key) {
+        if (key.contains("removeAllTasks")) {
             URI uri =
-                    URI.create(url.toString() + "/delete" + "/removeAllTasks"
+                    URI.create(url.toString() + "/delete" + "/ALL"
                             + "?API_KEY=" + API_KEY);
             HttpRequest request = HttpRequest
                     .newBuilder()
@@ -98,24 +97,25 @@ public class KVTaskClient {
                         + uri + " произошла ошибка\n"
                         + e.getMessage() + "\n" + e.getStackTrace());
             }
-            break;
-            case "removeTaskById=":
-                uri = URI.create(url.toString() + "/delete" + "/?id=" + key + "&API_KEY=" + API_KEY);
-                request = HttpRequest
-                        .newBuilder()
-                        .uri(uri)
-                        .DELETE()
-                        .header("content-type", "application/json")
-                        .build();
-                try {
-                    HttpResponse<String> response = client.
-                            send(request, HttpResponse.BodyHandlers.ofString());
-                } catch (InterruptedException | IOException e) {
-                    System.out.println("Во время выполнения запроса по адресу:"
-                            + uri + " произошла ошибка\n"
-                            + e.getMessage() + "\n" + e.getStackTrace());
-                }
-            break;
+        }
+        if (key.contains("removeTaskById=")) {
+            key = key.split("=")[1];
+            System.out.println(key);
+            URI uri = URI.create(url.toString() + "/delete" + "/" + key + "?API_KEY=" + API_KEY);
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(uri)
+                    .DELETE()
+                    .header("content-type", "application/json")
+                    .build();
+            try {
+                HttpResponse<String> response = client.
+                        send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (InterruptedException | IOException e) {
+                System.out.println("Во время выполнения запроса по адресу:"
+                        + uri + " произошла ошибка\n"
+                        + e.getMessage() + "\n" + e.getStackTrace());
+            }
         }
     }
 }

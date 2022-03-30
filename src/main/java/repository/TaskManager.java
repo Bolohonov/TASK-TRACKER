@@ -19,7 +19,7 @@ public interface TaskManager {
 
     Map<Integer, EpicTask> getEpicTasks();
 
-    Map<Integer, SubTask> getSubTasksByEpic(Task task);
+    Map<Integer, SubTask> getSubTasksByEpic(Task task) throws ManagerSaveException;
 
     boolean updateTask(Task newTask) throws ManagerSaveException;
 

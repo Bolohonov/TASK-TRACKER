@@ -69,7 +69,7 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
             timeOrZero = Optional.of(localDateTime);
         }
         String taskTypeFromJson = jsonObject.get("type").getAsString();
-        if (taskTypeFromJson.equals(TaskType.TASK.toString())) {
+        if (taskTypeFromJson.equals(TaskType.SINGLE.toString())) {
             task = new SingleTask(
                     jsonObject.get("name").getAsString(),
                     jsonObject.get("description").getAsString(),

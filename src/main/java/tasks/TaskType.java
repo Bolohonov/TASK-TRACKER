@@ -2,7 +2,7 @@ package tasks;
 
 public enum TaskType {
 
-    TASK("TASK"),
+    SINGLE("SINGLE"),
     EPIC("EPIC"),
     SUBTASK("SUBTASK");
 

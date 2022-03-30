@@ -167,7 +167,7 @@ public class BaseTaskManager {
     void getType() {
         assertEquals(TaskType.EPIC, epicTask1.getType());
         assertEquals(TaskType.SUBTASK, subTask1.getType());
-        assertEquals(TaskType.TASK, task1.getType());
+        assertEquals(TaskType.SINGLE, task1.getType());
     }
 
     @Test
@@ -193,7 +193,7 @@ public class BaseTaskManager {
                 "TestSingleDescription", 1008, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
                         .of(2022, 01, 13, 10, 00, 10)));
-        String expString = 1008 + "," + TaskType.TASK + "," + "TestSingleName" + "," + TaskStatus.NEW
+        String expString = 1008 + "," + TaskType.SINGLE + "," + "TestSingleName" + "," + TaskStatus.NEW
                 + "," + "TestSingleDescription" + "," + "PT2H" + "," + "2022-01-13T10:00:10" + ",";
         assertEquals(expString, task2.toString(task2));
     }

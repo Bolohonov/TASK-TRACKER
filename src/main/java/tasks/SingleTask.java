@@ -58,6 +58,6 @@ public class SingleTask extends Task {
 
     @Override
     public TaskType getType() {
-        return TaskType.TASK;
+        return TaskType.SINGLE;
     }
 }

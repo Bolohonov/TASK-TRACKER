@@ -245,6 +245,12 @@ class HTTPTaskManagerTest {
         testRep.removeAllTasks();
         manager.removeAllTasks();
         assertEquals(testRep.getTasks(), manager.getEpicTasks());
+        testRep.putTask(epicTask1);
+        testRep.putTask(epicTask2);
+        testRep.putTask(epicTask3);
+        manager.putTask(epicTask1);
+        manager.putTask(epicTask2);
+        manager.putTask(epicTask3);
         testRep.putTask(subTask1);
         testRep.putTask(subTask2);
         testRep.putTask(subTask3);
@@ -253,7 +259,7 @@ class HTTPTaskManagerTest {
         manager.putTask(subTask3);
         testRep.removeAllTasks();
         manager.removeAllTasks();
-        assertEquals(testRep.getTasks(), manager.getEpicTasks().get(1101).getSubTasks());
+        assertEquals(testRep.getTasks(), manager.getEpicTasks());
         testRep.putTask(task1);
         testRep.putTask(task2);
         manager.putTask(task1);
@@ -306,6 +312,7 @@ class HTTPTaskManagerTest {
         assertFalse(manager.getSubTasksByEpic(epicTask1).containsKey(subTask1.getId()));
         manager.putTask(task1);
         manager.putTask(task2);
+        System.out.println(task2);
         manager.removeTaskById(task2.getId());
         assertFalse(manager.getSingleTasks().containsKey(task2.getId()));
     }
@@ -319,15 +326,15 @@ class HTTPTaskManagerTest {
         SingleTask task1 = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1007, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2018, 03, 13, 7, 00, 10)));
+                        .of(2018, 9, 13, 7, 00, 10)));
         SingleTask task2 = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1008, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2018, 03, 13, 10, 00, 10)));
+                        .of(2018, 9, 13, 10, 00, 10)));
         SingleTask task3 = new SingleTask("TestSingleName",
                 "TestSingleDescription", 1009, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2018, 03, 14, 10, 00, 10)));
+                        .of(2018, 9, 14, 10, 00, 10)));
         testRep.put(1007, task1);
         testRep.put(1008, task2);
         testRep.put(1009, task3);
@@ -344,27 +351,27 @@ class HTTPTaskManagerTest {
         Map<Integer, EpicTask> testRep = new HashMap<>();
         manager.removeAllTasks();
         EpicTask task1 = new EpicTask("TestEpicName",
-                "TestEpicDescription", 1211);
+                "TestEpicDescription", 1311);
         EpicTask task2 = new EpicTask("TestEpicName2",
-                "TestEpicDescription2", 1212);
+                "TestEpicDescription2", 1312);
         EpicTask task3 = new EpicTask("TestEpicName3",
-                "TestEpicDescription3", 1213);
+                "TestEpicDescription3", 1313);
         SubTask subTask1 = new SubTask(task1.getId(), "TestNameSub1",
-                "TestDescriptionSub1", 1214, Optional.of(Duration.ofHours(1)),
+                "TestDescriptionSub1", 1314, Optional.of(Duration.ofHours(1)),
                 Optional.of(LocalDateTime
-                        .of(2017, 05, 12, 1, 00, 10)));
+                        .of(2015, 05, 12, 1, 00, 10)));
         SubTask subTask2 = new SubTask(task1.getId(), "TestNameSub1",
-                "TestDescriptionSub1", 1215, Optional.of(Duration.ofHours(2)),
+                "TestDescriptionSub1", 1315, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2017, 05, 12, 3, 00, 10)));
+                        .of(2015, 05, 12, 3, 00, 10)));
         SubTask subTask3 = new SubTask(task1.getId(), "TestNameSub1",
-                "TestDescriptionSub1", 1216, Optional.of(Duration.ofHours(2)),
+                "TestDescriptionSub1", 1316, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2017, 05, 12, 8, 00, 10)));
+                        .of(2015, 05, 12, 8, 00, 10)));
         SubTask subTask4 = new SubTask(task2.getId(), "TestNameSub1",
-                "TestDescriptionSub1", 1217, Optional.of(Duration.ofHours(2)),
+                "TestDescriptionSub1", 1317, Optional.of(Duration.ofHours(2)),
                 Optional.of(LocalDateTime
-                        .of(2017, 05, 13, 8, 00, 10)));
+                        .of(2015, 05, 13, 8, 00, 10)));
         task1.addSubTask(subTask1);
         task1.addSubTask(subTask2);
         task1.addSubTask(subTask3);

@@ -184,7 +184,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public Map<Integer, SubTask> getSubTasksByEpic(Task epicTask) {
+    public Map<Integer, SubTask> getSubTasksByEpic(Task epicTask) throws ManagerSaveException {
         if (epicTask != null && (epicTask instanceof EpicTask)) {
             EpicTask epic = (EpicTask) epicTask;
             return epic.getSubTasks();
