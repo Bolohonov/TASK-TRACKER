@@ -44,7 +44,8 @@ public class InMemoryTasksManager implements TaskManager {
         if (duration != null && startTime != null) {
             LocalDateTime finishTime = startTime.plus(duration);
             for (Task task : prioritizedTasks) {
-                if (taskToCheck instanceof SubTask && task instanceof EpicTask) {
+                if (!taskToCheck.equals(task) && taskToCheck instanceof SubTask
+                        && task instanceof EpicTask) {
                     if ((((SubTask) taskToCheck).getEpicId() != task.getId())
                             && task.getStartTime().isPresent() && task.getDuration().isPresent()) {
                         LocalDateTime taskStart = task.getStartTime().get();
