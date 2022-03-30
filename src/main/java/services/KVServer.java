@@ -115,11 +115,7 @@ public class KVServer {
                                     responseData = responseData + "\n" + task;
                                 }
                             }
-                            h.getResponseHeaders().add("Content-Type", "application/json");
-                            h.sendResponseHeaders(200, 0);
-                            try (OutputStream os = h.getResponseBody()) {
-                                os.write(responseData.getBytes());
-                            }
+                            sendText(h, responseData);
                         }
                         if (key.equals("getEpicTasks")) {
                             String responseData = null;
@@ -130,11 +126,7 @@ public class KVServer {
                                     responseData = responseData + "\n" + task;
                                 }
                             }
-                            h.getResponseHeaders().add("Content-Type", "application/json");
-                            h.sendResponseHeaders(200, 0);
-                            try (OutputStream os = h.getResponseBody()) {
-                                os.write(responseData.getBytes());
-                            }
+                            sendText(h, responseData);
                         }
                         if (key.contains("getSubTasksByEpic=")) {
                             String id = key.split("=")[1];
@@ -145,23 +137,13 @@ public class KVServer {
                                 JsonElement jsonElementSubTasks = jo.get("subTasksOfEpic");
                                 responseData = jsonElementSubTasks.getAsString();
                             }
-                            h.getResponseHeaders().add("Content-Type", "application/json");
-                            h.sendResponseHeaders(200, 0);
-                            try (OutputStream os = h.getResponseBody()) {
-                                os.write(responseData.getBytes());
-                            }
-                            //sendText(h, data.get(id));
+                            sendText(h, responseData);
                             System.out.println("Значение для ключа " +
                                     key + " успешно отправлено в ответ на запрос!");
-                            h.sendResponseHeaders(200, 0);
                             return;
                         }
                         if (data.containsKey(key)) {
-                            h.getResponseHeaders().add("Content-Type", "application/json");
-                            h.sendResponseHeaders(200, 0);
-                            try (OutputStream os = h.getResponseBody()) {
-                                os.write(data.get(key).getBytes());
-                            }
+                            sendText(h, data.get(key));
                             System.out.println("Значение для ключа " +
                                     key + " успешно отправлено в ответ на запрос!");
                             return;
@@ -245,10 +227,11 @@ public class KVServer {
     }
 
     protected void sendText(HttpExchange h, String text) throws IOException {
-        byte[] resp = text.getBytes("UTF-8");
         h.getResponseHeaders().add("Content-Type", "application/json");
-        h.sendResponseHeaders(200, resp.length);
-        h.getResponseBody().write(resp);
+        h.sendResponseHeaders(200, 0);
+        try (OutputStream os = h.getResponseBody()) {
+            os.write(text.getBytes());
+        }
     }
 
     public void stop(int delay) {

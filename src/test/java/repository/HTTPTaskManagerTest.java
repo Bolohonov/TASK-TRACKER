@@ -82,7 +82,6 @@ class HTTPTaskManagerTest {
         expectedEpicTask.addSubTask(expectedSubTask1);
         expectedEpicTask.addSubTask(expectedSubTask2);
         expectedEpicTask.addSubTask(expectedSubTask3);
-        System.out.println(expectedEpicTask);
         Task actualEpicTask = manager.getTaskById(expectedEpicTask.getId());
         assertEquals(expectedEpicTask, actualEpicTask);
     }
@@ -301,7 +300,6 @@ class HTTPTaskManagerTest {
         assertFalse(manager.getSubTasksByEpic(epicTask1).containsKey(subTask1.getId()));
         manager.putTask(task1);
         manager.putTask(task2);
-        System.out.println(task2);
         manager.removeTaskById(task2.getId());
         assertFalse(manager.getSingleTasks().containsKey(task2.getId()));
     }

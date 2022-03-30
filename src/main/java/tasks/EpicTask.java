@@ -50,6 +50,7 @@ public class EpicTask extends Task {
                     ", Статус=" + getStatus() +
                     ", Продолжительность=" + getDuration().get() +
                     ", Время начала=" + getStartTime().get() +
+                    ", SubTasks: " + subTasksMap.keySet() +
                     '}';
         } else {
             return "Эпик{" +
@@ -59,6 +60,7 @@ public class EpicTask extends Task {
                     ", Статус=" + getStatus() +
                     ", Продолжительность=" + super.getDuration() +
                     ", Время начала=" + super.getStartTime() +
+                    ", SubTasks: " + subTasksMap.keySet() +
                     '}';
         }
     }
