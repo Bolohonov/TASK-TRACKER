@@ -19,7 +19,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     private Path path;
     private KVTaskClient kvTaskClient;
-    private final static Set<Integer> historyFromHttp = new LinkedHashSet<>();
+    private final static InMemoryHistoryManager historyFromHttp = new InMemoryHistoryManager();
 
     public HTTPTaskManager(Path path) throws ManagerSaveException, URISyntaxException {
         super(Paths.get("resources/data.csv"));
@@ -34,7 +34,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             super.putTask(task);
             Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
             String json = gson.toJson(task);
-            System.out.println(json);
             if (task instanceof SubTask) {
                 EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
                 epic.addSubTask((SubTask) task);
@@ -55,7 +54,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             String json = gson.toJson(task);
             kvTaskClient.put(String.valueOf(task.getId()), json);
             isUpdate = true;
-            historyFromHttp.add(task.getId());
+            historyFromHttp.add(task);
         } catch (ManagerSaveException e) {
             System.out.println(e.getMessage() + " " + e.getStackTrace());
         }
@@ -68,21 +67,22 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load(String.valueOf(id));
         Task task = gson.fromJson(json, Task.class);
-        historyFromHttp.add(id);
+        if (task instanceof Task) {
+            historyFromHttp.add(task);
+        }
         return task;
     }
 
     @Override
     public void removeAllTasks() throws ManagerSaveException {
         super.removeAllTasks();
-        historyFromHttp.clear();
+        historyFromHttp.clearHistory();
         kvTaskClient.delete("removeAllTasks");
     }
 
     @Override
     public void removeTaskById(int id) throws ManagerSaveException {
         try {
-            historyFromHttp.remove(id);
             super.removeTaskById(id);
             Task task = getTaskById(id);
             if (task instanceof SubTask) {
@@ -97,6 +97,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
                     removeTaskById(sub.getId());
                 }
             }
+            historyFromHttp.remove(id);
             kvTaskClient.delete("removeTaskById=" + id);
         } catch (ManagerSaveException e) {
             System.out.println(e.getMessage() + " " + e.getStackTrace());
@@ -146,16 +147,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public List<Task> getHistory() {
-        List<Task> list = new LinkedList<>();
-        for (int i : historyFromHttp) {
-            try {
-                list.add(getTaskById(i));
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            } catch (ManagerSaveException e) {
-                e.printStackTrace();
-            }
-        }
-        return list;
+        return historyFromHttp.getHistory();
     }
 }
