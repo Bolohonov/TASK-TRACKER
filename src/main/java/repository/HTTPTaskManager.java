@@ -13,16 +13,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HTTPTaskManager extends FileBackedTasksManager {
 
     private Path path;
     private KVTaskClient kvTaskClient;
-    //private final static InMemoryHistoryManager historyFromHttp = new InMemoryHistoryManager();
+    private final static Set<Integer> historyFromHttp = new LinkedHashSet<>();
 
     public HTTPTaskManager(Path path) throws ManagerSaveException, URISyntaxException {
         super(Paths.get("resources/data.csv"));
@@ -44,7 +41,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
                 updateTask(epic);
             }
             kvTaskClient.put(String.valueOf(task.getId()), json);
-            //historyFromHttp.add(task);
         } catch (IntersectionException | ManagerSaveException e) {
             System.out.println(e.getMessage() + " " + e.getStackTrace());
         }
@@ -59,6 +55,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             String json = gson.toJson(task);
             kvTaskClient.put(String.valueOf(task.getId()), json);
             isUpdate = true;
+            historyFromHttp.add(task.getId());
         } catch (ManagerSaveException e) {
             System.out.println(e.getMessage() + " " + e.getStackTrace());
         }
@@ -71,18 +68,21 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
         String json = kvTaskClient.load(String.valueOf(id));
         Task task = gson.fromJson(json, Task.class);
+        historyFromHttp.add(id);
         return task;
     }
 
     @Override
     public void removeAllTasks() throws ManagerSaveException {
         super.removeAllTasks();
+        historyFromHttp.clear();
         kvTaskClient.delete("removeAllTasks");
     }
 
     @Override
     public void removeTaskById(int id) throws ManagerSaveException {
         try {
+            historyFromHttp.remove(id);
             super.removeTaskById(id);
             Task task = getTaskById(id);
             if (task instanceof SubTask) {
@@ -93,6 +93,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             if (task instanceof EpicTask) {
                 EpicTask epic = (EpicTask) getTaskById(id);
                 for (SubTask sub : epic.getSubTasks().values()) {
+                    historyFromHttp.remove(sub.getId());
                     removeTaskById(sub.getId());
                 }
             }
@@ -145,6 +146,16 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public List<Task> getHistory() {
-        return super.getHistory();
+        List<Task> list = new LinkedList<>();
+        for (int i : historyFromHttp) {
+            try {
+                list.add(getTaskById(i));
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            } catch (ManagerSaveException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 }
