@@ -18,13 +18,14 @@ import java.util.Optional;
 
 public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<Task> {
 
+    private static final Gson gson =
+            new GsonBuilder()
+                    .setExclusionStrategies(new ExclusionStrategyOfTask())
+                    .create();
+
     @Override
     public JsonElement serialize(Task task, Type type,
                                  JsonSerializationContext jsonSerializationContext) {
-        Gson gson =
-                new GsonBuilder()
-                        .setExclusionStrategies(new ExclusionStrategyOfTask())
-                        .create();
         JsonElement jsonElement = gson.toJsonTree(task);
         jsonElement.getAsJsonObject().addProperty("type", task.getType().toString());
         if (task instanceof EpicTask && !((EpicTask) task).getSubTasks().isEmpty()) {
@@ -37,12 +38,7 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                 for (Integer id : list) {
                     sb.append(id + ",");
                 }
-//                Gson gsonOfEpic = new Gson();
                 jsonElement.getAsJsonObject().addProperty("subTasksOfEpic", sb.toString());
-//                jsonElement.getAsJsonObject().addProperty("duration",
-//                        gsonOfEpic.toJson(task.getDuration().get()));
-//                jsonElement.getAsJsonObject().addProperty("startTime",
-//                        gsonOfEpic.toJson(task.getStartTime().get()));
             }
         }
         return jsonElement;
@@ -191,12 +187,8 @@ public class TaskJsonAdapter implements JsonSerializer<Task>, JsonDeserializer<T
                     epic.addSubTask((SubTask) new Managers()
                             .getDefault().getTaskById(id));
                 }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            } catch (ManagerSaveException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+            } catch (NumberFormatException | ManagerSaveException | URISyntaxException exp) {
+                exp.printStackTrace();
             }
         }
         return epic;

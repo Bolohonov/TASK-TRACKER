@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HTTPTaskManagerTest {
 
     @BeforeAll
-    static void run() throws IOException, ManagerSaveException {
+    static void run() throws IOException {
         KVServer kvServer = new KVServer();
         kvServer.start();
         HttpTaskServer httpTaskServer = new HttpTaskServer();

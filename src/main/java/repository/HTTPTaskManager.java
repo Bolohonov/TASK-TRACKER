@@ -28,8 +28,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     @Override
-    public void putTask(Task task) {
-        try {
+    public void putTask(Task task) throws IntersectionException, ManagerSaveException {
             super.putTask(task);
             Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
             String json = gson.toJson(task);
@@ -39,24 +38,17 @@ public class HTTPTaskManager extends FileBackedTasksManager {
                 updateTask(epic);
             }
             kvTaskClient.put(String.valueOf(task.getId()), json);
-        } catch (IntersectionException | ManagerSaveException e) {
-            System.out.println(e.getMessage() + " " + e.getStackTrace());
-        }
     }
 
     @Override
-    public boolean updateTask(Task task) {
+    public boolean updateTask(Task task) throws ManagerSaveException {
         boolean isUpdate = false;
-        try {
             super.updateTask(task);
             Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
             String json = gson.toJson(task);
             kvTaskClient.put(String.valueOf(task.getId()), json);
             isUpdate = true;
             historyFromHttp.add(task);
-        } catch (ManagerSaveException e) {
-            System.out.println(e.getMessage() + " " + e.getStackTrace());
-        }
         return isUpdate;
     }
 
@@ -81,7 +73,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public void removeTaskById(int id) throws ManagerSaveException {
-        try {
             super.removeTaskById(id);
             Task task = getTaskById(id);
             if (task instanceof SubTask) {
@@ -98,9 +89,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             }
             historyFromHttp.remove(id);
             kvTaskClient.delete("removeTaskById=" + id);
-        } catch (ManagerSaveException e) {
-            System.out.println(e.getMessage() + " " + e.getStackTrace());
-        }
     }
 
     @Override
