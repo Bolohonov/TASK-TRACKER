@@ -63,16 +63,19 @@ public class HttpTaskServer {
                             for (SingleTask task : manager.getSingleTasks().values()) {
                                 response = response + "\n" + task.toString();
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getEpicTasks":
                             for (EpicTask task : manager.getEpicTasks().values()) {
                                 response = response + "\n" + task.toString();
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getHistory":
                             for (Task task : manager.getHistory()) {
                                 response = response + "\n" + task.toString();
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getSubTasks":
                             for (EpicTask task : manager.getEpicTasks().values()) {
@@ -80,6 +83,7 @@ public class HttpTaskServer {
                                     response = response + "\n" + sub.toString();
                                 }
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                             break;
                         case "getTaskById":
                             String[] query = httpExchange.getRequestURI()
@@ -88,6 +92,7 @@ public class HttpTaskServer {
                                 response =
                                         manager.getTaskById(Integer.parseInt(query[1]))
                                                 .toString();
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -101,6 +106,7 @@ public class HttpTaskServer {
                             try {
                                 manager.getSubTasksByEpic(manager
                                         .getTaskById(Integer.parseInt(query[1])));
+                                httpExchange.sendResponseHeaders(200, 0);
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -121,6 +127,7 @@ public class HttpTaskServer {
                     Task task = gson.fromJson(body, Task.class);
                     try {
                         manager.putTask(task);
+                        httpExchange.sendResponseHeaders(200, 0);
                     } catch (IntersectionException e) {
                         System.out.println("Во время выполнения запроса по адресу:"
                                 + httpExchange.getRequestURI() + " произошла ошибка\n"

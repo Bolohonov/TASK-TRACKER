@@ -1,6 +1,8 @@
 package repository;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
+import services.ConfigTaskJsonAdapter;
 import services.HttpTaskServer;
 import services.KVServer;
 import tasks.EpicTask;
@@ -9,14 +11,19 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class HTTPTaskManagerTest {
+class HTTPTaskManagerAndServerTest {
 
     @BeforeAll
     static void run() throws IOException {
@@ -493,5 +500,114 @@ class HTTPTaskManagerTest {
         actualList.add(manager.getHistory().get(length - 2));
         actualList.add(manager.getHistory().get(length - 1));
         assertEquals(list, actualList);
+    }
+
+    @Test
+    public void shouldHttpTaskServerPutAndGetTask() throws IOException,
+            InterruptedException, URISyntaxException {
+
+        HTTPTaskManager manager = new HTTPTaskManager(Paths.get("/localhost"));
+        manager.removeAllTasks();
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8077/tasks/task/");
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        Task expectedTask = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1023, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2021, 06, 19, 7, 00, 10)));
+        String json = gson.toJson(expectedTask);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest requestPost = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(requestPost,
+                HttpResponse.BodyHandlers.ofString());
+        int expectedStatusCode = 200;
+        assertEquals(expectedStatusCode, response.statusCode());
+
+        URI urlGet = URI.create("http://localhost:8077/tasks/task/?id=1023");
+        HttpRequest requestGet = HttpRequest.newBuilder().uri(urlGet).GET().build();
+        HttpResponse<String> responseGet = client.send(requestGet,
+                HttpResponse.BodyHandlers.ofString());
+        String jsonFromKV = responseGet.body();
+        assertEquals(expectedTask.toString(), jsonFromKV.toString());
+    }
+
+    @Test
+    public void shouldHttpTaskServerPutAndGetEpicTask() throws IOException,
+            InterruptedException, URISyntaxException {
+
+        HTTPTaskManager manager = new HTTPTaskManager(Paths.get("/localhost"));
+        manager.removeAllTasks();
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8077/tasks/task/");
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        EpicTask epic = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1022);
+        String json = gson.toJson(epic);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest requestPost = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(requestPost,
+                HttpResponse.BodyHandlers.ofString());
+        int expectedStatusCode = 200;
+        assertEquals(expectedStatusCode, response.statusCode());
+
+        URI urlGet = URI.create("http://localhost:8077/tasks/task/?id=1022");
+        HttpRequest requestGet = HttpRequest.newBuilder().uri(urlGet).GET().build();
+        HttpResponse<String> responseGet = client.send(requestGet,
+                HttpResponse.BodyHandlers.ofString());
+        String jsonFromKV = responseGet.body();
+        assertEquals(epic.toString(), jsonFromKV);
+    }
+
+    @Test
+    public void shouldHttpTaskServerPutAndGetEpicTaskWithSubTasks() throws IOException,
+            InterruptedException, URISyntaxException {
+
+        HTTPTaskManager manager = new HTTPTaskManager(Paths.get("/localhost"));
+        manager.removeAllTasks();
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8077/tasks/task/");
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        EpicTask epic = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1025);
+        String json = gson.toJson(epic);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest requestPost = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(requestPost,
+                HttpResponse.BodyHandlers.ofString());
+        int expectedStatusCode = 200;
+        assertEquals(expectedStatusCode, response.statusCode());
+
+
+        SubTask subTask1 = new SubTask(epic.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1026, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2020, 03, 10, 8, 00, 10)));
+
+        json = gson.toJson(subTask1);
+        final HttpRequest.BodyPublisher bodySubTask1 = HttpRequest.BodyPublishers.ofString(json);
+        requestPost = HttpRequest.newBuilder().uri(url).POST(bodySubTask1).build();
+        response = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
+        assertEquals(expectedStatusCode, response.statusCode());
+
+        SubTask subTask2 = new SubTask(epic.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1027, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2020, 03, 11, 5, 00, 10)));
+
+        json = gson.toJson(subTask2);
+        final HttpRequest.BodyPublisher bodySubTask2 = HttpRequest.BodyPublishers.ofString(json);
+        requestPost = HttpRequest.newBuilder().uri(url).POST(bodySubTask2).build();
+        response = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
+        assertEquals(expectedStatusCode, response.statusCode());
+
+        epic.addSubTask(subTask1);
+        epic.addSubTask(subTask2);
+
+        URI urlGet = URI.create("http://localhost:8077/tasks/task/?id=1025");
+        HttpRequest requestGet = HttpRequest.newBuilder().uri(urlGet).GET().build();
+        HttpResponse<String> responseGet = client.send(requestGet,
+                HttpResponse.BodyHandlers.ofString());
+        String jsonFromKV = responseGet.body();
+        assertEquals(epic.toString(), jsonFromKV);
     }
 }
