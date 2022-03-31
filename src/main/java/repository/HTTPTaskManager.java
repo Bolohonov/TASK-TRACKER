@@ -29,15 +29,15 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public void putTask(Task task) throws IntersectionException, ManagerSaveException {
-            super.putTask(task);
-            Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
-            String json = gson.toJson(task);
-            if (task instanceof SubTask) {
-                EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
-                epic.addSubTask((SubTask) task);
-                updateTask(epic);
-            }
-            kvTaskClient.put(String.valueOf(task.getId()), json);
+        super.putTask(task);
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        String json = gson.toJson(task);
+        if (task instanceof SubTask) {
+            EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
+            epic.addSubTask((SubTask) task);
+            updateTask(epic);
+        }
+        kvTaskClient.put(String.valueOf(task.getId()), json);
     }
 
     @Override
@@ -73,22 +73,22 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     @Override
     public void removeTaskById(int id) throws ManagerSaveException {
-            super.removeTaskById(id);
-            Task task = getTaskById(id);
-            if (task instanceof SubTask) {
-                EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
-                epic.removeSubTask((SubTask) task);
-                updateTask(epic);
+        super.removeTaskById(id);
+        Task task = getTaskById(id);
+        if (task instanceof SubTask) {
+            EpicTask epic = (EpicTask) getTaskById(((SubTask) task).getEpicId());
+            epic.removeSubTask((SubTask) task);
+            updateTask(epic);
+        }
+        if (task instanceof EpicTask) {
+            EpicTask epic = (EpicTask) getTaskById(id);
+            for (SubTask sub : epic.getSubTasks().values()) {
+                historyFromHttp.remove(sub.getId());
+                removeTaskById(sub.getId());
             }
-            if (task instanceof EpicTask) {
-                EpicTask epic = (EpicTask) getTaskById(id);
-                for (SubTask sub : epic.getSubTasks().values()) {
-                    historyFromHttp.remove(sub.getId());
-                    removeTaskById(sub.getId());
-                }
-            }
-            historyFromHttp.remove(id);
-            kvTaskClient.delete("removeTaskById=" + id);
+        }
+        historyFromHttp.remove(id);
+        kvTaskClient.delete("removeTaskById=" + id);
     }
 
     @Override

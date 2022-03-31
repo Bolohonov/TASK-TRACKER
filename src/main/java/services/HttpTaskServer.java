@@ -53,7 +53,7 @@ public class HttpTaskServer {
     static class TaskHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-            String response = "Ответ на запрос: ";
+            String response = new String();
             String method = httpExchange.getRequestMethod();
 
             switch (method) {
@@ -63,19 +63,19 @@ public class HttpTaskServer {
                             for (SingleTask task : manager.getSingleTasks().values()) {
                                 response = response + "\n" + task.toString();
                             }
-                            httpExchange.sendResponseHeaders(200, 0);
+                            sendText(httpExchange, response);
                             break;
                         case "getEpicTasks":
                             for (EpicTask task : manager.getEpicTasks().values()) {
                                 response = response + "\n" + task.toString();
                             }
-                            httpExchange.sendResponseHeaders(200, 0);
+                            sendText(httpExchange, response);
                             break;
                         case "getHistory":
                             for (Task task : manager.getHistory()) {
                                 response = response + "\n" + task.toString();
                             }
-                            httpExchange.sendResponseHeaders(200, 0);
+                            sendText(httpExchange, response);
                             break;
                         case "getSubTasks":
                             for (EpicTask task : manager.getEpicTasks().values()) {
@@ -83,30 +83,45 @@ public class HttpTaskServer {
                                     response = response + "\n" + sub.toString();
                                 }
                             }
-                            httpExchange.sendResponseHeaders(200, 0);
+                            sendText(httpExchange, response);
                             break;
                         case "getTaskById":
                             String[] query = httpExchange.getRequestURI()
                                     .getQuery().split("=");
                             try {
-                                response =
-                                        manager.getTaskById(Integer.parseInt(query[1]))
-                                                .toString();
-                                httpExchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException | NumberFormatException e) {
+                                Task task = manager.getTaskById(Integer.parseInt(query[1]));
+                                if (task != null) {
+                                    response = task.toString();
+                                    sendText(httpExchange, response);
+                                } else {
+                                    System.out.println("Задача с таким ID отсутствует!");
+                                    httpExchange.sendResponseHeaders(404, 0);
+                                    try (OutputStream os = httpExchange.getResponseBody()) {
+                                        os.write(null);
+                                    }
+                                }
+                            } catch (IOException | ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
-                                httpExchange.sendResponseHeaders(500, 0);
+                                httpExchange.sendResponseHeaders(404, 0);
                             }
                             break;
                         case "getSubTasksByEpic":
                             query = httpExchange.getRequestURI()
                                     .getQuery().split("=");
                             try {
-                                manager.getSubTasksByEpic(manager
-                                        .getTaskById(Integer.parseInt(query[1])));
-                                httpExchange.sendResponseHeaders(200, 0);
+                                Task task = manager.getTaskById(Integer.parseInt(query[1]));
+                                if (task != null) {
+                                    response = task.toString();
+                                    sendText(httpExchange, response);
+                                } else {
+                                    System.out.println("Задача с таким ID отсутствует!");
+                                    httpExchange.sendResponseHeaders(404, 0);
+                                    try (OutputStream os = httpExchange.getResponseBody()) {
+                                        os.write(null);
+                                    }
+                                }
                             } catch (ManagerSaveException | NumberFormatException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
@@ -122,18 +137,12 @@ public class HttpTaskServer {
                 case "POST":
                     InputStream inputStream = httpExchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
-                    System.out.println(body);
                     Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
                     Task task = gson.fromJson(body, Task.class);
                     try {
                         manager.putTask(task);
-                        httpExchange.sendResponseHeaders(200, 0);
-                    } catch (IntersectionException e) {
-                        System.out.println("Во время выполнения запроса по адресу:"
-                                + httpExchange.getRequestURI() + " произошла ошибка\n"
-                                + e.getMessage() + "\n" + e.getStackTrace());
-                        httpExchange.sendResponseHeaders(500, 0);
-                    } catch (ManagerSaveException e) {
+                        sendText(httpExchange, response);
+                    } catch (IntersectionException | ManagerSaveException e) {
                         System.out.println("Во время выполнения запроса по адресу:"
                                 + httpExchange.getRequestURI() + " произошла ошибка\n"
                                 + e.getMessage() + "\n" + e.getStackTrace());
@@ -146,8 +155,8 @@ public class HttpTaskServer {
                             try {
                                 manager.removeAllTasks();
                                 response = "Все задачи, эпики и подзадачи успешно удалены!";
-                                httpExchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException e) {
+                                sendText(httpExchange, response);
+                            } catch (IOException | ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
@@ -161,8 +170,8 @@ public class HttpTaskServer {
                                 manager.removeTaskById(Integer.parseInt(query[1]));
                                 response = "Задача с id " + Integer.parseInt(query[1]) + " " +
                                         "удалена!";
-                                httpExchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException e) {
+                                sendText(httpExchange, response);
+                            } catch (IOException | ManagerSaveException e) {
                                 System.out.println("Во время выполнения запроса по адресу:"
                                         + httpExchange.getRequestURI() + " произошла ошибка\n"
                                         + e.getMessage() + "\n" + e.getStackTrace());
@@ -176,12 +185,13 @@ public class HttpTaskServer {
                     break;
                 default:
                     response = "Некорректный метод!";
-                    httpExchange.sendResponseHeaders(400, 0);
+                    sendText(httpExchange, response);
                     break;
             }
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+
+//            try (OutputStream os = httpExchange.getResponseBody()) {
+//                os.write(response.getBytes());
+//            }
         }
 
         private String getPathFromGetRequest(HttpExchange httpExchange) {
@@ -222,6 +232,15 @@ public class HttpTaskServer {
             }
             return command;
         }
+
+        protected void sendText(HttpExchange h, String text) throws IOException {
+            h.getResponseHeaders().add("Content-Type", "application/json");
+            h.sendResponseHeaders(200, 0);
+            try (OutputStream os = h.getResponseBody()) {
+                os.write(text.getBytes());
+            }
+        }
+
     }
 
     public void stop(int delay) {

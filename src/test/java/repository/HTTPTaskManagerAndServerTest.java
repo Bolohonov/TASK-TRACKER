@@ -132,27 +132,6 @@ class HTTPTaskManagerAndServerTest {
         assertEquals(expectedTask, actualTask);
     }
 
-//    @Test
-//    void updateEpicTaskStandardBehavior() throws ManagerSaveException, URISyntaxException,
-//            IntersectionException {
-//        Managers managers = new Managers();
-//        TaskManager manager = managers.getDefault();
-//        manager.removeAllTasks();
-//        Task expectedTask = new SingleTask("TestSingleName",
-//                "TestSingleDescription", 1030, Optional.of(Duration.ofDays(2)),
-//                Optional.of(LocalDateTime
-//                        .of(2021, 06, 19, 7, 00, 10)));
-//        manager.putTask(expectedTask);
-//        expectedTask.setName("SingleName");
-//        expectedTask.setDescription("SingleDescription");
-//        expectedTask.setDuration(Duration.ofHours(10));
-//        expectedTask.setStartTime(LocalDateTime
-//                .of(2021, 01, 27, 7, 15, 10));
-//        manager.updateTask(expectedTask);
-//        Task actualTask = manager.getTaskById(expectedTask.getId());
-//        assertEquals(expectedTask, actualTask);
-//    }
-
     @Test
     void getSingleTaskStandardBehavior() throws ManagerSaveException, URISyntaxException,
             IntersectionException {
@@ -166,6 +145,20 @@ class HTTPTaskManagerAndServerTest {
         manager.putTask(expectedTask);
         Task actualTask = manager.getTaskById(expectedTask.getId());
         assertEquals(expectedTask, actualTask);
+    }
+
+    @Test
+    void getSingleTaskWrongId() throws ManagerSaveException,
+            URISyntaxException, IntersectionException {
+        Managers managers = new Managers();
+        TaskManager manager = managers.getDefault();
+        manager.removeAllTasks();
+        Task expectedTask = new SingleTask("TestSingleName",
+                "TestSingleDescription", 1035, Optional.of(Duration.ofDays(2)),
+                Optional.of(LocalDateTime
+                        .of(2019, 06, 19, 7, 00, 10)));
+        manager.putTask(expectedTask);
+        assertEquals(null , manager.getTaskById(1034));
     }
 
     @Test
@@ -609,5 +602,83 @@ class HTTPTaskManagerAndServerTest {
                 HttpResponse.BodyHandlers.ofString());
         String jsonFromKV = responseGet.body();
         assertEquals(epic.toString(), jsonFromKV);
+    }
+
+    @Test
+    public void shouldHttpTaskServerPutAndRemoveEpicTaskWithSubTasks() throws IOException,
+            InterruptedException, URISyntaxException {
+
+        HTTPTaskManager manager = new HTTPTaskManager(Paths.get("/localhost"));
+        manager.removeAllTasks();
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8077/tasks/task/");
+        Gson gson = ConfigTaskJsonAdapter.getGsonBuilder().create();
+        EpicTask epic = new EpicTask("TestEpicName",
+                "TestEpicDescription", 1025);
+        String json = gson.toJson(epic);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest requestPost = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(requestPost,
+                HttpResponse.BodyHandlers.ofString());
+        int expectedStatusCode = 200;
+        assertEquals(expectedStatusCode, response.statusCode());
+
+
+        SubTask subTask1 = new SubTask(epic.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1026, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2020, 03, 10, 8, 00, 10)));
+
+        json = gson.toJson(subTask1);
+        final HttpRequest.BodyPublisher bodySubTask1 = HttpRequest.BodyPublishers.ofString(json);
+        requestPost = HttpRequest.newBuilder().uri(url).POST(bodySubTask1).build();
+        response = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
+        assertEquals(expectedStatusCode, response.statusCode());
+
+        SubTask subTask2 = new SubTask(epic.getId(), "TestNameSub1",
+                "TestDescriptionSub1", 1027, Optional.of(Duration.ofHours(2)),
+                Optional.of(LocalDateTime
+                        .of(2020, 03, 11, 5, 00, 10)));
+
+        json = gson.toJson(subTask2);
+        final HttpRequest.BodyPublisher bodySubTask2 = HttpRequest.BodyPublishers.ofString(json);
+        requestPost = HttpRequest.newBuilder().uri(url).POST(bodySubTask2).build();
+        response = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
+        assertEquals(expectedStatusCode, response.statusCode());
+
+        epic.addSubTask(subTask1);
+        epic.addSubTask(subTask2);
+
+        URI urlGet = URI.create("http://localhost:8077/tasks/task/?id=1026");
+        HttpRequest requestGet = HttpRequest.newBuilder().uri(urlGet).GET().build();
+        HttpResponse<String> responseGet = client.send(requestGet,
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(expectedStatusCode, responseGet.statusCode());
+
+        urlGet = URI.create("http://localhost:8077/tasks/task/?id=1027");
+        requestGet = HttpRequest.newBuilder().uri(urlGet).GET().build();
+        responseGet = client.send(requestGet,
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(expectedStatusCode, responseGet.statusCode());
+
+        URI urlDelete = URI.create("http://localhost:8077/tasks/task/?id=1025");
+        HttpRequest requestDelete = HttpRequest.newBuilder().uri(urlDelete).DELETE().build();
+        HttpResponse<String> responseDelete = client.send(requestDelete,
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(expectedStatusCode, responseDelete.statusCode());
+
+
+        urlGet = URI.create("http://localhost:8077/tasks/task/?id=1026");
+        requestGet = HttpRequest.newBuilder().uri(urlGet).GET().build();
+        responseGet = client.send(requestGet,
+                HttpResponse.BodyHandlers.ofString());
+        int newExpectedCode = 404;
+        assertEquals(newExpectedCode, responseGet.statusCode());
+
+        urlGet = URI.create("http://localhost:8077/tasks/task/?id=1027");
+        requestGet = HttpRequest.newBuilder().uri(urlGet).GET().build();
+        responseGet = client.send(requestGet,
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(newExpectedCode, responseGet.statusCode());
     }
 }
