@@ -1,4 +1,4 @@
-# **TASK_TRACKER**
+# **TASK-TRACKER**
 
 ## Трекер задач на Java без фреймворков
 
